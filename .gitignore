@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Build outputs
+dist/
+build/
+
+# Database files (if local)
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads (uncomment if you want to ignore user uploads)
+# uploads/
+
+# Exports
+exports/
