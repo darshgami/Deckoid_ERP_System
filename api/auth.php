@@ -1,11 +1,13 @@
 <?php
 
-require_once '../config/env.php';
-require_once '../includes/auth.php';
+require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, OPTIONS');
+// Adjust CORS for session-based auth (Credentials must be true)
+header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -20,21 +22,28 @@ try {
         $input = json_decode(file_get_contents('php://input'), true);
 
         if (strpos($path, '/register') !== false) {
-            // Register endpoint
             $result = AuthController::register($input);
             echo json_encode($result);
         } elseif (strpos($path, '/login') !== false) {
-            // Login endpoint
             $result = AuthController::login($input);
             echo json_encode($result);
         } elseif (strpos($path, '/logout') !== false) {
-            // Logout endpoint
-            $result = AuthController::logout($input);
+            $result = AuthController::logout();
             echo json_encode($result);
-        } elseif (strpos($path, '/refresh') !== false) {
-            // Refresh token endpoint
-            $result = AuthController::refresh($input);
-            echo json_encode($result);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Endpoint not found']);
+        }
+    } elseif ($method === 'GET') {
+        // Status check endpoint
+        if (strpos($path, '/status') !== false) {
+            echo json_encode([
+                'isLoggedIn' => AuthController::isLoggedIn(),
+                'user' => [
+                    'username' => $_SESSION['username'] ?? null,
+                    'role' => $_SESSION['role'] ?? null
+                ]
+            ]);
         } else {
             http_response_code(404);
             echo json_encode(['error' => 'Endpoint not found']);

@@ -1,375 +1,240 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leads - Lead Management ERP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="../assets/css/style.css" rel="stylesheet">
-</head>
-<body class="bg-neutral-50">
-    <div class="min-h-screen flex">
-        <!-- Sidebar -->
-        <div class="w-64 bg-white shadow-sm">
-            <div class="p-6">
-                <h1 class="text-xl font-bold text-neutral-900">Lead ERP</h1>
-            </div>
-            <nav class="mt-6">
-                <a href="dashboard.php" class="block px-6 py-3 text-neutral-700 hover:bg-neutral-100">Dashboard</a>
-                <a href="leads.php" class="block px-6 py-3 text-neutral-700 hover:bg-neutral-100 bg-neutral-100">Leads</a>
-                <a href="#" class="block px-6 py-3 text-neutral-700 hover:bg-neutral-100">Reports</a>
-                <a href="#" onclick="logout()" class="block px-6 py-3 text-neutral-700 hover:bg-neutral-100">Logout</a>
-            </nav>
+<?php
+require_once '../includes/middleware.php';
+require_once '../includes/components/layout_wrapper.php';
+requireAuth();
+
+layout_start('Lead Management - Deckoid ERP');
+?>
+
+<div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+        <h1 class="text-3xl font-bold text-neutral-900 tracking-tight">Lead Management</h1>
+        <p class="text-neutral-500 mt-1">Manage and track your sales opportunities efficiently.</p>
+    </div>
+    <div class="flex items-center gap-3">
+        <button onclick="exportLeads()" class="px-5 py-2.5 bg-white border border-neutral-200 text-neutral-700 font-semibold rounded-2xl hover:bg-neutral-50 transition-all shadow-sm flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Export CSV
+        </button>
+        <button onclick="openAddLeadModal()" class="px-5 py-2.5 bg-primary-600 text-white font-semibold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+            Add New Lead
+        </button>
+    </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="relative group">
+            <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input type="text" id="search" placeholder="Search by name, company..." 
+                   class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 pl-12 pr-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
         </div>
+        <select id="categoryFilter" class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm cursor-pointer">
+            <option value="">All Categories</option>
+            <option value="Hot">🔥 Hot</option>
+            <option value="Warm">☀️ Warm</option>
+            <option value="Cold">❄️ Cold</option>
+        </select>
+        <select id="statusFilter" class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm cursor-pointer">
+            <option value="">All Status</option>
+            <option value="New">New</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Qualified">Qualified</option>
+            <option value="Proposal">Proposal</option>
+            <option value="Negotiation">Negotiation</option>
+            <option value="Closed">Closed</option>
+        </select>
+        <button onclick="loadLeads()" class="w-full bg-neutral-900 text-white font-bold rounded-2xl py-3 hover:bg-neutral-800 transition-all">
+            Apply Filters
+        </button>
+    </div>
+</div>
 
-        <!-- Main content -->
-        <div class="flex-1 p-8">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-neutral-900">Leads</h2>
-                <div class="flex space-x-3">
-                    <button onclick="exportLeads()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-                        Export to CSV
-                    </button>
-                    <button onclick="openAddLeadModal()" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
-                        Add New Lead
-                    </button>
-                </div>
-            </div>
-
-            <!-- Filters -->
-            <div class="bg-white p-4 rounded-lg shadow-sm mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <input type="text" id="search" placeholder="Search leads..."
-                           class="border border-neutral-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                    <select id="categoryFilter" class="border border-neutral-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        <option value="">All Categories</option>
-                        <option value="Hot">Hot</option>
-                        <option value="Warm">Warm</option>
-                        <option value="Cold">Cold</option>
-                    </select>
-                    <select id="statusFilter" class="border border-neutral-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        <option value="">All Status</option>
-                        <option value="New">New</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="Qualified">Qualified</option>
-                        <option value="Proposal">Proposal</option>
-                        <option value="Negotiation">Negotiation</option>
-                        <option value="Closed">Closed</option>
-                    </select>
-                    <button onclick="loadLeads()" class="bg-neutral-600 text-white px-4 py-2 rounded-lg hover:bg-neutral-700">
-                        Filter
-                    </button>
-                </div>
-            </div>
-
-            <!-- Leads Table -->
-            <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-neutral-200">
-                        <thead class="bg-neutral-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Lead ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Company</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Contact</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Mobile</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Category</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leadsTableBody" class="bg-white divide-y divide-neutral-200">
-                            <!-- Leads will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Pagination -->
-            <div class="mt-6 flex justify-between items-center">
-                <div id="paginationInfo" class="text-sm text-neutral-600"></div>
-                <div id="pagination" class="flex space-x-2"></div>
-            </div>
+<!-- Table Section -->
+<div class="bg-white rounded-3xl shadow-sm border border-neutral-100 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="bg-neutral-50/50">
+                    <th class="px-8 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Lead Info</th>
+                    <th class="px-8 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Contact</th>
+                    <th class="px-8 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Category</th>
+                    <th class="px-8 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Status</th>
+                    <th class="px-8 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Priority</th>
+                    <th class="px-8 py-4 text-right text-xs font-bold text-neutral-400 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="leadsTableBody" class="divide-y divide-neutral-50">
+                <!-- Loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="p-8 border-t border-neutral-50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <p id="paginationInfo" class="text-sm text-neutral-500 font-medium"></p>
+        <div id="pagination" class="flex items-center gap-2">
+            <!-- Buttons via JS -->
         </div>
     </div>
+</div>
 
-    <!-- Add/Edit Lead Modal -->
-    <div id="leadModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto">
-                <div class="p-6 border-b border-neutral-200">
-                    <h3 id="modalTitle" class="text-lg font-medium text-neutral-900">Add New Lead</h3>
-                </div>
-                <form id="leadForm" class="p-6 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Lead Date *</label>
-                            <input type="date" name="lead_date" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Company/Client Name *</label>
-                            <input type="text" name="company_client_name" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Contact Person *</label>
-                            <input type="text" name="contact_person" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Mobile Number *</label>
-                            <input type="text" name="mobile_number" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Alternative Number</label>
-                            <input type="text" name="alternative_number" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Email ID</label>
-                            <input type="email" name="email_id" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">City</label>
-                            <input type="text" name="city" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">State</label>
-                            <input type="text" name="state" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Source of Lead *</label>
-                            <select name="source_of_lead" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="">Select Source</option>
-                                <option value="Website">Website</option>
-                                <option value="Social Media">Social Media</option>
-                                <option value="Referral">Referral</option>
-                                <option value="Cold Call">Cold Call</option>
-                                <option value="Email">Email</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Service Interested In</label>
-                            <input type="text" name="service_interested_in" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Lead Category *</label>
-                            <select name="lead_category" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="Hot">Hot</option>
-                                <option value="Warm">Warm</option>
-                                <option value="Cold">Cold</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Lead Status *</label>
-                            <select name="lead_status" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="New">New</option>
-                                <option value="Contacted">Contacted</option>
-                                <option value="Qualified">Qualified</option>
-                                <option value="Proposal">Proposal</option>
-                                <option value="Negotiation">Negotiation</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Priority</label>
-                            <select name="priority" class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="High">High</option>
-                                <option value="Medium">Medium</option>
-                                <option value="Low">Low</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Deal Status *</label>
-                            <select name="deal_status" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="Open">Open</option>
-                                <option value="Won">Won</option>
-                                <option value="Lost">Lost</option>
-                                <option value="On Hold">On Hold</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-neutral-700">Payment Status *</label>
-                            <select name="payment_status" required class="mt-1 block w-full border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500">
-                                <option value="Pending">Pending</option>
-                                <option value="Partial">Partial</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Overdue">Overdue</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" onclick="closeLeadModal()" class="bg-neutral-600 text-white px-4 py-2 rounded-lg hover:bg-neutral-700">
-                            Cancel
-                        </button>
-                        <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
-                            Save Lead
-                        </button>
-                    </div>
-                </form>
+<!-- Modal Container -->
+<div id="leadModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm hidden z-[100] transition-all duration-300">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-[2rem] max-w-4xl w-full shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+            <div class="p-8 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h3 id="modalTitle" class="text-2xl font-bold text-neutral-900 tracking-tight">Add New Lead</h3>
+                <button onclick="closeLeadModal()" class="p-2 text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 rounded-xl transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
+            <form id="leadForm" class="p-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Lead Date *</label>
+                        <input type="date" name="lead_date" required class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Company/Client Name *</label>
+                        <input type="text" name="company_client_name" required placeholder="e.g. Acme Corp" class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Contact Person *</label>
+                        <input type="text" name="contact_person" required placeholder="Full Name" class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Mobile Number *</label>
+                        <input type="text" name="mobile_number" required placeholder="+1 234 567 890" class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Source of Lead *</label>
+                        <select name="source_of_lead" required class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer">
+                            <option value="Website">Website</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Referral">Referral</option>
+                            <option value="Cold Call">Cold Call</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-neutral-700 ml-1">Lead Category *</label>
+                        <select name="lead_category" required class="w-full bg-neutral-50 border-transparent rounded-2xl py-3 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer">
+                            <option value="Hot">Hot</option>
+                            <option value="Warm">Warm</option>
+                            <option value="Cold">Cold</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-4">
+                    <button type="button" onclick="closeLeadModal()" class="px-8 py-3 bg-neutral-100 text-neutral-600 font-bold rounded-2xl hover:bg-neutral-200 transition-all">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-8 py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all">
+                        Save Lead Details
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <script>
-        let currentPage = 1;
-        let currentLeadId = null;
+<script>
+    let currentPage = 1;
 
-        // Check authentication
-        const token = localStorage.getItem('access_token');
-        if (!token) {
-            window.location.href = 'login.php';
+    async function loadLeads(page = 1) {
+        currentPage = page;
+        const search = document.getElementById('search').value;
+        const category = document.getElementById('categoryFilter').value;
+        const status = document.getElementById('statusFilter').value;
+
+        const params = new URLSearchParams({ page, limit: 10, search, category, status });
+
+        try {
+            const response = await fetch(`../api/leads.php?${params}`);
+            const data = await response.json();
+
+            const tbody = document.getElementById('leadsTableBody');
+            tbody.innerHTML = data.leads.map(lead => `
+                <tr class="hover:bg-neutral-50/50 transition-colors group">
+                    <td class="px-8 py-5">
+                        <div class="flex flex-col">
+                            <span class="font-bold text-neutral-900 group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
+                            <span class="text-xs text-neutral-400 font-medium mt-0.5">${lead.lead_id}</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-neutral-700">${lead.contact_person}</span>
+                            <span class="text-xs text-neutral-500">${lead.mobile_number}</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        <span class="px-3 py-1 text-[10px] font-bold rounded-lg uppercase tracking-wider ${
+                            lead.lead_category === 'Hot' ? 'bg-red-50 text-red-600' :
+                            lead.lead_category === 'Warm' ? 'bg-orange-50 text-orange-600' :
+                            'bg-blue-50 text-blue-600'
+                        }">${lead.lead_category}</span>
+                    </td>
+                    <td class="px-8 py-5 text-sm font-bold text-neutral-900">${lead.lead_status}</td>
+                    <td class="px-8 py-5">
+                        <span class="flex items-center gap-1.5 text-xs font-bold text-neutral-500">
+                            <div class="w-1.5 h-1.5 rounded-full ${lead.priority === 'High' ? 'bg-red-500' : 'bg-neutral-300'}"></div>
+                            ${lead.priority || 'Medium'}
+                        </span>
+                    </td>
+                    <td class="px-8 py-5 text-right">
+                        <button onclick="editLead('${lead.id}')" class="p-2 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition-all">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            updatePagination(data.pagination);
+        } catch (error) {
+            console.error('Error:', error);
         }
+    }
 
-        function openAddLeadModal() {
-            document.getElementById('modalTitle').textContent = 'Add New Lead';
-            document.getElementById('leadForm').reset();
-            document.getElementById('leadModal').classList.remove('hidden');
-            currentLeadId = null;
+    function updatePagination(pagination) {
+        document.getElementById('paginationInfo').textContent = `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} leads`;
+        
+        const container = document.getElementById('pagination');
+        container.innerHTML = '';
+        
+        for (let i = 1; i <= pagination.pages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = `w-10 h-10 rounded-xl font-bold text-sm transition-all ${i === pagination.page ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-neutral-500 hover:bg-neutral-100'}`;
+            btn.onclick = () => loadLeads(i);
+            container.appendChild(btn);
         }
+    }
 
-        function closeLeadModal() {
-            document.getElementById('leadModal').classList.add('hidden');
-        }
+    function openAddLeadModal() {
+        const modal = document.getElementById('leadModal');
+        const content = document.getElementById('modalContent');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('scale-95', 'opacity-0');
+        }, 10);
+    }
 
-        async function loadLeads(page = 1) {
-            currentPage = page;
-            const search = document.getElementById('search').value;
-            const category = document.getElementById('categoryFilter').value;
-            const status = document.getElementById('statusFilter').value;
+    function closeLeadModal() {
+        const modal = document.getElementById('leadModal');
+        const content = document.getElementById('modalContent');
+        content.classList.add('scale-95', 'opacity-0');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
 
-            const params = new URLSearchParams({
-                page: page,
-                limit: 10,
-                search: search,
-                category: category,
-                status: status
-            });
+    document.addEventListener('DOMContentLoaded', () => loadLeads());
+</script>
 
-            try {
-                const response = await fetch(`../api/leads.php?${params}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-
-                if (response.status === 401) {
-                    await refreshToken();
-                    return loadLeads(page);
-                }
-
-                const data = await response.json();
-
-                const tbody = document.getElementById('leadsTableBody');
-                tbody.innerHTML = data.leads.map(lead => `
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">${lead.lead_id}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900">${lead.company_client_name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900">${lead.contact_person}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900">${lead.mobile_number}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full ${
-                                lead.lead_category === 'Hot' ? 'bg-red-100 text-red-800' :
-                                lead.lead_category === 'Warm' ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-blue-100 text-blue-800'
-                            }">${lead.lead_category}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-900">${lead.lead_status}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="editLead('${lead.id}')" class="text-primary-600 hover:text-primary-900 mr-2">Edit</button>
-                        </td>
-                    </tr>
-                `).join('');
-
-                updatePagination(data.pagination);
-            } catch (error) {
-                console.error('Error loading leads:', error);
-            }
-        }
-
-        function updatePagination(pagination) {
-            const info = document.getElementById('paginationInfo');
-            const pages = document.getElementById('pagination');
-
-            info.textContent = `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} leads`;
-
-            pages.innerHTML = '';
-            for (let i = 1; i <= pagination.pages; i++) {
-                const button = document.createElement('button');
-                button.textContent = i;
-                button.className = `px-3 py-1 rounded ${i === pagination.page ? 'bg-primary-600 text-white' : 'bg-neutral-200 text-neutral-700 hover:bg-neutral-300'}`;
-                button.onclick = () => loadLeads(i);
-                pages.appendChild(button);
-            }
-        }
-
-        async function refreshToken() {
-            const refreshToken = localStorage.getItem('refresh_token');
-            if (!refreshToken) {
-                window.location.href = 'login.php';
-                return;
-            }
-
-            try {
-                const response = await fetch('../api/auth.php/refresh', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        refresh_token: refreshToken
-                    })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('access_token', data.access_token);
-                } else {
-                    window.location.href = 'login.php';
-                }
-            } catch (error) {
-                window.location.href = 'login.php';
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('refresh_token');
-            window.location.href = 'login.php';
-        }
-
-        async function exportLeads() {
-            try {
-                const response = await fetch('../api/export.php', {
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                });
-
-                if (response.status === 401) {
-                    await refreshToken();
-                    return exportLeads();
-                }
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Download the file
-                    const link = document.createElement('a');
-                    link.href = data.file_url;
-                    link.download = data.filename;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    alert('Export failed: ' + data.error);
-                }
-            } catch (error) {
-                console.error('Error exporting leads:', error);
-                alert('Export failed');
-            }
-        }
-
-        // Load leads on page load
-        loadLeads();
-    </script>
-</body>
-</html>
+<?php layout_end(); ?>

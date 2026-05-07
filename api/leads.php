@@ -3,8 +3,11 @@
 require_once '../config/env.php';
 require_once '../includes/database.php';
 
+require_once '../includes/middleware.php';
+
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -12,14 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Check authentication (simplified for now)
-$headers = getallheaders();
-$authHeader = $headers['Authorization'] ?? '';
-if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
-    exit;
-}
+// Check authentication using middleware
+requireAuth();
+
 
 $method = $_SERVER['REQUEST_METHOD'];
 $db = Database::getInstance();
@@ -77,7 +75,7 @@ try {
             $input['client_onboard_date'] ?? null, $input['project_start_date'] ?? null,
             $input['project_status'] ?? null, $input['reference_by'] ?? null,
             $input['website_social_link'] ?? null, $input['remarks_notes'] ?? null,
-            'user-id-placeholder' // TODO: Get from JWT
+            $_SESSION['user_id'] // Get from session
         ]);
 
         echo json_encode(['message' => 'Lead created successfully', 'lead_id' => $leadId]);
@@ -180,7 +178,7 @@ try {
         );
 
         $stmt = $db->prepare("INSERT INTO lead_activity_logs (id, lead_id, user_id, activity_type, notes) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$activityId, $leadId, 'user-id-placeholder', 'updated', 'Lead details updated']);
+        $stmt->execute([$activityId, $leadId, $_SESSION['user_id'], 'updated', 'Lead details updated']);
 
         echo json_encode(['message' => 'Lead updated successfully']);
 

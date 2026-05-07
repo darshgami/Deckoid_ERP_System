@@ -75,10 +75,6 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Store tokens
-                    localStorage.setItem('access_token', data.access_token);
-                    localStorage.setItem('refresh_token', data.refresh_token);
-
                     messageDiv.className = 'mt-4 p-4 rounded-md bg-green-50 text-green-800';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     messageDiv.classList.remove('hidden');

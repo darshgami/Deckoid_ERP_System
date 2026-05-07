@@ -4,8 +4,11 @@ require_once '../config/env.php';
 require_once '../includes/database.php';
 require_once '../includes/auth.php';
 
+require_once '../includes/middleware.php';
+
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -19,35 +22,36 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// Check authentication
-$headers = getallheaders();
-$authHeader = $headers['Authorization'] ?? '';
-if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
-    exit;
-}
+// Check authentication using middleware
+requireAuth();
 
-$token = $matches[1];
 try {
-    // For now, simple token validation (in production, properly validate JWT)
-    // This is a placeholder - implement proper JWT validation
 
     $db = Database::getInstance();
 
     // Get statistics
     $stats = [
         'total' => 0,
-        'hot' => 0,
-        'warm' => 0,
-        'cold' => 0
+        'won' => 0,
+        'lost' => 0,
+        'new' => 0
     ];
 
-    $stmt = $db->query("SELECT lead_category, COUNT(*) as count FROM leads GROUP BY lead_category");
-    while ($row = $stmt->fetch()) {
-        $stats[strtolower($row['lead_category'])] = (int)$row['count'];
-        $stats['total'] += (int)$row['count'];
-    }
+    // Total leads
+    $stmt = $db->query("SELECT COUNT(*) as count FROM leads");
+    $stats['total'] = (int)$stmt->fetch()['count'];
+
+    // Won leads
+    $stmt = $db->query("SELECT COUNT(*) as count FROM leads WHERE deal_status = 'Won'");
+    $stats['won'] = (int)$stmt->fetch()['count'];
+
+    // Lost leads
+    $stmt = $db->query("SELECT COUNT(*) as count FROM leads WHERE deal_status = 'Lost'");
+    $stats['lost'] = (int)$stmt->fetch()['count'];
+
+    // New leads
+    $stmt = $db->query("SELECT COUNT(*) as count FROM leads WHERE lead_status = 'New'");
+    $stats['new'] = (int)$stmt->fetch()['count'];
 
     // Get recent leads
     $stmt = $db->query("SELECT lead_id, company_client_name, contact_person, mobile_number, lead_category FROM leads ORDER BY created_at DESC LIMIT 5");

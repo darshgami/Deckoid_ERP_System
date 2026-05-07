@@ -1,11 +1,19 @@
 <?php
 
-require_once 'database.php';
+require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/session.php';
 
 class AuthController
 {
+    /**
+     * Register a new user
+     * Uses BCRYPT for password hashing as per requirement
+     */
     public static function register($data)
     {
+        // Start session if not started
+        start_secure_session();
+
         // Validate input
         if (!isset($data['full_name']) || !isset($data['email']) || !isset($data['username']) || !isset($data['password'])) {
             throw new Exception('Missing required fields');
@@ -15,6 +23,7 @@ class AuthController
         $email = trim($data['email']);
         $username = trim($data['username']);
         $password = $data['password'];
+        $role = $data['role'] ?? 'staff'; // Default to staff
 
         if (empty($fullName) || empty($email) || empty($username) || empty($password)) {
             throw new Exception('All fields are required');
@@ -36,21 +45,28 @@ class AuthController
             throw new Exception('User already exists');
         }
 
-        // Hash password
+        // Hash password using BCRYPT
         $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
         // Generate UUID
         $id = self::generateUUID();
 
         // Insert user
-        $stmt = $db->prepare("INSERT INTO users (id, full_name, email, username, password_hash) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$id, $fullName, $email, $username, $passwordHash]);
+        $stmt = $db->prepare("INSERT INTO users (id, full_name, email, username, password_hash, role) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$id, $fullName, $email, $username, $passwordHash, $role]);
 
         return ['message' => 'User registered successfully', 'user_id' => $id];
     }
 
+    /**
+     * Login user and establish session
+     * Implements session regeneration for security
+     */
     public static function login($data)
     {
+        // Start session
+        start_secure_session();
+
         if (!isset($data['username']) || !isset($data['password'])) {
             throw new Exception('Username and password are required');
         }
@@ -59,7 +75,7 @@ class AuthController
         $password = $data['password'];
 
         $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT id, password_hash, status FROM users WHERE username = ? OR email = ?");
+        $stmt = $db->prepare("SELECT id, password_hash, status, role, full_name FROM users WHERE username = ? OR email = ?");
         $stmt->execute([$username, $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -71,73 +87,71 @@ class AuthController
             throw new Exception('Account is inactive');
         }
 
-        // Generate tokens
-        $accessToken = self::generateJWT($user['id']);
-        $refreshToken = self::generateRefreshToken();
+        // Regenerate session ID to prevent fixation
+        secure_session_regenerate();
 
-        // Store session
-        $sessionId = self::generateUUID();
-        $expiresAt = date('Y-m-d H:i:s', strtotime('+30 days'));
-        $stmt = $db->prepare("INSERT INTO sessions (id, user_id, refresh_token, ip_address, user_agent, expires_at) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $sessionId,
-            $user['id'],
-            $refreshToken,
-            $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
-            $_SERVER['HTTP_USER_AGENT'] ?? '',
-            $expiresAt
-        ]);
+        // Store user info in session
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $username;
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['full_name'] = $user['full_name'];
+        $_SESSION['last_activity'] = time();
 
         // Update last login
         $stmt = $db->prepare("UPDATE users SET last_login_at = NOW() WHERE id = ?");
         $stmt->execute([$user['id']]);
 
         return [
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
-            'expires_in' => 3600,
+            'message' => 'Login successful',
             'user' => [
                 'id' => $user['id'],
-                'username' => $username
+                'username' => $username,
+                'role' => $user['role']
             ]
         ];
     }
 
-    public static function logout($data)
+    /**
+     * Logout user and destroy session
+     */
+    public static function logout()
     {
-        if (!isset($data['refresh_token'])) {
-            throw new Exception('Refresh token is required');
+        start_secure_session();
+
+        // Unset all session variables
+        $_SESSION = array();
+
+        // Destroy cookie
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
         }
 
-        $db = Database::getInstance();
-        $stmt = $db->prepare("DELETE FROM sessions WHERE refresh_token = ?");
-        $stmt->execute([$data['refresh_token']]);
+        // Destroy session
+        session_destroy();
 
         return ['message' => 'Logged out successfully'];
     }
 
-    public static function refresh($data)
+    /**
+     * Check if user is logged in
+     */
+    public static function isLoggedIn()
     {
-        if (!isset($data['refresh_token'])) {
-            throw new Exception('Refresh token is required');
-        }
+        start_secure_session();
+        return isset($_SESSION['user_id']);
+    }
 
-        $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT user_id FROM sessions WHERE refresh_token = ? AND expires_at > NOW()");
-        $stmt->execute([$data['refresh_token']]);
-        $session = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$session) {
-            throw new Exception('Invalid or expired refresh token');
-        }
-
-        // Generate new access token
-        $accessToken = self::generateJWT($session['user_id']);
-
-        return [
-            'access_token' => $accessToken,
-            'expires_in' => 3600
-        ];
+    /**
+     * Get current user role
+     */
+    public static function getCurrentRole()
+    {
+        start_secure_session();
+        return $_SESSION['role'] ?? null;
     }
 
     private static function generateUUID()
@@ -153,29 +167,5 @@ class AuthController
             mt_rand(0, 0xffff),
             mt_rand(0, 0xffff)
         );
-    }
-
-    private static function generateJWT($userId)
-    {
-        // Simple JWT implementation (in production, use a proper JWT library)
-        $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
-        $payload = json_encode([
-            'user_id' => $userId,
-            'iat' => time(),
-            'exp' => time() + 3600
-        ]);
-
-        $headerEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($header));
-        $payloadEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($payload));
-
-        $signature = hash_hmac('sha256', $headerEncoded . "." . $payloadEncoded, Env::get('APP_KEY', 'default_secret_key'), true);
-        $signatureEncoded = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
-
-        return $headerEncoded . "." . $payloadEncoded . "." . $signatureEncoded;
-    }
-
-    private static function generateRefreshToken()
-    {
-        return bin2hex(random_bytes(32));
     }
 }

@@ -3,7 +3,11 @@
 require_once '../config/env.php';
 require_once '../includes/database.php';
 
-header('Access-Control-Allow-Origin: *');
+require_once '../includes/middleware.php';
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
+header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -17,14 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// Check authentication
-$headers = getallheaders();
-$authHeader = $headers['Authorization'] ?? '';
-if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-    http_response_code(401);
-    echo json_encode(['error' => 'Unauthorized']);
-    exit;
-}
+// Check authentication using middleware
+requireAuth();
 
 try {
     $db = Database::getInstance();
