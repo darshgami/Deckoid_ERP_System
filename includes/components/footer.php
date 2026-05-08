@@ -48,22 +48,36 @@
         // Sidebar Collapse (Desktop)
 
         function toggleSidebarCollapse() {
+            if (window.innerWidth < 1024) return; // Don't collapse on mobile
+
             const sidebar = document.getElementById('sidebar');
-            const mainContent = document.querySelector('.lg\\:ml-72');
+            const mainContent = document.getElementById('mainContent');
             const collapseIcon = document.getElementById('collapseIcon');
             
             sidebar.classList.toggle('sidebar-collapsed');
+            const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
             
-            if (sidebar.classList.contains('sidebar-collapsed')) {
-                mainContent.style.marginLeft = '88px';
-                collapseIcon.style.transform = 'rotate(180deg)';
+            if (isCollapsed) {
+                if (mainContent) mainContent.style.marginLeft = '80px';
+                if (collapseIcon) collapseIcon.style.transform = 'rotate(180deg)';
                 localStorage.setItem('sidebarCollapsed', 'true');
             } else {
-                mainContent.style.marginLeft = '18rem'; // 72 * 0.25rem
-                collapseIcon.style.transform = 'rotate(0deg)';
+                if (mainContent) mainContent.style.marginLeft = '256px';
+                if (collapseIcon) collapseIcon.style.transform = 'rotate(0deg)';
                 localStorage.setItem('sidebarCollapsed', 'false');
             }
         }
+
+        // Handle window resize to reset margins if needed
+        window.addEventListener('resize', () => {
+            const mainContent = document.getElementById('mainContent');
+            if (window.innerWidth < 1024) {
+                if (mainContent) mainContent.style.marginLeft = '0';
+            } else {
+                const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+                if (mainContent) mainContent.style.marginLeft = isCollapsed ? '80px' : '256px';
+            }
+        });
 
         // Mobile Sidebar Toggle
         function toggleMobileSidebar() {

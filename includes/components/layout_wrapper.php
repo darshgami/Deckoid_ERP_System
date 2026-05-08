@@ -26,9 +26,9 @@ function render_footer() {
 function layout_start($title = 'Deckoid ERP') {
     render_header($title);
     render_sidebar();
-    echo '<div class="lg:ml-72 min-h-screen flex flex-col transition-all duration-300">';
+    echo '<div id="mainContent" class="lg:ml-64 min-h-screen flex flex-col transition-all duration-300">';
     render_navbar();
-    echo '<main class="flex-1 p-8">';
+    echo '<main class="flex-1 p-4 lg:p-6">';
 }
 
 /**

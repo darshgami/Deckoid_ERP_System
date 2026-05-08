@@ -6,107 +6,165 @@ requireAuth();
 layout_start('Dashboard - Deckoid ERP');
 ?>
 
-<!-- Welcome Hero Section -->
-<div class="mb-10 relative overflow-hidden bg-primary-600 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-primary-200">
-    <div class="relative z-10">
-        <h1 class="text-4xl font-bold tracking-tight">Welcome back, <?php echo explode(' ', $_SESSION['full_name'] ?? 'Admin')[0]; ?>!</h1>
-        <p class="text-primary-100 mt-2 text-lg max-w-md font-medium opacity-90">Manage your leads, track conversions, and grow your business with Deckoid ERP.</p>
-        <div class="mt-8 flex gap-4">
-            <a href="add_lead.php" class="px-6 py-3 bg-white text-primary-600 font-bold rounded-2xl hover:bg-primary-50 transition-all shadow-lg flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                Add New Lead
-            </a>
-            <button class="px-6 py-3 bg-primary-500 text-white font-bold rounded-2xl hover:bg-primary-400 transition-all border border-primary-400/30 flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 17v-2a4 4 0 014-4h4m0 0l-4-4m4 4l-4 4"></path></svg>
-                View Analytics
-            </button>
-        </div>
-    </div>
-    <!-- Abstract Shapes -->
-    <div class="absolute top-[-20%] right-[-10%] w-96 h-96 bg-primary-500 rounded-full blur-3xl opacity-50"></div>
-    <div class="absolute bottom-[-20%] right-[10%] w-64 h-64 bg-primary-700 rounded-full blur-3xl opacity-30"></div>
-</div>
-
-<!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12" id="statsContainer">
-    <!-- Stat Item -->
-    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-14 h-14 bg-primary-50 rounded-2xl flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-500">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+<div class="grid grid-cols-1 gap-4 lg:gap-6">
+    <!-- Main Content -->
+    <div class="space-y-4 lg:space-y-6">
+        
+        <!-- Welcome Hero Section -->
+        <div class="relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-2xl lg:text-3xl font-black tracking-tight mb-2">Hello, <?php echo explode(' ', $_SESSION['full_name'] ?? 'Admin')[0]; ?>!</h1>
             </div>
-            <span class="text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-bold">+12%</span>
         </div>
-        <p class="text-neutral-500 font-bold text-sm uppercase tracking-widest">Total Leads</p>
-        <h3 class="text-4xl font-black text-neutral-900 mt-1" id="totalLeads">...</h3>
-    </div>
 
-    <!-- Stat Item -->
-    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <span class="text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-bold">+5%</span>
-        </div>
-        <p class="text-neutral-500 font-bold text-sm uppercase tracking-widest">Won Deals</p>
-        <h3 class="text-4xl font-black text-neutral-900 mt-1" id="wonLeads">...</h3>
-    </div>
-
-    <!-- Stat Item (Purple Highlight) -->
-    <div class="bg-primary-600 p-8 rounded-[2rem] shadow-xl shadow-primary-200 text-white hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
-        <p class="text-primary-200 font-bold text-sm uppercase tracking-widest relative z-10">New Leads</p>
-        <h3 class="text-5xl font-black mt-2 relative z-10" id="newLeads">...</h3>
-        <p class="text-primary-100 text-sm mt-4 font-medium relative z-10">Updated 5m ago</p>
-        <div class="absolute bottom-0 right-0 p-4 opacity-20 transform translate-y-4 translate-x-4 group-hover:translate-y-0 group-hover:translate-x-0 transition-transform duration-500">
-            <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
-        </div>
-    </div>
-
-    <!-- Stat Item -->
-    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
-        <div class="flex items-start justify-between mb-4">
-            <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <span class="text-red-600 bg-red-50 px-3 py-1 rounded-full text-xs font-bold">-2%</span>
-        </div>
-        <p class="text-neutral-500 font-bold text-sm uppercase tracking-widest">Lost Leads</p>
-        <h3 class="text-4xl font-black text-neutral-900 mt-1" id="lostLeads">...</h3>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-    <!-- Main Content Left (Recent Leads) -->
-    <div class="lg:col-span-2 space-y-10">
-        <!-- Recent Leads Table -->
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-neutral-100 overflow-hidden">
-            <div class="p-10 border-b border-neutral-50 flex items-center justify-between">
-                <div>
-                    <h3 class="text-2xl font-bold text-neutral-900 tracking-tight">Recent Leads</h3>
-                    <p class="text-neutral-400 font-medium text-sm mt-1">Latest potential customers registered.</p>
+        <!-- Statistics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 lg:gap-5">
+            <!-- Stat Card -->
+            <div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 hover:shadow-lg hover:shadow-neutral-200/50 transition-all duration-300 group overflow-hidden relative">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
                 </div>
-                <a href="leads.php" class="p-3 bg-neutral-50 text-neutral-500 hover:text-primary-600 rounded-2xl transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                <div>
+                    <p class="text-neutral-400 font-bold text-[10px] uppercase tracking-widest">Total Leads</p>
+                    <h3 class="text-2xl font-black text-neutral-900 mt-0.5" id="statTotalLeads">0</h3>
+                </div>
+                <div class="absolute bottom-0 right-0 w-24 h-24 bg-primary-50/50 rounded-tl-full -mr-8 -mb-8 transition-all group-hover:scale-150"></div>
+            </div>
+
+            <!-- Stat Card -->
+            <div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 hover:shadow-lg hover:shadow-neutral-200/50 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black">New</span>
+                </div>
+                <div>
+                    <p class="text-neutral-400 font-bold text-[10px] uppercase tracking-widest">New Leads</p>
+                    <h3 class="text-2xl font-black text-neutral-900 mt-0.5" id="statNewLeads">0</h3>
+                </div>
+            </div>
+
+            <!-- Stat Card -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <span class="text-orange-600 bg-orange-50 px-3 py-1 rounded-full text-xs font-black" id="statTodayFollowups">0</span>
+                </div>
+                <div>
+                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Followups</p>
+                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statFollowupLeads">0</h3>
+                </div>
+            </div>
+
+            <!-- Stat Card -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-black">Won</span>
+                </div>
+                <div>
+                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Converted</p>
+                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statConvertedLeads">0</h3>
+                </div>
+            </div>
+
+            <!-- Stat Card -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-red-600 bg-red-50 px-3 py-1 rounded-full text-xs font-black">Lost</span>
+                </div>
+                <div>
+                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Lost Leads</p>
+                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statLostLeads">0</h3>
+                </div>
+            </div>
+
+            <!-- Stat Card -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </div>
+                    <span class="text-purple-600 bg-purple-50 px-3 py-1 rounded-full text-xs font-black">Pending</span>
+                </div>
+                <div>
+                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Pending Payments</p>
+                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statPendingPayments">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6" id="analytics">
+            <!-- Monthly Growth Chart -->
+            <div class="bg-white p-5 lg:p-6 rounded-xl shadow-sm border border-neutral-100">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-neutral-900">Lead Growth</h3>
+                        <p class="text-neutral-400 text-xs font-medium">Monthly lead registration trend</p>
+                    </div>
+                    <select class="bg-neutral-50 border-none text-[10px] font-bold rounded-lg px-3 py-1.5 outline-none">
+                        <option>Last 6 Months</option>
+                        <option>Last Year</option>
+                    </select>
+                </div>
+                <div class="h-[250px]">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Source Distribution -->
+            <div class="bg-white p-5 lg:p-6 rounded-xl shadow-sm border border-neutral-100">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-neutral-900">Lead Sources</h3>
+                        <p class="text-neutral-400 text-xs font-medium">Where your leads come from</p>
+                    </div>
+                </div>
+                <div class="h-[250px] flex items-center justify-center">
+                    <canvas id="sourceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Leads Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
+            <div class="px-5 py-4 lg:px-6 lg:py-4 border-b border-neutral-50 flex items-center justify-between bg-neutral-50/30">
+                <div>
+                    <h3 class="text-lg font-bold text-neutral-900">Latest Registered Leads</h3>
+                    <p class="text-neutral-400 text-xs font-medium">Manage your most recent opportunities</p>
+                </div>
+                <a href="leads.php" class="px-4 py-2 bg-white border border-neutral-200 text-neutral-600 font-bold rounded-lg hover:bg-primary-600 hover:text-white hover:border-primary-600 transition-all text-xs shadow-sm">
+                    View All Leads
                 </a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
                         <tr class="bg-neutral-50/50">
-                            <th class="px-10 py-5 text-left text-xs font-bold text-neutral-400 uppercase tracking-widest">Client / Company</th>
-                            <th class="px-10 py-5 text-left text-xs font-bold text-neutral-400 uppercase tracking-widest">Category</th>
-                            <th class="px-10 py-5 text-left text-xs font-bold text-neutral-400 uppercase tracking-widest">Status</th>
-                            <th class="px-10 py-5 text-right text-xs font-bold text-neutral-400 uppercase tracking-widest">Action</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Client Name</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Category</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Status</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-right text-[10px] font-black text-neutral-400 uppercase tracking-widest">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="recentLeadsBody" class="divide-y divide-neutral-50">
+                    <tbody id="recentLeadsTable" class="divide-y divide-neutral-50">
                         <!-- Loading State -->
                         <tr>
-                            <td colspan="4" class="px-10 py-10 text-center">
-                                <div class="flex flex-col items-center gap-3 text-neutral-400">
-                                    <div class="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
-                                    <span class="font-bold text-sm uppercase tracking-widest">Fetching Data...</span>
+                            <td colspan="4" class="px-8 py-12 text-center">
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+                                    <span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Loading Data...</span>
                                 </div>
                             </td>
                         </tr>
@@ -114,67 +172,14 @@ layout_start('Dashboard - Deckoid ERP');
                 </table>
             </div>
         </div>
-    </div>
 
-    <!-- Right Sidebar Content -->
-    <div class="space-y-10">
-        <!-- Upcoming Followups -->
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-neutral-100 p-10">
-            <h3 class="text-xl font-bold text-neutral-900 tracking-tight mb-8">Upcoming Followups</h3>
-            <div class="space-y-6" id="followupsList">
-                <!-- Mock Followups -->
-                <div class="flex items-center gap-4 p-4 bg-neutral-50 rounded-3xl group cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-neutral-200/50 transition-all">
-                    <div class="w-12 h-12 bg-orange-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-orange-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-bold text-neutral-900 text-sm">Design Proposal</p>
-                        <p class="text-xs text-neutral-500">Tech Solutions • 2:00 PM</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 p-4 bg-neutral-50 rounded-3xl group cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-neutral-200/50 transition-all">
-                    <div class="w-12 h-12 bg-primary-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-primary-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-bold text-neutral-900 text-sm">Call back John</p>
-                        <p class="text-xs text-neutral-500">Marketing Lead • 4:30 PM</p>
-                    </div>
-                </div>
-                <button class="w-full py-4 text-primary-600 font-bold text-sm bg-primary-50 rounded-3xl hover:bg-primary-100 transition-all">View All Schedule</button>
-            </div>
-        </div>
-
-        <!-- Recent Activity Logs -->
-        <div class="bg-white rounded-[2.5rem] shadow-sm border border-neutral-100 p-10">
-            <h3 class="text-xl font-bold text-neutral-900 tracking-tight mb-8">Recent Activity</h3>
-            <div class="space-y-8 relative before:absolute before:left-[23px] before:top-2 before:bottom-2 before:w-[2px] before:bg-neutral-100" id="activityLogs">
-                <!-- Activity Item -->
-                <div class="flex gap-4 relative">
-                    <div class="w-12 h-12 bg-white border border-neutral-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-primary-600 z-10 shadow-sm">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-neutral-900">New lead added</p>
-                        <p class="text-xs text-neutral-500 mt-0.5">by Admin • 10m ago</p>
-                    </div>
-                </div>
-                <!-- Activity Item -->
-                <div class="flex gap-4 relative">
-                    <div class="w-12 h-12 bg-white border border-neutral-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-green-600 z-10 shadow-sm">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm font-bold text-neutral-900">Deal closed: Won</p>
-                        <p class="text-xs text-neutral-500 mt-0.5">by Staff • 2h ago</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+</div>
 </div>
 
 <script>
+    let monthlyChart, sourceChart;
+
     async function loadDashboard() {
         try {
             const response = await fetch('../api/dashboard.php');
@@ -183,88 +188,194 @@ layout_start('Dashboard - Deckoid ERP');
             if (data.error) throw new Error(data.error);
 
             // Update Stats
-            document.getElementById('totalLeads').textContent = data.stats.total || 0;
-            document.getElementById('wonLeads').textContent = data.stats.won || 0;
-            document.getElementById('lostLeads').textContent = data.stats.lost || 0;
-            document.getElementById('newLeads').textContent = data.stats.new || 0;
+            document.getElementById('statTotalLeads').textContent = data.stats.total || 0;
+            document.getElementById('statNewLeads').textContent = data.stats.new || 0;
+            document.getElementById('statFollowupLeads').textContent = data.stats.followup || 0;
+            document.getElementById('statConvertedLeads').textContent = data.stats.converted || 0;
+            document.getElementById('statLostLeads').textContent = data.stats.lost || 0;
+            document.getElementById('statPendingPayments').textContent = data.stats.pending_payments || 0;
+            
+            document.getElementById('statTodayFollowups').textContent = data.stats.today_followups || 0;
+
+
+            // Render Monthly Chart
+            renderMonthlyChart(data.monthly_stats);
+
+            // Render Source Chart
+            renderSourceChart(data.source_stats);
 
             // Update Recent Leads
-            const tbody = document.getElementById('recentLeadsBody');
+            const tbody = document.getElementById('recentLeadsTable');
             if (data.recent_leads && data.recent_leads.length > 0) {
                 tbody.innerHTML = data.recent_leads.map(lead => `
                     <tr class="hover:bg-neutral-50/50 transition-colors group">
-                        <td class="px-10 py-6">
-                            <div class="flex flex-col">
-                                <span class="font-bold text-neutral-900 group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
-                                <span class="text-xs text-neutral-400 font-medium">${lead.contact_person}</span>
+                        <td class="px-5 py-3 lg:px-6 lg:py-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 bg-neutral-100 rounded-lg flex-shrink-0 flex items-center justify-center text-neutral-600 font-bold text-[10px] group-hover:bg-primary-600 group-hover:text-white transition-all">
+                                    ${lead.company_client_name.charAt(0)}
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-neutral-900 text-[13px] group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
+                                    <span class="text-[9px] text-neutral-400 font-bold uppercase tracking-tight">${lead.contact_person}</span>
+                                </div>
                             </div>
                         </td>
-                        <td class="px-10 py-6">
-                            <span class="px-4 py-1.5 text-[10px] font-black rounded-xl uppercase tracking-widest ${
-                                lead.lead_category === 'Hot' ? 'bg-red-50 text-red-600' :
-                                lead.lead_category === 'Warm' ? 'bg-orange-50 text-orange-600' :
-                                'bg-blue-50 text-blue-600'
-                            }">${lead.lead_category}</span>
+                        <td class="px-5 py-3 lg:px-6 lg:py-3">
+                            ${renderCategoryBadge(lead.lead_category)}
                         </td>
-                        <td class="px-10 py-6">
+                        <td class="px-5 py-3 lg:px-6 lg:py-3">
                             <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full ${lead.lead_status === 'Converted' ? 'bg-green-500' : 'bg-primary-500'}"></div>
-                                <span class="text-sm font-bold text-neutral-900">${lead.lead_status}</span>
+                                <div class="w-1.5 h-1.5 rounded-full ${lead.lead_status === 'Converted' ? 'bg-green-500' : 'bg-primary-500'}"></div>
+                                <span class="text-[11px] font-bold text-neutral-700">${lead.lead_status}</span>
                             </div>
                         </td>
-                        <td class="px-10 py-6 text-right">
-                            <a href="leads.php" class="p-3 bg-neutral-50 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-2xl transition-all inline-block">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        <td class="px-5 py-3 lg:px-6 lg:py-3 text-right">
+                            <a href="leads.php" class="p-2 bg-neutral-50 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all inline-block shadow-sm">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </a>
                         </td>
                     </tr>
                 `).join('');
             } else {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-10 py-20 text-center text-neutral-400">No recent leads found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-16 text-center text-neutral-400 font-bold text-sm">No recent leads found.</td></tr>`;
             }
 
-            // Update Followups
-            const followupsList = document.getElementById('followupsList');
-            if (data.upcoming_followups && data.upcoming_followups.length > 0) {
-                followupsList.innerHTML = data.upcoming_followups.map(f => `
-                    <div class="flex items-center gap-4 p-4 bg-neutral-50 rounded-3xl group cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-neutral-200/50 transition-all">
-                        <div class="w-12 h-12 bg-orange-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-orange-600">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <div class="flex-1">
-                            <p class="font-bold text-neutral-900 text-sm">${f.company_client_name}</p>
-                            <p class="text-xs text-neutral-500">${f.next_followup_date}</p>
-                        </div>
-                    </div>
-                `).join('') + '<a href="leads.php" class="block w-full py-4 text-center text-primary-600 font-bold text-sm bg-primary-50 rounded-3xl hover:bg-primary-100 transition-all">View All Schedule</a>';
-            } else {
-                followupsList.innerHTML = '<div class="p-8 text-center text-neutral-400 text-sm font-medium">No upcoming followups</div>';
-            }
-
-            // Update Activity
-            const activityLogs = document.getElementById('activityLogs');
-            if (data.recent_activity && data.recent_activity.length > 0) {
-                activityLogs.innerHTML = data.recent_activity.map(a => `
-                    <div class="flex gap-4 relative">
-                        <div class="w-12 h-12 bg-white border border-neutral-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-primary-600 z-10 shadow-sm">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-neutral-900">${a.activity_type} lead for ${a.company_client_name}</p>
-                            <p class="text-xs text-neutral-500 mt-0.5">by ${a.user_name || 'System'} • ${new Date(a.created_at).toLocaleDateString()}</p>
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                activityLogs.innerHTML = '<div class="p-8 text-center text-neutral-400 text-sm font-medium">No recent activity</div>';
-            }
 
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
+    function renderCategoryBadge(category) {
+        if (!category) return '<span class="text-neutral-400 font-bold text-[10px]">-</span>';
+        
+        let styles = '';
+        let label = category;
+        
+        switch(category.toLowerCase()) {
+            case 'hot':
+                styles = 'background-color: #FF9D3D; color: #7A3E00;';
+                label = '🔥 Hot';
+                break;
+            case 'warm':
+                styles = 'background-color: #FEEE91; color: #7A6500;';
+                label = '☀️ Warm';
+                break;
+            case 'cold':
+                styles = 'background-color: #B0DEFF; color: #004A7A;';
+                label = '❄️ Cold';
+                break;
+            default:
+                styles = 'background-color: #f3f4f6; color: #4b5563;';
+        }
+        
+        return `<span class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm hover:brightness-95 transition-all cursor-default whitespace-nowrap inline-block" style="${styles}">${label}</span>`;
+    }
+
+    function renderMonthlyChart(stats) {
+        const ctx = document.getElementById('monthlyChart').getContext('2d');
+        if (monthlyChart) monthlyChart.destroy();
+
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(109, 93, 252, 0.2)');
+        gradient.addColorStop(1, 'rgba(109, 93, 252, 0)');
+
+        monthlyChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: stats.map(s => s.month),
+                datasets: [{
+                    label: 'New Leads',
+                    data: stats.map(s => s.count),
+                    borderColor: '#6D5DFC',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#6D5DFC',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f5f7fb' },
+                        ticks: { font: { weight: 'bold', size: 10 }, color: '#9ca3af' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { weight: 'bold', size: 10 }, color: '#9ca3af' }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderSourceChart(stats) {
+        const ctx = document.getElementById('sourceChart').getContext('2d');
+        if (sourceChart) sourceChart.destroy();
+
+        sourceChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: stats.map(s => s.source || 'Unknown'),
+                datasets: [{
+                    data: stats.map(s => s.count),
+                    backgroundColor: ['#6D5DFC', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe'],
+                    borderWidth: 0,
+                    hoverOffset: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            font: { weight: 'bold', size: 11, family: 'Inter' },
+                            color: '#4b5563'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function formatTimeAgo(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - date) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + 'm ago';
+        if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + 'h ago';
+        return date.toLocaleDateString();
+    }
+
+    function scrollToAnalytics() {
+        document.getElementById('analytics').scrollIntoView({ behavior: 'smooth' });
+    }
+
     document.addEventListener('DOMContentLoaded', loadDashboard);
 </script>
+
+<style>
+    body {
+        background-color: #F5F7FB;
+    }
+</style>
 
 <?php layout_end(); ?>

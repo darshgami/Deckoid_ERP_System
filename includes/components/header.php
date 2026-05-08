@@ -15,8 +15,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Styles -->
+    <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -29,10 +30,10 @@
                             300: '#c4b5fd',
                             400: '#a78bfa',
                             500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
+                            600: '#6D5DFC',
+                            700: '#5b4dfa',
+                            800: '#4a3df7',
+                            900: '#392df4',
                         },
                         neutral: {
                             50: '#f9fafb',
@@ -54,6 +55,7 @@
                         'xl': '0.75rem',
                         '2xl': '1rem',
                         '3xl': '1.5rem',
+                        '4xl': '2.5rem',
                     }
                 }
             }

@@ -35,8 +35,17 @@ try {
             }
         }
 
-        // Generate lead_id
-        $leadId = 'L' . date('Ymd') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        // Generate Lead ID DK0001 format
+        $lastIdStmt = $db->query("SELECT lead_id FROM leads WHERE lead_id LIKE 'DK%' ORDER BY lead_id DESC LIMIT 1");
+        $lastLead = $lastIdStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($lastLead) {
+            $lastNum = (int)substr($lastLead['lead_id'], 2);
+            $newNum = $lastNum + 1;
+        } else {
+            $newNum = 1;
+        }
+        $leadId = 'DK' . str_pad($newNum, 4, '0', STR_PAD_LEFT);
 
         // Check for duplicate mobile
         $stmt = $db->prepare("SELECT id FROM leads WHERE mobile_number = ?");
@@ -55,19 +64,19 @@ try {
         $stmt = $db->prepare("INSERT INTO leads (
             id, lead_id, lead_date, company_client_name, contact_person, mobile_number,
             alternative_number, email_id, city, state, source_of_lead, service_interested_in,
-            lead_category, lead_status, priority, next_followup_date, last_followup_notes,
+            lead_category, lead_status, priority, assigned_to, next_followup_date, last_followup_notes,
             requirement_details, estimated_budget, proposal_sent, meeting_scheduled,
             quotation_sent, deal_status, expected_closing_date, payment_status,
             client_onboard_date, project_start_date, project_status, reference_by,
             website_social_link, remarks_notes, created_by
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
         $stmt->execute([
             $id, $leadId, $input['lead_date'], $input['company_client_name'], $input['contact_person'],
             $input['mobile_number'], $input['alternative_number'] ?? null, $input['email_id'] ?? null,
             $input['city'] ?? null, $input['state'] ?? null, $input['source_of_lead'],
             $input['service_interested_in'] ?? null, $input['lead_category'], $input['lead_status'],
-            $input['priority'] ?? 'Medium', $input['next_followup_date'] ?? null,
+            $input['priority'] ?? 'Medium', $input['assigned_to'] ?? null, $input['next_followup_date'] ?? null,
             $input['last_followup_notes'] ?? null, $input['requirement_details'] ?? null,
             $input['estimated_budget'] ?? null, 
             isset($input['proposal_sent']) ? (bool)$input['proposal_sent'] : false,
@@ -116,6 +125,11 @@ try {
             $params[] = $_GET['status'];
         }
 
+        if (isset($_GET['service']) && !empty($_GET['service'])) {
+            $where[] = "service_interested_in = ?";
+            $params[] = $_GET['service'];
+        }
+
         if (isset($_GET['has_followup']) && $_GET['has_followup'] === 'true') {
             $where[] = "next_followup_date IS NOT NULL";
             
@@ -139,8 +153,13 @@ try {
         $totalRow = $countStmt->fetch();
         $total = $totalRow ? $totalRow['total'] : 0;
 
-        // Get leads
-        $stmt = $db->prepare("SELECT * FROM leads $whereClause ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        // Get leads with assigned user names
+        $stmt = $db->prepare("SELECT l.*, u.full_name as assigned_to_name, c.full_name as created_by_name 
+                             FROM leads l 
+                             LEFT JOIN users u ON l.assigned_to = u.id 
+                             LEFT JOIN users c ON l.created_by = c.id 
+                             $whereClause 
+                             ORDER BY l.created_at DESC LIMIT ? OFFSET ?");
         
         // Bind all parameters positionally
         $paramIndex = 1;
@@ -198,11 +217,11 @@ try {
         ];
 
         foreach ($allowedFields as $field) {
-            if (isset($input[$field])) {
+            if (array_key_exists($field, $input)) {
                 $updates[] = "$field = ?";
                 // Handle booleans for database
                 if (in_array($field, ['proposal_sent', 'meeting_scheduled', 'quotation_sent'])) {
-                    $params[] = (bool)$input[$field] ? 1 : 0;
+                    $params[] = ($input[$field] === '1' || $input[$field] === 1 || $input[$field] === true) ? 1 : 0;
                 } else {
                     $params[] = $input[$field];
                 }

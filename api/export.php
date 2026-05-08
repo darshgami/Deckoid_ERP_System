@@ -72,20 +72,28 @@ try {
     // Add UTF-8 BOM for Excel compatibility
     fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
-    // Add headers
+    // Add headers matching Excel exactly
     fputcsv($output, [
-        'Lead ID', 'Lead Date', 'Company/Client Name', 'Contact Person', 'Mobile Number',
-        'Alternative Number', 'Email ID', 'City', 'State', 'Source of Lead',
-        'Service Interested In', 'Lead Category', 'Lead Status', 'Priority',
-        'Next Followup Date', 'Last Followup Notes', 'Requirement Details',
-        'Estimated Budget', 'Proposal Sent', 'Meeting Scheduled', 'Quotation Sent',
-        'Deal Status', 'Expected Closing Date', 'Payment Status', 'Client Onboard Date',
-        'Project Start Date', 'Project Status', 'Reference By', 'Website/Social Link',
-        'Remarks/Notes', 'Created At'
+        'Lead ID', 'Lead Date', 'Company / Client Name', 'Contact Person', 'Mobile Number', 
+        'Alternative Number', 'Email ID', 'City', 'State', 'Source of Lead', 
+        'Service Interested In', 'Lead Category', 'Lead Status', 'Priority', 
+        'Assigned To', 'Next Follow-up Date', 'Last Follow-up Notes', 'Requirement Details', 
+        'Estimated Budget', 'Proposal Sent', 'Meeting Scheduled', 'Quotation Sent', 
+        'Deal Status', 'Expected Closing Date', 'Payment Status', 'Client Onboard Date', 
+        'Project Start Date', 'Project Status', 'Reference By', 'Website / Social Link', 'Remarks / Notes'
     ]);
 
     // Add data rows
     foreach ($leads as $lead) {
+        // Get assigned user name
+        $assignedTo = '-';
+        if ($lead['assigned_to']) {
+            $uStmt = $db->prepare("SELECT full_name FROM users WHERE id = ?");
+            $uStmt->execute([$lead['assigned_to']]);
+            $user = $uStmt->fetch();
+            if ($user) $assignedTo = $user['full_name'];
+        }
+
         fputcsv($output, [
             $lead['lead_id'],
             $lead['lead_date'],
@@ -101,6 +109,7 @@ try {
             $lead['lead_category'],
             $lead['lead_status'],
             $lead['priority'],
+            $assignedTo,
             $lead['next_followup_date'],
             $lead['last_followup_notes'],
             $lead['requirement_details'],
@@ -116,8 +125,7 @@ try {
             $lead['project_status'],
             $lead['reference_by'],
             $lead['website_social_link'],
-            $lead['remarks_notes'],
-            $lead['created_at']
+            $lead['remarks_notes']
         ]);
     }
 

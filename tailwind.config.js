@@ -18,10 +18,10 @@ module.exports = {
           300: '#c4b5fd',
           400: '#a78bfa',
           500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
+          600: '#6D5DFC',
+          700: '#5b4dfa',
+          800: '#4a3df7',
+          900: '#392df4',
         },
         neutral: {
           50: '#f9fafb',
@@ -80,6 +80,7 @@ module.exports = {
         lg: '0.5rem',
         xl: '0.75rem',
         '2xl': '1rem',
+        '3xl': '1.5rem',
         full: '9999px',
       },
       boxShadow: {
