@@ -1,534 +1,490 @@
 FRONTEND_GUIDELINES.md
-Lead Management ERP System Design System
-1. Design Principles
-1. Simplicity First
+Lead Management ERP System — Refined Modern SaaS ERP Design System
 
-The interface must prioritize fast business operations over visual complexity.
+UI DESIGN DIRECTION
+The ERP UI must follow a modern SaaS dashboard style similar to the provided reference UI:
 
-Rules:
 
-Avoid decorative UI
+Soft minimal interface
+
+
+Spacious layout
+
+
+White card-based containers
+
+
+Purple accent theme
+
+
+Light gray application background
+
+
+Rounded modern components
+
+
+Business-focused UX
+
+
+Fast operational workflow
+
+
+Premium but realistic ERP appearance
+
+
+The interface must NOT feel:
+
+
+AI-generated
+
+
+Over-designed
+
+
+Over-animated
+
+
+Gaming/dashboard flashy
+
+
+Glassmorphism-heavy
+
+
+The design must prioritize:
+
+
+Productivity
+
+
+Data visibility
+
+
+Form efficiency
+
+
+ERP readability
+
+
+Mobile responsiveness
+
+
+
+1. DESIGN PRINCIPLES
+
+1.1 Simplicity First
+The interface must prioritize operational speed over visual decoration.
+Rules
+
+
+Avoid unnecessary graphics
+
+
 Minimize clicks
-Use clear hierarchy
-Keep layouts predictable
-2. Data Readability
 
-Lead information must always remain easy to scan.
 
-Rules:
+Predictable layouts
+
+
+Consistent navigation
+
+
+Use whitespace intentionally
+
+
+Keep actions obvious
+
+
+
+1.2 Data Readability
+Lead information must remain easy to scan and process.
+Rules
+
+
+Strong typography hierarchy
+
 
 High contrast text
-Consistent spacing
-Structured tables
-Clear form grouping
-3. Speed & Efficiency
 
-Users should complete tasks quickly.
 
-Rules:
+Clear table spacing
+
+
+Structured form grouping
+
+
+Consistent row heights
+
+
+Minimal visual noise
+
+
+
+1.3 Workflow Efficiency
+Users should complete business tasks rapidly.
+Rules
+
 
 Large clickable targets
+
+
+Sticky save actions
+
+
 Inline validation
-Minimal animations
-Sticky actions where needed
-4. Responsive Professionalism
 
-The ERP must work reliably across desktop and mobile.
 
-Rules:
+Quick access navigation
 
-Mobile-first responsiveness
-No layout shifting
-Stable component sizing
-5. Consistency
 
-All components must behave consistently.
+Search-first workflows
 
-Rules:
 
-Same spacing system
+Fast-loading UI
+
+
+
+1.4 Modern SaaS Professionalism
+The ERP should feel like premium modern business software.
+Rules
+
+
+Rounded modern cards
+
+
+Soft shadows
+
+
+Minimal borders
+
+
+Spacious layouts
+
+
+Consistent card hierarchy
+
+
+Clean sidebar navigation
+
+
+
+1.5 Consistency
+All components must behave identically across screens.
+Rules
+
+
+Unified spacing system
+
+
+Same focus states
+
+
+Same hover behavior
+
+
 Same button hierarchy
-Same interaction states
+
+
 Same typography scale
-2. Design Tokens
-Color System
-Primary Color Scale
-Primary-50:  #eff6ff
-Primary-100: #dbeafe
-Primary-200: #bfdbfe
-Primary-300: #93c5fd
-Primary-400: #60a5fa
-Primary-500: #3b82f6
-Primary-600: #2563eb
-Primary-700: #1d4ed8
-Primary-800: #1e40af
-Primary-900: #1e3a8a
 
-Usage:
 
-Buttons
-Active states
-Links
-Navigation highlights
-Neutral Color Scale
-Neutral-50:  #f9fafb
-Neutral-100: #f3f4f6
-Neutral-200: #e5e7eb
-Neutral-300: #d1d5db
-Neutral-400: #9ca3af
-Neutral-500: #6b7280
-Neutral-600: #4b5563
-Neutral-700: #374151
-Neutral-800: #1f2937
-Neutral-900: #111827
+Same radius system
 
-Usage:
 
-Backgrounds
-Borders
-Body text
-Table rows
+
+2. DESIGN TOKENS
+
+2.1 COLOR SYSTEM
+
+Primary Purple Scale
+Primary-50:  #F3F0FF;Primary-100: #E9E2FF;Primary-200: #D6CAFF;Primary-300: #B9A5FF;Primary-400: #9B7DFF;Primary-500: #7C5CFC;Primary-600: #6D5DFC;Primary-700: #5B4AE6;Primary-800: #4C3BC7;Primary-900: #3D2FA1;
+Usage
+ColorUsagePrimary-500Primary buttonsPrimary-600Active sidebarPrimary-100Selected statesPrimary-50Light backgroundsPrimary-700Hover states
+
+Neutral Scale
+Neutral-50:  #F8FAFC;Neutral-100: #F1F5F9;Neutral-200: #E2E8F0;Neutral-300: #CBD5E1;Neutral-400: #94A3B8;Neutral-500: #64748B;Neutral-600: #475569;Neutral-700: #334155;Neutral-800: #1E293B;Neutral-900: #0F172A;
+
 Semantic Colors
-Success: #16a34a
-Warning: #d97706
-Error:   #dc2626
-Info:    #0284c7
+Success: #16A34A;Warning: #D97706;Error:   #DC2626;Info:    #0284C7;
 
-Usage Rules:
+Background Colors
+App Background:      #F5F7FB;Sidebar Background:  #FFFFFF;Card Background:     #FFFFFF;Input Background:    #FFFFFF;Table Hover:         #F8FAFC;
 
-Color	Usage
-Success	Save confirmation
-Warning	Pending actions
-Error	Validation/system errors
-Info	Notifications
-Typography
+Border Colors
+Border Light:  #E2E8F0;Border Medium: #CBD5E1;
+
+Text Colors
+Heading Text: #111827;Body Text:    #334155;Muted Text:   #64748B;Light Text:   #94A3B8;
+
+2.2 TYPOGRAPHY
+
 Font Families
-Primary Font:
-"Inter", sans-serif
+Primary Font:"Inter", sans-serif;Monospace:"JetBrains Mono", monospace;
 
-Monospace:
-"JetBrains Mono", monospace
 Font Size Scale
-xs:  0.75rem   (12px)
-sm:  0.875rem  (14px)
-base:1rem      (16px)
-lg:  1.125rem  (18px)
-xl:  1.25rem   (20px)
-2xl: 1.5rem    (24px)
-3xl: 1.875rem  (30px)
-4xl: 2.25rem   (36px)
+TokenSizexs0.75remsm0.875rembase1remlg1.125remxl1.25rem2xl1.5rem3xl1.875rem4xl2.25rem
+
 Font Weights
-Regular:   400
-Medium:    500
-Semibold:  600
-Bold:      700
+Regular:   400;Medium:    500;Semibold:  600;Bold:      700;
+
 Line Heights
-tight:   1.25
-normal:  1.5
-relaxed: 1.75
-Spacing Scale
-0  = 0px
-1  = 4px
-2  = 8px
-3  = 12px
-4  = 16px
-5  = 20px
-6  = 24px
-7  = 28px
-8  = 32px
-9  = 36px
-10 = 40px
-11 = 44px
-12 = 48px
-13 = 52px
-14 = 56px
-15 = 60px
-16 = 64px
-Border Radius
-none: 0rem
-sm:   0.125rem
-md:   0.375rem
-lg:   0.5rem
-xl:   0.75rem
-2xl:  1rem
-full: 9999px
-Shadow System
-Shadow-1:
-0 1px 2px rgba(0,0,0,0.05)
+tight:   1.25;normal:  1.5;relaxed: 1.75;
 
-Shadow-2:
-0 2px 6px rgba(0,0,0,0.08)
+2.3 SPACING SYSTEM
 
-Shadow-3:
-0 4px 12px rgba(0,0,0,0.10)
+TokenValue00px14px28px312px416px520px624px728px832px1040px1248px1456px1664px
 
-Shadow-4:
-0 8px 20px rgba(0,0,0,0.12)
+Recommended ERP Spacing
+AreaRecommendedCard Padding24pxSection Gap32pxForm Input Gap20pxTable Row Height56pxSidebar Item Height48px
 
-Shadow-5:
-0 12px 32px rgba(0,0,0,0.15)
-3. Component Library
-Button Component
-Primary Button
-<button
-className="
-inline-flex items-center justify-center
-rounded-lg
-bg-blue-600
-px-4 py-2
-text-sm font-medium text-white
-shadow-sm
-transition-all duration-200
-hover:bg-blue-700
-focus:outline-none
-focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-disabled:cursor-not-allowed
-disabled:bg-blue-300
-"
->
-Save Lead
-</button>
-Secondary Button
-<button
-className="
-inline-flex items-center justify-center
-rounded-lg
-border border-gray-300
-bg-white
-px-4 py-2
-text-sm font-medium text-gray-700
-shadow-sm
-transition-all duration-200
-hover:bg-gray-50
-focus:outline-none
-focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-disabled:cursor-not-allowed
-disabled:opacity-50
-"
->
-Cancel
-</button>
-Danger Button
-<button
-className="
-inline-flex items-center justify-center
-rounded-lg
-bg-red-600
-px-4 py-2
-text-sm font-medium text-white
-transition-all duration-200
-hover:bg-red-700
-focus:outline-none
-focus:ring-2 focus:ring-red-500 focus:ring-offset-2
-disabled:cursor-not-allowed
-disabled:bg-red-300
-"
->
-Delete
-</button>
-Button Sizes
-Size	Classes
-sm	px-3 py-1.5 text-xs
-md	px-4 py-2 text-sm
-lg	px-5 py-3 text-base
-Loading Button
-<button
-disabled
-className="
-inline-flex items-center justify-center
-rounded-lg
-bg-blue-400
-px-4 py-2
-text-sm font-medium text-white
-cursor-not-allowed
-"
->
-<svg className="mr-2 h-4 w-4 animate-spin" />
-Saving...
-</button>
-Usage Rules
-Variant	Usage
-Primary	Main actions
-Secondary	Optional actions
-Danger	Destructive actions
-Accessibility Requirements
-Must support keyboard focus
-Minimum 44px height
-Visible focus ring
-Proper button labels
-Input Component
-Default Input
-<input
-className="
-w-full
-rounded-lg
-border border-gray-300
-bg-white
-px-4 py-2
-text-sm text-gray-900
-shadow-sm
-transition-all duration-200
-placeholder:text-gray-400
-focus:border-blue-500
-focus:outline-none
-focus:ring-2 focus:ring-blue-500
-disabled:bg-gray-100
-disabled:cursor-not-allowed
-"
-/>
-Error Input
-<input
-className="
-w-full
-rounded-lg
-border border-red-500
-bg-white
-px-4 py-2
-text-sm text-gray-900
-focus:outline-none
-focus:ring-2 focus:ring-red-500
-"
-/>
-Input States
-State	Behavior
-Default	Neutral border
-Hover	Slight border darkening
-Focus	Blue ring
-Error	Red border
-Disabled	Gray background
-Accessibility
-Associate labels with inputs
-Required fields use aria-required="true"
-Error fields use aria-invalid="true"
-Card Component
-<div
-className="
-rounded-2xl
-border border-gray-200
-bg-white
-p-6
-shadow-sm
-transition-all duration-200
-hover:shadow-md
-"
->
-Card Content
-</div>
-Usage Rules
+2.4 BORDER RADIUS
+sm:   0.375rem;md:   0.5rem;lg:   0.75rem;xl:   1rem;2xl:  1.25rem;3xl:  1.5rem;full: 9999px;
 
-Use cards for:
+2.5 SHADOW SYSTEM
+Shadow-1:0 1px 2px rgba(15, 23, 42, 0.04);Shadow-2:0 4px 10px rgba(15, 23, 42, 0.06);Shadow-3:0 8px 20px rgba(15, 23, 42, 0.08);Shadow-4:0 12px 30px rgba(15, 23, 42, 0.10);Shadow-5:0 20px 40px rgba(15, 23, 42, 0.12);
 
-Dashboard widgets
-Forms
-Statistics
-Lead detail sections
-Modal Component
-<div
-className="
-fixed inset-0 z-50
-flex items-center justify-center
-bg-black/50
-p-4
-"
->
-<div
-className="
-w-full max-w-lg
-rounded-2xl
-bg-white
-p-6
-shadow-2xl
-"
->
-Modal Content
-</div>
-</div>
-Modal Accessibility
+3. LAYOUT SYSTEM
 
-Required:
+Main ERP Layout
+<div class="flex min-h-screen bg-[#F5F7FB]">  <!-- Sidebar -->  <aside class="hidden lg:flex w-[280px] flex-col bg-white border-r border-slate-200">  </aside>  <!-- Main Area -->  <div class="flex-1 flex flex-col">    <!-- Navbar -->    <header class="h-[80px] border-b border-slate-200 bg-white">    </header>    <!-- Content -->    <main class="flex-1 p-6 lg:p-8">    </main>  </div></div>
 
-role="dialog"
-aria-modal="true"
-ESC closes modal
-Focus trapped inside modal
-Alert / Toast Component
-Success Toast
-<div
-className="
-flex items-center
-rounded-lg
-border border-green-200
-bg-green-50
-px-4 py-3
-text-sm text-green-800
-shadow-sm
-"
->
-Lead saved successfully.
-</div>
-Error Toast
-<div
-className="
-flex items-center
-rounded-lg
-border border-red-200
-bg-red-50
-px-4 py-3
-text-sm text-red-800
-shadow-sm
-"
->
-Unable to save lead.
-</div>
-Loading States
-Table Loading
-<div className="animate-pulse space-y-3">
-  <div className="h-10 rounded bg-gray-200"></div>
-  <div className="h-10 rounded bg-gray-200"></div>
-  <div className="h-10 rounded bg-gray-200"></div>
-</div>
-Spinner Loading
-<div
-className="
-h-6 w-6
-animate-spin
-rounded-full
-border-4 border-blue-500
-border-t-transparent
-"
-></div>
-Empty States
-<div
-className="
-flex flex-col items-center justify-center
-rounded-2xl
-border border-dashed border-gray-300
-bg-gray-50
-p-10
-text-center
-"
->
-<h3 className="text-lg font-semibold text-gray-900">
-No Leads Found
-</h3>
+Container Width
+Max Width: 1440px;
 
-<p className="mt-2 text-sm text-gray-500">
-Try changing filters or add a new lead.
-</p>
-</div>
-4. Layout System
-Container Widths
-sm: 640px
-md: 768px
-lg: 1024px
-xl: 1280px
-2xl: 1536px
-Responsive Breakpoints
-sm: 640px
-md: 768px
-lg: 1024px
-xl: 1280px
-2xl: 1536px
 Grid System
-Columns: 12
-Gutter: 24px
-Max Width: 1280px
-Centered Layout
-<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-Content
-</div>
-Two Column Layout
-<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-  <div>Left</div>
-  <div>Right</div>
-</div>
-Sidebar Layout
-<div className="flex min-h-screen">
-  
-  <aside
-  className="
-  hidden w-64 border-r border-gray-200 bg-white lg:block
-  "
-  >
-  Sidebar
-  </aside>
+Columns: 12;Gap: 24px;
 
-  <main className="flex-1 bg-gray-50 p-6">
-  Main Content
-  </main>
+Dashboard Layout
+<div class="grid grid-cols-12 gap-6">  <div class="col-span-12 xl:col-span-8">    Main Content  </div>  <div class="col-span-12 xl:col-span-4">    Sidebar Widgets  </div></div>
 
-</div>
-5. Accessibility
-WCAG 2.1 AA Requirements
+4. SIDEBAR DESIGN
 
+Sidebar Rules
+
+
+White background
+
+
+Soft separators
+
+
+Rounded active item
+
+
+Icon + label alignment
+
+
+Minimal shadows
+
+
+Sticky sidebar
+
+
+
+Sidebar Item Style
+<aclass="flex items-center gap-3rounded-2xlpx-4 py-3text-sm font-mediumtext-slate-600transition-all duration-200hover:bg-violet-50hover:text-violet-600"></a>
+
+Active Sidebar Item
+<aclass="bg-violet-100text-violet-700shadow-sm"></a>
+
+5. NAVBAR DESIGN
+
+Navbar Structure
 Required:
 
-Contrast ratio minimum 4.5:1
-Keyboard accessibility
-Screen-reader labels
-Focus indicators visible
-Error messages readable
-Focus Indicators
-focus:ring-2
-focus:ring-blue-500
-focus:ring-offset-2
-Keyboard Navigation
 
-Required:
+Search bar
 
-TAB navigation
-ESC closes modal
-ENTER submits forms
-SPACE activates buttons
-Form Accessibility
 
-Required:
+Notification icon
 
-Labels linked via for
-Error messages linked using aria-describedby
-6. Animation System
-Duration Scale
-Fast:   150ms
-Normal: 200ms
-Slow:   300ms
-Easing
-ease-in-out
-Allowed Animations
-Animation	Usage
-Fade	Toasts
-Scale	Modals
-Pulse	Loading skeleton
-Hover elevation	Cards
-Avoid
 
-Do NOT animate:
+User profile
 
-Large layout shifts
-Table rendering
-Form typing
-Reduced Motion
-@media (prefers-reduced-motion: reduce)
 
-Rules:
+Mobile menu toggle
 
-Disable non-essential animations
-Remove transitions >100ms
-Final UI Direction
 
-The Lead Management ERP UI must feel:
+
+Navbar Style
+<headerclass="sticky top-0 z-30flex items-center justify-betweenbg-whitepx-6h-20border-b border-slate-200"></header>
+
+Search Bar Style
+<divclass="flex items-centerw-full max-w-xlrounded-2xlborder border-slate-200bg-slate-50px-4 h-12"></div>
+
+6. CARD SYSTEM
+
+Default Card
+<divclass="rounded-3xlbg-whiteborder border-slate-200shadow-smp-6"></div>
+
+Statistics Card
+<divclass="rounded-3xlbg-whitep-6shadow-smborder border-slate-200hover:shadow-mdtransition-all duration-200"></div>
+
+Hero Card (Purple Dashboard Card)
+<divclass="rounded-3xlbg-gradient-to-r from-violet-600 to-indigo-500p-8text-whiteshadow-lg"></div>
+
+7. TABLE DESIGN SYSTEM
+
+ERP Table Rules
+
+
+Large readable rows
+
+
+Sticky header
+
+
+Soft hover
+
+
+Minimal borders
+
+
+Rounded container
+
+
+
+Table Container
+<divclass="overflow-hiddenrounded-3xlborder border-slate-200bg-whiteshadow-sm"></div>
+
+Table Row
+<trclass="border-b border-slate-100hover:bg-slate-50transition-colors"></tr>
+
+Table Cell
+<td class="px-6 py-4 text-sm text-slate-700"></td>
+
+8. FORM DESIGN SYSTEM
+
+Form Container
+<divclass="rounded-3xlbg-whiteborder border-slate-200shadow-smp-8"></div>
+
+Input Style
+<inputclass="w-fullh-12rounded-2xlborder border-slate-200bg-whitepx-4text-smtext-slate-800placeholder:text-slate-400transition-all duration-200focus:border-violet-500focus:ring-4focus:ring-violet-100focus:outline-none"/>
+
+Select Dropdown Style
+<selectclass="w-fullh-12rounded-2xlborder border-slate-200bg-whitepx-4text-smfocus:border-violet-500focus:ring-4focus:ring-violet-100"></select>
+
+Form Section Card
+<divclass="rounded-2xlborder border-slate-200bg-slate-50p-6"></div>
+
+Sticky Action Footer
+<divclass="sticky bottom-0bg-white/90backdrop-blur-smborder-t border-slate-200p-4flex justify-end gap-4"></div>
+
+9. BUTTON SYSTEM
+
+Primary Button
+<buttonclass="inline-flex items-center justify-centerh-12rounded-2xlbg-violet-600px-6text-sm font-mediumtext-whitetransition-all duration-200hover:bg-violet-700focus:ring-4focus:ring-violet-200">Save Lead</button>
+
+Secondary Button
+<buttonclass="inline-flex items-center justify-centerh-12rounded-2xlborder border-slate-200bg-whitepx-6text-sm font-mediumtext-slate-700hover:bg-slate-50">Cancel</button>
+
+Danger Button
+<buttonclass="inline-flex items-center justify-centerh-12rounded-2xlbg-red-600px-6text-sm font-mediumtext-whitehover:bg-red-700">Delete</button>
+
+10. RESPONSIVE STRATEGY
+
+Breakpoints
+sm: 640px;md: 768px;lg: 1024px;xl: 1280px;2xl: 1536px;
+
+Mobile Behavior
+ComponentBehaviorSidebarOffcanvasTablesHorizontal scrollFormsSingle columnCardsStackedNavbarCompact
+
+Tablet Behavior
+ComponentBehaviorSidebarCollapsibleDashboard2-columnFormsMixed grid
+
+Desktop Behavior
+ComponentBehaviorSidebarFixedDashboardFull gridTablesFull-width
+
+11. ACCESSIBILITY
+
+Requirements
+
+
+WCAG 2.1 AA
+
+
+Keyboard navigation
+
+
+Visible focus states
+
+
+Proper labels
+
+
+Accessible modals
+
+
+High contrast ratios
+
+
+
+Focus Ring
+focus:ring-4focus:ring-violet-100
+
+Keyboard Rules
+KeyActionTABNavigateESCClose modalENTERSubmitSPACEActivate button
+
+12. ANIMATION SYSTEM
+
+Animation Philosophy
+Animations must feel:
+
+
+Fast
+
+
+Minimal
+
 
 Professional
-Fast
-Lightweight
-Real business-oriented
-Easy for office staff
-Minimal learning curve
-Consistent across all screens
 
-Avoid:
 
-Fancy gradients
-Over-animation
-Glassmorphism
-AI-generated aesthetics
-Oversized components
+Non-distracting
+
+
+
+Durations
+Fast:   150ms;Normal: 200ms;Slow:   300ms;
+
+Allowed Animations
+AnimationUsageFadeToastsElevationCard hoverScaleModal openPulseSkeleton loading
+
+Avoid
+Do NOT animate:
+
+
+Tables
+
+
+Layout shifts
+
+
+Form typing
+
+
+Sidebar resize aggressively
+
+
+
+13. FINAL UI DIRECTION
+The ERP must feel:
+✅ Professional
+✅ Modern SaaS-like
+✅ Fast operationally
+✅ Spacious and clean
+✅ Easy for office staff
+✅ Business-oriented
+✅ Premium but realistic
+✅ Mobile responsive
+✅ Data-focused
+
+STRICTLY AVOID
+❌ Heavy gradients
+❌ Neon colors
+❌ Glassmorphism
+❌ Over-animation
+❌ Oversized UI
+❌ Gaming dashboard style
+❌ AI-generated aesthetics
+❌ Crowded layouts
+❌ Too many accent colors

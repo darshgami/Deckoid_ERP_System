@@ -12,7 +12,7 @@ layout_start('Dashboard - Deckoid ERP');
         <h1 class="text-4xl font-bold tracking-tight">Welcome back, <?php echo explode(' ', $_SESSION['full_name'] ?? 'Admin')[0]; ?>!</h1>
         <p class="text-primary-100 mt-2 text-lg max-w-md font-medium opacity-90">Manage your leads, track conversions, and grow your business with Deckoid ERP.</p>
         <div class="mt-8 flex gap-4">
-            <a href="leads.php?action=add" class="px-6 py-3 bg-white text-primary-600 font-bold rounded-2xl hover:bg-primary-50 transition-all shadow-lg flex items-center gap-2">
+            <a href="add_lead.php" class="px-6 py-3 bg-white text-primary-600 font-bold rounded-2xl hover:bg-primary-50 transition-all shadow-lg flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
                 Add New Lead
             </a>
@@ -188,6 +188,7 @@ layout_start('Dashboard - Deckoid ERP');
             document.getElementById('lostLeads').textContent = data.stats.lost || 0;
             document.getElementById('newLeads').textContent = data.stats.new || 0;
 
+            // Update Recent Leads
             const tbody = document.getElementById('recentLeadsBody');
             if (data.recent_leads && data.recent_leads.length > 0) {
                 tbody.innerHTML = data.recent_leads.map(lead => `
@@ -207,34 +208,57 @@ layout_start('Dashboard - Deckoid ERP');
                         </td>
                         <td class="px-10 py-6">
                             <div class="flex items-center gap-2">
-                                <div class="w-2 h-2 rounded-full bg-green-500"></div>
-                                <span class="text-sm font-bold text-neutral-900">Active</span>
+                                <div class="w-2 h-2 rounded-full ${lead.lead_status === 'Converted' ? 'bg-green-500' : 'bg-primary-500'}"></div>
+                                <span class="text-sm font-bold text-neutral-900">${lead.lead_status}</span>
                             </div>
                         </td>
                         <td class="px-10 py-6 text-right">
-                            <button class="p-3 bg-neutral-50 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-2xl transition-all">
+                            <a href="leads.php" class="p-3 bg-neutral-50 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-2xl transition-all inline-block">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 `).join('');
             } else {
-                tbody.innerHTML = \`
-                    <tr>
-                        <td colspan="4" class="px-10 py-20 text-center">
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="w-20 h-20 bg-neutral-50 rounded-full flex items-center justify-center text-neutral-200">
-                                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
-                                </div>
-                                <div>
-                                    <p class="font-bold text-neutral-900">No leads found</p>
-                                    <p class="text-sm text-neutral-400 mt-1">Start by adding your first lead.</p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                \`;
+                tbody.innerHTML = `<tr><td colspan="4" class="px-10 py-20 text-center text-neutral-400">No recent leads found.</td></tr>`;
             }
+
+            // Update Followups
+            const followupsList = document.getElementById('followupsList');
+            if (data.upcoming_followups && data.upcoming_followups.length > 0) {
+                followupsList.innerHTML = data.upcoming_followups.map(f => `
+                    <div class="flex items-center gap-4 p-4 bg-neutral-50 rounded-3xl group cursor-pointer hover:bg-white hover:shadow-xl hover:shadow-neutral-200/50 transition-all">
+                        <div class="w-12 h-12 bg-orange-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-orange-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-bold text-neutral-900 text-sm">${f.company_client_name}</p>
+                            <p class="text-xs text-neutral-500">${f.next_followup_date}</p>
+                        </div>
+                    </div>
+                `).join('') + '<a href="leads.php" class="block w-full py-4 text-center text-primary-600 font-bold text-sm bg-primary-50 rounded-3xl hover:bg-primary-100 transition-all">View All Schedule</a>';
+            } else {
+                followupsList.innerHTML = '<div class="p-8 text-center text-neutral-400 text-sm font-medium">No upcoming followups</div>';
+            }
+
+            // Update Activity
+            const activityLogs = document.getElementById('activityLogs');
+            if (data.recent_activity && data.recent_activity.length > 0) {
+                activityLogs.innerHTML = data.recent_activity.map(a => `
+                    <div class="flex gap-4 relative">
+                        <div class="w-12 h-12 bg-white border border-neutral-100 rounded-2xl flex-shrink-0 flex items-center justify-center text-primary-600 z-10 shadow-sm">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-neutral-900">${a.activity_type} lead for ${a.company_client_name}</p>
+                            <p class="text-xs text-neutral-500 mt-0.5">by ${a.user_name || 'System'} • ${new Date(a.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                activityLogs.innerHTML = '<div class="p-8 text-center text-neutral-400 text-sm font-medium">No recent activity</div>';
+            }
+
         } catch (error) {
             console.error('Error:', error);
         }

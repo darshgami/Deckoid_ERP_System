@@ -295,19 +295,7 @@ Edge Cases
 No results found
 Invalid filter combination
 Large dataset search
-Scenario 3 — Export Leads
-Steps
-User applies filters
-Clicks Export Excel
-System generates file
-File downloads automatically
-Expected Outcome
-Excel file contains filtered data only
-Edge Cases
-Empty result export
-Large export file
-Interrupted download
-Invalid characters in notes 8. Non-Functional Requirements
+8. Non-Functional Requirements
 Performance
 Page load time < 3 seconds
 Search/filter response < 2 seconds

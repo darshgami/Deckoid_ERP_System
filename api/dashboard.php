@@ -54,12 +54,28 @@ try {
     $stats['new'] = (int)$stmt->fetch()['count'];
 
     // Get recent leads
-    $stmt = $db->query("SELECT lead_id, company_client_name, contact_person, mobile_number, lead_category FROM leads ORDER BY created_at DESC LIMIT 5");
+    $stmt = $db->query("SELECT lead_id, company_client_name, contact_person, mobile_number, lead_category, lead_status FROM leads ORDER BY created_at DESC LIMIT 5");
     $recentLeads = $stmt->fetchAll();
+
+    // Get upcoming followups
+    $today = date('Y-m-d');
+    $stmt = $db->prepare("SELECT lead_id, company_client_name, contact_person, next_followup_date, last_followup_notes FROM leads WHERE next_followup_date >= ? ORDER BY next_followup_date ASC LIMIT 5");
+    $stmt->execute([$today]);
+    $upcomingFollowups = $stmt->fetchAll();
+
+    // Get recent activity
+    $stmt = $db->query("SELECT l.company_client_name, u.full_name as user_name, al.activity_type, al.created_at 
+                        FROM lead_activity_logs al 
+                        JOIN leads l ON al.lead_id = l.id 
+                        LEFT JOIN users u ON al.user_id = u.id 
+                        ORDER BY al.created_at DESC LIMIT 5");
+    $recentActivity = $stmt->fetchAll();
 
     echo json_encode([
         'stats' => $stats,
-        'recent_leads' => $recentLeads
+        'recent_leads' => $recentLeads,
+        'upcoming_followups' => $upcomingFollowups,
+        'recent_activity' => $recentActivity
     ]);
 
 } catch (Exception $e) {
