@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Indexes for users (using CREATE INDEX IF NOT EXISTS)
-CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_status ON users(status);
 
 -- Create sessions table
 CREATE TABLE IF NOT EXISTS sessions (
@@ -30,8 +30,8 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 
 -- Indexes for sessions
-CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
-CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
+CREATE INDEX idx_sessions_user_id ON sessions(user_id);
+CREATE INDEX idx_sessions_expires_at ON sessions(expires_at);
 
 -- Create leads table
 CREATE TABLE IF NOT EXISTS leads (
@@ -75,20 +75,21 @@ CREATE TABLE IF NOT EXISTS leads (
 );
 
 -- Indexes for leads
-CREATE INDEX IF NOT EXISTS idx_leads_mobile_number ON leads(mobile_number);
-CREATE INDEX IF NOT EXISTS idx_leads_email_id ON leads(email_id);
-CREATE INDEX IF NOT EXISTS idx_leads_lead_status ON leads(lead_status);
-CREATE INDEX IF NOT EXISTS idx_leads_priority ON leads(priority);
-CREATE INDEX IF NOT EXISTS idx_leads_city ON leads(city);
-CREATE INDEX IF NOT EXISTS idx_leads_deal_status ON leads(deal_status);
-CREATE INDEX IF NOT EXISTS idx_leads_payment_status ON leads(payment_status);
-CREATE INDEX IF NOT EXISTS idx_leads_assigned_to ON leads(assigned_to);
+CREATE INDEX idx_leads_mobile_number ON leads(mobile_number);
+CREATE INDEX idx_leads_email_id ON leads(email_id);
+CREATE INDEX idx_leads_lead_status ON leads(lead_status);
+CREATE INDEX idx_leads_priority ON leads(priority);
+CREATE INDEX idx_leads_city ON leads(city);
+CREATE INDEX idx_leads_deal_status ON leads(deal_status);
+CREATE INDEX idx_leads_payment_status ON leads(payment_status);
+CREATE INDEX idx_leads_assigned_to ON leads(assigned_to);
 
 -- Create lead_activity_logs table
 CREATE TABLE IF NOT EXISTS lead_activity_logs (
     id CHAR(36) PRIMARY KEY,
     lead_id CHAR(36) NOT NULL,
     user_id CHAR(36) NULL,
+    company_client_name VARCHAR(255) NULL,
     activity_type VARCHAR(100) NOT NULL,
     old_value TEXT NULL,
     new_value TEXT NULL,

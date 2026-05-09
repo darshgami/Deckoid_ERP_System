@@ -28,6 +28,18 @@ class DatabaseSetup
         }
     }
 
+    public function dropDatabase()
+    {
+        $database = Env::require('DB_DATABASE');
+
+        try {
+            $this->pdo->exec("DROP DATABASE IF EXISTS `$database`");
+            echo "Database '$database' dropped successfully.\n";
+        } catch (PDOException $e) {
+            die('Failed to drop database: ' . $e->getMessage() . PHP_EOL);
+        }
+    }
+
     public function createDatabase()
     {
         $database = Env::require('DB_DATABASE');
@@ -57,11 +69,15 @@ class DatabaseSetup
         $sql = file_get_contents($schemaFile);
 
         try {
+            // Remove comments (single line and multi-line)
+            $sql = preg_replace('/--.*$/m', '', $sql);
+            $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
+            
             // Split SQL into individual statements
             $statements = array_filter(array_map('trim', explode(';', $sql)));
 
             foreach ($statements as $statement) {
-                if (!empty($statement) && !preg_match('/^--/', $statement)) {
+                if (!empty($statement)) {
                     $this->pdo->exec($statement);
                 }
             }
@@ -69,6 +85,8 @@ class DatabaseSetup
             echo "All tables created successfully.\n";
         } catch (PDOException $e) {
             die('Migration failed: ' . $e->getMessage() . PHP_EOL);
+        } catch (Exception $e) {
+            die('Unexpected error: ' . $e->getMessage() . PHP_EOL);
         }
     }
 
@@ -123,9 +141,10 @@ class DatabaseSetup
 echo "Starting database setup...\n";
 
 $setup = new DatabaseSetup();
+$setup->dropDatabase();
 $setup->createDatabase();
 $setup->runMigrations();
 $setup->seedSampleData();
 
 echo "\nDatabase setup completed successfully!\n";
-echo "You can now access the application at: http://localhost/admin/login.php\n";
+echo "You can now access the application at: http://localhost/login.php\n";

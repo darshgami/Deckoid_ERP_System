@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/session.php';
+require_once __DIR__ . '/utils.php';
 
 class AuthController
 {
@@ -49,7 +50,7 @@ class AuthController
         $passwordHash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
         // Generate UUID
-        $id = self::generateUUID();
+        $id = generateUUID();
 
         // Insert user
         $stmt = $db->prepare("INSERT INTO users (id, full_name, email, username, password_hash, role) VALUES (?, ?, ?, ?, ?, ?)");
@@ -152,20 +153,5 @@ class AuthController
     {
         start_secure_session();
         return $_SESSION['role'] ?? null;
-    }
-
-    private static function generateUUID()
-    {
-        return sprintf(
-            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 0x3fff) | 0x8000,
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
-        );
     }
 }

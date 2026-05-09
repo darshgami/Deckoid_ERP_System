@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/middleware.php';
 require_once '../includes/components/layout_wrapper.php';
-requireAuth();
+requireAdmin();
 
 layout_start('Activity Logs - Deckoid ERP');
 ?>
@@ -39,9 +39,11 @@ layout_start('Activity Logs - Deckoid ERP');
 
         try {
             const response = await fetch(`../api/logs.php?page=${page}&limit=20`);
-            const data = await response.json();
+            const res = await response.json();
 
-            if (data.error) throw new Error(data.error);
+            if (!res.success) throw new Error(res.message);
+            
+            const data = res.data;
 
             if (data.data.length === 0 && page === 1) {
                 container.innerHTML = '<div class="text-center py-12 text-neutral-400 font-medium text-sm">No activity logs found.</div>';

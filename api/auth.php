@@ -2,9 +2,9 @@
 
 require_once __DIR__ . '/../config/env.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/utils.php';
 
 header('Content-Type: application/json');
-// Adjust CORS for session-based auth (Credentials must be true)
 header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
@@ -23,36 +23,41 @@ try {
 
         if (strpos($path, '/register') !== false) {
             $result = AuthController::register($input);
-            echo json_encode($result);
+            ApiResponse::send(ApiResponse::success($result['message'], ['user_id' => $result['user_id']]));
         } elseif (strpos($path, '/login') !== false) {
             $result = AuthController::login($input);
-            echo json_encode($result);
+            ApiResponse::send(ApiResponse::success($result['message'], ['user' => $result['user']]));
         } elseif (strpos($path, '/logout') !== false) {
             $result = AuthController::logout();
-            echo json_encode($result);
+            ApiResponse::send(ApiResponse::success($result['message']));
         } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Endpoint not found']);
+            ApiResponse::send(ApiResponse::error('The requested endpoint was not found'), 404);
         }
     } elseif ($method === 'GET') {
-        // Status check endpoint
         if (strpos($path, '/status') !== false) {
-            echo json_encode([
+            ApiResponse::send(ApiResponse::success('Auth status retrieved', [
                 'isLoggedIn' => AuthController::isLoggedIn(),
                 'user' => [
                     'username' => $_SESSION['username'] ?? null,
                     'role' => $_SESSION['role'] ?? null
                 ]
-            ]);
+            ]));
         } else {
-            http_response_code(404);
-            echo json_encode(['error' => 'Endpoint not found']);
+            ApiResponse::send(ApiResponse::error('The requested endpoint was not found'), 404);
         }
     } else {
-        http_response_code(405);
-        echo json_encode(['error' => 'Method not allowed']);
+        ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
-}
+    // Log the actual technical error internally
+    Logger::error('Auth API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    
+    // Send a friendly message to the user
+    $message = $e->getMessage();
+    // Only allow specific "safe" messages to pass through, otherwise use a generic one
+    $safeMessages = ['User already exists', 'Invalid credentials', 'Account is inactive', 'Missing required fields', 'Password must be at least 8 characters', 'All fields are required', 'Invalid email format'];
+    
+    $userFriendlyMessage = in_array($message, $safeMessages) ? $message : 'Something went wrong while processing your request. Please try again.';
+    
+    ApiResponse::send(ApiResponse::error($userFriendlyMessage), 400);
+}

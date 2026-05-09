@@ -39,7 +39,6 @@ layout_start('Dashboard - Deckoid ERP');
                     <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <span class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full text-[10px] font-black">New</span>
                 </div>
                 <div>
                     <p class="text-neutral-400 font-bold text-[10px] uppercase tracking-widest">New Leads</p>
@@ -48,12 +47,11 @@ layout_start('Dashboard - Deckoid ERP');
             </div>
 
             <!-- Stat Card -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
+                    <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-500">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     </div>
-                    <span class="text-orange-600 bg-orange-50 px-3 py-1 rounded-full text-xs font-black" id="statTodayFollowups">0</span>
                 </div>
                 <div>
                     <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Followups</p>
@@ -62,12 +60,11 @@ layout_start('Dashboard - Deckoid ERP');
             </div>
 
             <!-- Stat Card -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
+                    <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-500">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <span class="text-green-600 bg-green-50 px-3 py-1 rounded-full text-xs font-black">Won</span>
                 </div>
                 <div>
                     <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Converted</p>
@@ -76,12 +73,11 @@ layout_start('Dashboard - Deckoid ERP');
             </div>
 
             <!-- Stat Card -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
+                    <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-all duration-500">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
-                    <span class="text-red-600 bg-red-50 px-3 py-1 rounded-full text-xs font-black">Lost</span>
                 </div>
                 <div>
                     <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Lost Leads</p>
@@ -90,12 +86,11 @@ layout_start('Dashboard - Deckoid ERP');
             </div>
 
             <!-- Stat Card -->
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100 hover:shadow-xl hover:shadow-neutral-200/50 transition-all duration-300 group">
                 <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                    <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     </div>
-                    <span class="text-purple-600 bg-purple-50 px-3 py-1 rounded-full text-xs font-black">Pending</span>
                 </div>
                 <div>
                     <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Pending Payments</p>
@@ -183,9 +178,11 @@ layout_start('Dashboard - Deckoid ERP');
     async function loadDashboard() {
         try {
             const response = await fetch('../api/dashboard.php');
-            const data = await response.json();
+            const res = await response.json();
 
-            if (data.error) throw new Error(data.error);
+            if (!res.success) throw new Error(res.message);
+            
+            const data = res.data;
 
             // Update Stats
             document.getElementById('statTotalLeads').textContent = data.stats.total || 0;
@@ -195,7 +192,10 @@ layout_start('Dashboard - Deckoid ERP');
             document.getElementById('statLostLeads').textContent = data.stats.lost || 0;
             document.getElementById('statPendingPayments').textContent = data.stats.pending_payments || 0;
             
-            document.getElementById('statTodayFollowups').textContent = data.stats.today_followups || 0;
+            const followupsBadge = document.getElementById('statTodayFollowups');
+            if (followupsBadge) {
+                followupsBadge.textContent = data.stats.today_followups || 0;
+            }
 
 
             // Render Monthly Chart

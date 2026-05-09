@@ -236,20 +236,36 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-neutral-100">
-            <button type="button" onclick="window.location.href='leads.php'" class="px-6 py-2 bg-neutral-100 text-neutral-600 font-bold rounded-xl hover:bg-neutral-200 transition-all text-sm">
-                Cancel
-            </button>
-            <button type="submit" id="saveLeadBtn" class="px-6 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all flex items-center gap-2 text-sm">
-                <span>Save Lead Details</span>
-                <svg id="loadingIcon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-            </button>
+        <div class="flex items-center justify-between mt-6 pt-6 border-t border-neutral-100">
+            <div class="flex gap-3">
+                <button type="button" id="cancelBtn" onclick="window.location.href='leads.php'" class="px-6 py-2 bg-neutral-100 text-neutral-600 font-bold rounded-xl hover:bg-neutral-200 transition-all text-sm hidden">
+                    Cancel
+                </button>
+                <button type="button" id="prevBtn" onclick="navigate('prev')" class="px-6 py-2 bg-neutral-100 text-neutral-600 font-bold rounded-xl hover:bg-neutral-200 transition-all text-sm hidden">
+                    Previous
+                </button>
+            </div>
+            
+            <div class="flex gap-3">
+                <button type="button" id="nextBtn" onclick="navigate('next')" class="px-6 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all flex items-center gap-2 text-sm">
+                    <span>Next Step</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                </button>
+                <button type="submit" id="saveLeadBtn" class="px-6 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all flex items-center gap-2 text-sm hidden">
+                    <span>Save Lead Details</span>
+                    <svg id="loadingIcon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </button>
+            </div>
         </div>
     </form>
 </div>
 
 <script>
+    let currentTab = 'basic';
+    const tabs = ['basic', 'sales', 'project'];
+
     function switchTab(tab) {
+        currentTab = tab;
         document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
         document.getElementById('content-' + tab).classList.remove('hidden');
         
@@ -261,6 +277,53 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         const activeTab = document.getElementById('tab-' + tab);
         activeTab.classList.remove('border-transparent', 'text-neutral-400');
         activeTab.classList.add('border-primary-600', 'text-primary-600');
+
+        // Update Buttons Visibility
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const saveBtn = document.getElementById('saveLeadBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        if (tab === 'basic') {
+            prevBtn.classList.add('hidden');
+            cancelBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            saveBtn.classList.add('hidden');
+        } else if (tab === 'sales') {
+            prevBtn.classList.remove('hidden');
+            cancelBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            saveBtn.classList.add('hidden');
+        } else if (tab === 'project') {
+            prevBtn.classList.remove('hidden');
+            cancelBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            saveBtn.classList.remove('hidden');
+        }
+    }
+
+    function navigate(direction) {
+        const currentIndex = tabs.indexOf(currentTab);
+        if (direction === 'next' && currentIndex < tabs.length - 1) {
+            // Optional: Basic validation before moving next
+            const currentContent = document.getElementById('content-' + currentTab);
+            const inputs = currentContent.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    input.reportValidity();
+                    isValid = false;
+                }
+            });
+            
+            if (isValid) {
+                switchTab(tabs[currentIndex + 1]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        } else if (direction === 'prev' && currentIndex > 0) {
+            switchTab(tabs[currentIndex - 1]);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     }
 
     document.getElementById('addLeadForm').onsubmit = async function(e) {
@@ -287,7 +350,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 showToast('Lead added successfully!', 'success');
                 setTimeout(() => window.location.href = 'leads.php', 1500);
             } else {
-                throw new Error(result.error || 'Failed to add lead');
+                throw new Error(result.message || 'Failed to add lead');
             }
         } catch (error) {
             showToast(error.message, 'error');

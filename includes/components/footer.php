@@ -118,10 +118,10 @@
             if (confirm('Are you sure you want to logout?')) {
                 try {
                     await fetch('../api/auth.php/logout', { method: 'POST' });
-                    window.location.href = 'login.php';
+                    window.location.href = '../login.php';
                 } catch (error) {
                     console.error('Logout failed:', error);
-                    window.location.href = 'login.php';
+                    window.location.href = '../login.php';
                 }
             }
         }

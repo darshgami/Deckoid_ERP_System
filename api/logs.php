@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-requireAuth();
+// Admin Only
+requireAdmin();
 
 try {
     $db = Database::getInstance();
@@ -46,7 +47,6 @@ try {
         $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         // Total count
-        $countParams = $params;
         $totalStmt = $db->prepare("
             SELECT COUNT(*) 
             FROM lead_activity_logs al
@@ -54,11 +54,10 @@ try {
             LEFT JOIN users u ON al.user_id = u.id
             $whereSQL
         ");
-        $totalStmt->execute($countParams);
+        $totalStmt->execute($params);
         $total = (int)$totalStmt->fetchColumn();
 
-        // Fetch logs — LEFT JOIN so rows survive even after lead deletion
-        $fetchParams = array_merge($params, [$limit, $offset]);
+        // Fetch logs
         $stmt = $db->prepare("
             SELECT 
                 al.id,
@@ -84,7 +83,7 @@ try {
         $stmt->execute();
         $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo json_encode([
+        ApiResponse::send(ApiResponse::success('Activity logs retrieved', [
             'data' => $logs,
             'pagination' => [
                 'total' => $total,
@@ -92,14 +91,13 @@ try {
                 'limit' => $limit,
                 'pages' => $total > 0 ? (int)ceil($total / $limit) : 1
             ]
-        ]);
+        ]));
 
     } else {
-        http_response_code(405);
-        echo json_encode(['error' => 'Method not allowed']);
+        ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
 
 } catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+    Logger::error('Logs API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    ApiResponse::send(ApiResponse::error('Unable to retrieve activity logs. Please try again later.'), 500);
 }

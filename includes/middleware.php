@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/utils.php';
 
 /**
  * Route Protection Middleware
@@ -13,13 +14,12 @@ function requireAuth() {
     if (!AuthController::isLoggedIn()) {
         // For API requests
         if (strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
-            http_response_code(401);
-            echo json_encode(['error' => 'Unauthorized. Please login.']);
+            ApiResponse::send(ApiResponse::error('Authentication required. Please log in.'), 401);
             exit;
         }
         
         // For Page requests
-        header('Location: /login.php');
+        header('Location: ../login.php');
         exit;
     }
 }
@@ -30,8 +30,11 @@ function requireAuth() {
 function requireAdmin() {
     requireAuth();
     if (AuthController::getCurrentRole() !== 'admin') {
-        http_response_code(403);
-        echo json_encode(['error' => 'Forbidden. Admin access required.']);
+        if (strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
+            ApiResponse::send(ApiResponse::error('Access denied. Administrator privileges are required.'), 403);
+            exit;
+        }
+        header('Location: /admin/dashboard.php');
         exit;
     }
 }
@@ -43,8 +46,11 @@ function requireStaff() {
     requireAuth();
     $role = AuthController::getCurrentRole();
     if ($role !== 'staff' && $role !== 'admin') {
-        http_response_code(403);
-        echo json_encode(['error' => 'Forbidden. Access denied.']);
+        if (strpos($_SERVER['REQUEST_URI'], '/api/') !== false) {
+            ApiResponse::send(ApiResponse::error('Access denied. Insufficient permissions.'), 403);
+            exit;
+        }
+        header('Location: ../login.php');
         exit;
     }
 }

@@ -4,7 +4,6 @@
  * Environment Configuration Loader
  * Loads and validates environment variables from .env file
  */
-
 class Env
 {
     private static $loaded = false;
@@ -22,14 +21,18 @@ class Env
         $path = $path ?: __DIR__ . '/../.env';
 
         if (!file_exists($path)) {
-            throw new Exception('.env file not found at: ' . $path);
+            // If .env is missing, we can't do much, but we shouldn't crash if we have defaults
+            return;
         }
 
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
-            if (strpos(trim($line), '#') === 0) {
+            $line = trim($line);
+            if (empty($line) || strpos($line, '#') === 0) {
                 continue;
             }
+
+            if (strpos($line, '=') === false) continue;
 
             list($name, $value) = explode('=', $line, 2);
             $name = trim($name);
@@ -75,3 +78,30 @@ class Env
 
 // Load environment on include
 Env::load();
+
+// Configure Environment-based error handling
+$isLocal = (Env::get('APP_ENV', 'production') === 'local');
+$isDebug = (filter_var(Env::get('APP_DEBUG', false), FILTER_VALIDATE_BOOLEAN));
+
+if ($isLocal && $isDebug) {
+    // Development Settings: Show everything
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+} else {
+    // Production Settings: Hide everything from user
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    ini_set('display_startup_errors', 0);
+}
+
+// Always log errors in both environments
+ini_set('log_errors', 1);
+$logDir = __DIR__ . '/../logs';
+if (!is_dir($logDir)) {
+    mkdir($logDir, 0755, true);
+}
+ini_set('error_log', $logDir . '/php_errors.log');
+
+// Set System Timezone
+date_default_timezone_set(Env::get('TIMEZONE', 'Asia/Kolkata'));

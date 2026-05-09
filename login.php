@@ -1,3 +1,16 @@
+<?php
+/**
+ * Centralized Login Page for Deckoid ERP
+ * Handles both Admin and Staff authentication
+ */
+require_once 'includes/auth.php';
+
+// Redirect if already logged in
+if (AuthController::isLoggedIn()) {
+    header('Location: admin/dashboard.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,24 +28,25 @@
             background-position: 0 0, 10px 10px;
             opacity: 0.05;
         }
+        :root {
+            --primary: #6D5DFC;
+        }
     </style>
 </head>
 <body class="bg-[#F8FAFC] min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
     <div class="absolute inset-0 bg-pattern"></div>
     
     <!-- Background Glow -->
-    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-100 rounded-full blur-[120px] opacity-20"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-100 rounded-full blur-[120px] opacity-20"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-100 rounded-full blur-[120px] opacity-20"></div>
 
     <div class="max-w-[440px] w-full relative z-10">
         <!-- Logo/Header -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl shadow-xl shadow-primary-100 mb-4 border border-neutral-50">
-                <svg class="w-8 h-8 text-[#6D5DFC]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
-                    <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
+            <div class="inline-flex items-center justify-center mb-4">
+                <img src="assets/ERP.png" alt="Deckoid ERP Logo" class="w-20 h-20 object-contain">
             </div>
-            <h1 class="text-3xl font-black text-neutral-900 tracking-tight">Deckoid <span class="text-[#6D5DFC]">ERP</span></h1>
+            <h1 class="text-3xl font-black text-neutral-900 tracking-tight">Deckoid<span class="text-[#6D5DFC]">ERP</span></h1>
         </div>
 
         <!-- Login Card -->
@@ -43,12 +57,12 @@
                 <div class="space-y-2">
                     <label for="username" class="text-[11px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Username / Email</label>
                     <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors group-focus-within:text-[#6D5DFC]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </span>
                         <input id="username" name="username" type="text" required
-                               class="w-full bg-neutral-50 border border-neutral-100 rounded-2xl py-3.5 pl-12 pr-4 focus:bg-white focus:border-[#6D5DFC] focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium"
-                               placeholder="Enter your username">
+                                class="w-full bg-neutral-50 border border-neutral-100 rounded-2xl py-3.5 pl-12 pr-4 focus:bg-white focus:border-[#6D5DFC] focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium"
+                                placeholder="Enter your username">
                     </div>
                 </div>
 
@@ -57,26 +71,26 @@
                         <label for="password" class="text-[11px] font-bold text-neutral-400 uppercase tracking-widest">Password</label>
                     </div>
                     <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors group-focus-within:text-[#6D5DFC]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </span>
                         <input id="password" name="password" type="password" required
-                               class="w-full bg-neutral-50 border border-neutral-100 rounded-2xl py-3.5 pl-12 pr-4 focus:bg-white focus:border-[#6D5DFC] focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium"
-                               placeholder="••••••••">
+                                class="w-full bg-neutral-50 border border-neutral-100 rounded-2xl py-3.5 pl-12 pr-4 focus:bg-white focus:border-[#6D5DFC] focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium"
+                                placeholder="••••••••">
                     </div>
                 </div>
 
                 <div class="pt-2">
                     <button type="submit" id="loginButton"
                             class="w-full bg-[#6D5DFC] text-white font-black py-4 rounded-2xl shadow-xl shadow-primary-200 hover:shadow-primary-300 hover:bg-[#5b4dfa] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group/btn">
-                        <span class="tracking-wide">Login</span>
+                        <span class="tracking-wide">Login to System</span>
                         <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                     </button>
                 </div>
             </form>
 
             <!-- Error Message -->
-            <div id="message" class="hidden mt-6 p-4 rounded-2xl text-center text-xs font-bold transition-all animate-pulse"></div>
+            <div id="message" class="hidden mt-6 p-4 rounded-2xl text-center text-xs font-bold transition-all"></div>
         </div>
     </div>
 
@@ -96,25 +110,26 @@
                 <span>Authenticating...</span>
             `;
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch('../api/auth.php/login', {
+                const response = await fetch('api/auth.php/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify(data)
                 });
 
-                const data = await response.json();
+                const result = await response.json();
 
                 if (response.ok) {
-                    
+                    messageDiv.className = 'mt-6 p-4 rounded-2xl bg-green-50 text-green-600 block';
+                    messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
-                        window.location.href = 'dashboard.php';
-                    }, 1500);
+                        window.location.href = 'admin/dashboard.php';
+                    }, 800);
                 } else {
-                    throw new Error(data.error || 'Invalid credentials provided');
+                    throw new Error(result.error || 'Invalid credentials provided');
                 }
             } catch (error) {
                 messageDiv.className = 'mt-6 p-4 rounded-2xl bg-red-50 text-red-600 block';
@@ -122,7 +137,7 @@
                 
                 loginButton.disabled = false;
                 loginButton.innerHTML = `
-                    <span class="tracking-wide">Login</span>
+                    <span class="tracking-wide">Login to System</span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 `;
             }
