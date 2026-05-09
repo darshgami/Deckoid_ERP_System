@@ -13,13 +13,33 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body { 
+            font-family: var(--font-sans);
+        }
+    </style>
     
     <!-- Production CSS -->
     <link href="/Deckoid_ERP_System/assets/css/output.css" rel="stylesheet">
     
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        // Safety check for Chart.js
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js failed to load from CDN. Dashboard analytics will be disabled.');
+            window.Chart = class { 
+                constructor() { console.error('Chart.js not loaded'); }
+                static register() {}
+                destroy() {}
+            };
+        }
+    </script>
     
     <style>
         .sidebar-item-active {

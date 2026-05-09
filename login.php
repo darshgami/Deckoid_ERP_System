@@ -20,7 +20,9 @@ if (AuthController::isLoggedIn()) {
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
         .bg-pattern {
             background-color: #f8fafc;
             background-image: radial-gradient(#6d5dfc 0.5px, transparent 0.5px), radial-gradient(#6d5dfc 0.5px, #f8fafc 0.5px);

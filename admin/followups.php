@@ -69,9 +69,11 @@ layout_start('Upcoming Followups - Deckoid ERP');
         try {
             // We reuse the leads API with a filter for followups
             const response = await fetch(`../api/leads.php?page=${page}&has_followup=true&followup_filter=${currentFilter}`);
-            const data = await response.json();
+            const res = await response.json();
 
-            if (data.error) throw new Error(data.error);
+            if (!res.success) throw new Error(res.message);
+
+            const data = res.data;
 
             if (!data.leads || data.leads.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-neutral-400 text-sm font-medium">No followups scheduled.</td></tr>`;
