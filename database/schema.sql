@@ -1,3 +1,14 @@
+-- Deckoid ERP System Database Schema
+-- Optimized for XAMPP (MariaDB/MySQL)
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+-- Create database if it doesn't exist
+CREATE DATABASE IF NOT EXISTS lead_management;
+USE lead_management;
+
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id CHAR(36) PRIMARY KEY NOT NULL,
@@ -7,6 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('admin','staff') DEFAULT 'staff',
     status ENUM('active','inactive') DEFAULT 'active',
+    phone_number VARCHAR(20) NULL,
+    bio TEXT NULL,
     last_login_at TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -45,6 +58,8 @@ CREATE TABLE IF NOT EXISTS leads (
     email_id VARCHAR(255) NULL,
     city VARCHAR(100) NULL,
     state VARCHAR(100) NULL,
+    country VARCHAR(100) DEFAULT 'India',
+    zip_code VARCHAR(20) NULL,
     source_of_lead VARCHAR(100) NOT NULL,
     service_interested_in VARCHAR(255) NULL,
     lead_category ENUM('Hot','Warm','Cold') NOT NULL,
@@ -99,3 +114,5 @@ CREATE TABLE IF NOT EXISTS lead_activity_logs (
     FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+COMMIT;

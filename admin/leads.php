@@ -210,6 +210,14 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="text" name="state" placeholder="State name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Country</label>
+                            <input type="text" name="country" placeholder="Country" value="India" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Zip Code</label>
+                            <input type="text" name="zip_code" placeholder="Postal Code" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                        </div>
+                        <div class="space-y-1.5">
                             <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In *</label>
                             <select name="service_interested_in" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                                 <option value="Facebook & Google Ads">Facebook & Google Ads</option>
@@ -387,6 +395,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 <script>
     let currentPage = 1;
     let leadsData = [];
+    const currentRole = '<?= $_SESSION['role'] ?>';
 
     async function loadLeads(page = 1) {
         currentPage = page;
@@ -457,7 +466,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                             <button onclick="editLead('${lead.id}')" class="p-1.5 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                             </button>
-                            ${'<?php echo $_SESSION['role']; ?>' === 'admin' ? `
+                            ${currentRole === 'admin' ? `
                             <button onclick="deleteLead('${lead.id}')" class="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             </button>

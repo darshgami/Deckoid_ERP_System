@@ -57,7 +57,7 @@ if (AuthController::isLoggedIn()) {
             
             <form id="loginForm" class="space-y-6">
                 <div class="space-y-2">
-                    <label for="username" class="text-[11px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Username / Email</label>
+                    <label for="username" class="text-[11px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Username</label>
                     <div class="relative">
                         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 transition-colors group-focus-within:text-[#6D5DFC]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -85,7 +85,7 @@ if (AuthController::isLoggedIn()) {
                 <div class="pt-2">
                     <button type="submit" id="loginButton"
                             class="w-full bg-[#6D5DFC] text-white font-black py-4 rounded-2xl shadow-xl shadow-primary-200 hover:shadow-primary-300 hover:bg-[#5b4dfa] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group/btn">
-                        <span class="tracking-wide">Login to System</span>
+                        <span class="tracking-wide">Sign in</span>
                         <svg class="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                     </button>
                 </div>
@@ -131,7 +131,7 @@ if (AuthController::isLoggedIn()) {
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Authenticating...</span>
+                <span>Loading...</span>
             `;
 
             const formData = new FormData(this);
@@ -149,13 +149,10 @@ if (AuthController::isLoggedIn()) {
                 console.log('Login Response:', { status: response.status, ok: response.ok, result });
 
                 if (response.ok && result.success) {
-                    messageDiv.className = 'mt-6 p-4 rounded-2xl bg-green-50 text-green-600 block';
-                    messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
                         window.location.href = 'admin/dashboard.php';
                     }, 800);
                 } else {
-                    // Show user-friendly error message
                     let errorMsg = result.message || result.error || 'Login failed. Please try again.';
                     
                     // Add specific guidance for common errors
@@ -176,7 +173,7 @@ if (AuthController::isLoggedIn()) {
                 
                 loginButton.disabled = false;
                 loginButton.innerHTML = `
-                    <span class="tracking-wide">Login to System</span>
+                    <span class="tracking-wide">Sign in</span>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 `;
             }

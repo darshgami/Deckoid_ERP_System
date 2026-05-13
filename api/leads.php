@@ -75,18 +75,19 @@ try {
             try {
                 $stmt = $db->prepare("INSERT INTO leads (
                     id, lead_id, lead_date, company_client_name, contact_person, mobile_number,
-                    alternative_number, email_id, city, state, source_of_lead, service_interested_in,
+                    alternative_number, email_id, city, state, country, zip_code, source_of_lead, service_interested_in,
                     lead_category, lead_status, priority, assigned_to, next_followup_date, last_followup_notes,
                     requirement_details, estimated_budget, proposal_sent, meeting_scheduled,
                     quotation_sent, deal_status, expected_closing_date, payment_status,
                     client_onboard_date, project_start_date, project_status, reference_by,
                     website_social_link, remarks_notes, created_by
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                 $stmt->execute([
                     $id, $leadId, $input['lead_date'], $input['company_client_name'], $input['contact_person'],
                     $input['mobile_number'], $input['alternative_number'] ?? null, $input['email_id'] ?? null,
-                    $input['city'] ?? null, $input['state'] ?? null, $input['source_of_lead'],
+                    $input['city'] ?? null, $input['state'] ?? null, $input['country'] ?? 'India', $input['zip_code'] ?? null,
+                    $input['source_of_lead'],
                     $input['service_interested_in'] ?? null, $input['lead_category'], $input['lead_status'],
                     $input['priority'] ?? 'Medium', $input['assigned_to'] ?? null, $input['next_followup_date'] ?? null,
                     $input['last_followup_notes'] ?? null, $input['requirement_details'] ?? null,
@@ -240,9 +241,9 @@ try {
 
         $allowedFields = [
             'lead_date', 'company_client_name', 'contact_person', 'mobile_number',
-            'alternative_number', 'email_id', 'city', 'state', 'source_of_lead',
-            'service_interested_in', 'lead_category', 'lead_status', 'priority',
-            'assigned_to', 'next_followup_date', 'last_followup_notes',
+            'alternative_number', 'email_id', 'city', 'state', 'country', 'zip_code',
+            'source_of_lead', 'service_interested_in', 'lead_category', 'lead_status',
+            'priority', 'assigned_to', 'next_followup_date', 'last_followup_notes',
             'requirement_details', 'estimated_budget', 'proposal_sent',
             'meeting_scheduled', 'quotation_sent', 'deal_status',
             'expected_closing_date', 'payment_status', 'client_onboard_date',

@@ -13,7 +13,7 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        $stmt = $db->prepare("SELECT id, full_name, email, username, role FROM users WHERE id = ?");
+        $stmt = $db->prepare("SELECT id, full_name, email, username, role, phone_number, bio FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -35,8 +35,8 @@ try {
             throw new Exception('Invalid email format');
         }
 
-        $stmt = $db->prepare("UPDATE users SET full_name = ?, email = ? WHERE id = ?");
-        $stmt->execute([$input['full_name'], $input['email'], $userId]);
+        $stmt = $db->prepare("UPDATE users SET full_name = ?, email = ?, phone_number = ?, bio = ? WHERE id = ?");
+        $stmt->execute([$input['full_name'], $input['email'], $input['phone_number'] ?? null, $input['bio'] ?? null, $userId]);
         
         // Update session
         $_SESSION['full_name'] = $input['full_name'];

@@ -142,6 +142,17 @@ class AuthController
         $stmt = $db->prepare("UPDATE users SET last_login_at = NOW() WHERE id = ?");
         $stmt->execute([$user['id']]);
 
+        // Record session in database
+        $dbSessionId = generateUUID();
+        $_SESSION['db_session_id'] = $dbSessionId; // Store for logout cleanup
+        $refreshToken = bin2hex(random_bytes(32));
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $ua = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown';
+        $expires = date('Y-m-d H:i:s', time() + Env::get('SESSION_TIMEOUT', 3600));
+
+        $sessionStmt = $db->prepare("INSERT INTO sessions (id, user_id, refresh_token, ip_address, user_agent, expires_at) VALUES (?, ?, ?, ?, ?, ?)");
+        $sessionStmt->execute([$dbSessionId, $user['id'], $refreshToken, $ip, $ua, $expires]);
+
         return [
             'message' => 'Login successful',
             'user' => [
@@ -158,6 +169,13 @@ class AuthController
     public static function logout()
     {
         start_secure_session();
+
+        // Clean up database session
+        if (isset($_SESSION['db_session_id'])) {
+            $db = Database::getInstance();
+            $stmt = $db->prepare("DELETE FROM sessions WHERE id = ?");
+            $stmt->execute([$_SESSION['db_session_id']]);
+        }
 
         // Unset all session variables
         $_SESSION = array();

@@ -26,6 +26,7 @@ layout_start('Staff Management - Deckoid ERP');
                     <th class="px-6 py-4 text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Full Name</th>
                     <th class="px-6 py-4 text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Username</th>
                     <th class="px-6 py-4 text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Role</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Status</th>
                     <th class="px-6 py-4 text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Last Login</th>
                     <th class="px-6 py-4 text-right text-[10px] font-black text-neutral-400 uppercase tracking-widest whitespace-nowrap">Actions</th>
                 </tr>
@@ -130,7 +131,7 @@ layout_start('Staff Management - Deckoid ERP');
                 <tr class="hover:bg-neutral-50/50 transition-colors group">
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-primary-100 text-primary-600 rounded-lg flex items-center justify-center font-black text-xs">
+                            <div class="w-8 h-8 bg-primary-100 text-primary-600 rounded-lg flex-shrink-0 flex items-center justify-center font-black text-xs">
                                 ${user.full_name.charAt(0)}
                             </div>
                             <div class="flex flex-col">
@@ -144,6 +145,14 @@ layout_start('Staff Management - Deckoid ERP');
                         <span class="px-2 py-0.5 text-[10px] font-black rounded-md uppercase tracking-widest ${user.role === 'admin' ? 'bg-purple-50 text-purple-600' : 'bg-blue-50 text-blue-600'}">
                             ${user.role}
                         </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <button onclick="toggleStatus('${user.id}', '${user.status}')" class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider transition-all ${user.status === 'active' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'}">
+                            ${user.status}
+                        </button>
+                    </td>
+                    <td class="px-6 py-4 text-[11px] text-neutral-500 font-medium">
+                        ${user.last_login_at ? formatDate(user.last_login_at) : 'Never'}
                     </td>
                     <td class="px-6 py-4 text-right whitespace-nowrap">
                         <div class="flex items-center justify-end gap-2">
@@ -236,6 +245,32 @@ layout_start('Staff Management - Deckoid ERP');
         } catch (error) {
             showToast(error.message, 'error');
         }
+    }
+
+    async function toggleStatus(id, currentStatus) {
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        try {
+            const response = await fetch('../api/staff.php', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status: newStatus })
+            });
+            const res = await response.json();
+            if (res.message || res.success) {
+                showToast(res.message || 'Status updated', 'success');
+                loadStaff();
+            } else {
+                throw new Error(res.error || 'Failed to update status');
+            }
+        } catch (error) {
+            showToast(error.message, 'error');
+        }
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return 'Never';
+        const date = new Date(dateStr);
+        return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
     document.addEventListener('DOMContentLoaded', loadStaff);

@@ -27,9 +27,20 @@ layout_start('Settings - Deckoid ERP');
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <input type="email" name="email" id="prof_email" required placeholder="Enter your email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-4 focus:ring-primary-100 focus:border-primary-600 transition-all font-medium text-sm">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Phone Number</label>
+                    <input type="text" name="phone_number" id="prof_phone" placeholder="Enter your phone number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-4 focus:ring-primary-100 focus:border-primary-600 transition-all font-medium text-sm">
+                </div>
+            </div>
+
             <div class="space-y-1.5">
-                <label class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Email Address</label>
-                <input type="email" name="email" id="prof_email" required placeholder="Enter your email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-4 focus:ring-primary-100 focus:border-primary-600 transition-all font-medium text-sm">
+                <label class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest ml-1">Bio / Professional Summary</label>
+                <textarea name="bio" id="prof_bio" rows="3" placeholder="Tell us about yourself..." class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-4 focus:ring-primary-100 focus:border-primary-600 transition-all font-medium text-sm resize-none"></textarea>
             </div>
 
             <div class="pt-2">
@@ -81,6 +92,8 @@ layout_start('Settings - Deckoid ERP');
             document.getElementById('prof_full_name').value = user.full_name;
             document.getElementById('prof_username').value = user.username;
             document.getElementById('prof_email').value = user.email || '';
+            document.getElementById('prof_phone').value = user.phone_number || '';
+            document.getElementById('prof_bio').value = user.bio || '';
         } catch (error) {
             showToast(error.message, 'error');
         }

@@ -15,7 +15,7 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        $stmt = $db->query("SELECT id, full_name, email, username, role, created_at FROM users ORDER BY created_at DESC");
+        $stmt = $db->query("SELECT id, full_name, email, username, role, status, last_login_at, created_at FROM users ORDER BY created_at DESC");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         ApiResponse::send(ApiResponse::success('Staff list retrieved', ['users' => $users]));
 
