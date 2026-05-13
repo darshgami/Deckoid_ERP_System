@@ -403,10 +403,10 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             if (!res.success) throw new Error(res.message);
             
             const data = res.data;
-            leadsData = data.leads;
+            leadsData = data?.leads || [];
 
             const tbody = document.getElementById('leadsTableBody');
-            if (leadsData.length === 0) {
+            if (!leadsData || leadsData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="32" class="px-8 py-20 text-center text-neutral-400">No leads found. Try adjusting filters.</td></tr>`;
                 updatePagination({ total: 0, page: 1, pages: 0, limit: 10 });
                 return;

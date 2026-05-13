@@ -5,10 +5,7 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/utils.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+apply_api_cors_headers('POST, GET, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -19,7 +16,17 @@ $path = $_SERVER['REQUEST_URI'];
 
 try {
     if ($method === 'POST') {
-        $input = json_decode(file_get_contents('php://input'), true);
+        $inputRaw = file_get_contents('php://input');
+        $input = json_decode($inputRaw, true);
+
+        // Debug: Log the raw input if it's not valid JSON
+        if ($input === null && !empty($inputRaw)) {
+            Logger::error('Invalid JSON received', ['raw_input' => substr($inputRaw, 0, 200), 'json_error' => json_last_error_msg()]);
+            throw new Exception('Invalid request format. Please ensure you are sending valid JSON.');
+        }
+
+        // Ensure $input is an array
+        $input = is_array($input) ? $input : [];
 
         if (strpos($path, '/register') !== false) {
             $result = AuthController::register($input);
@@ -55,9 +62,9 @@ try {
     // Send a friendly message to the user
     $message = $e->getMessage();
     // Only allow specific "safe" messages to pass through, otherwise use a generic one
-    $safeMessages = ['User already exists', 'Invalid credentials', 'Account is inactive', 'Missing required fields', 'Password must be at least 8 characters', 'All fields are required', 'Invalid email format'];
+    $safeMessages = ['User already exists', 'Invalid credentials', 'Account is inactive', 'Missing required fields', 'Password must be at least 8 characters', 'All fields are required', 'Invalid email format', 'Username and password are required'];
     
     $userFriendlyMessage = in_array($message, $safeMessages) ? $message : 'Something went wrong while processing your request. Please try again.';
     
     ApiResponse::send(ApiResponse::error($userFriendlyMessage), 400);
-}
+}

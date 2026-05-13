@@ -7,10 +7,7 @@ require_once '../includes/auth.php';
 require_once '../includes/middleware.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+apply_api_cors_headers('GET, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
@@ -125,4 +122,4 @@ try {
 } catch (Exception $e) {
     Logger::error('Dashboard API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
     ApiResponse::send(ApiResponse::error('Unable to load dashboard data. Please try again later.'), 500);
-}
+}

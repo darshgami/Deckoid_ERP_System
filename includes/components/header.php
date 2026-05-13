@@ -25,7 +25,7 @@
     </style>
     
     <!-- Production CSS -->
-    <link href="/Deckoid_ERP_System/assets/css/output.css" rel="stylesheet">
+    <link href="<?php echo asset_url('assets/css/output.css'); ?>" rel="stylesheet">
     
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

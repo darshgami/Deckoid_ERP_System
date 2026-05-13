@@ -17,7 +17,7 @@ if (AuthController::isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Deckoid ERP System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="<?php echo asset_url('assets/css/output.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { 
@@ -46,7 +46,7 @@ if (AuthController::isLoggedIn()) {
         <!-- Logo/Header -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center mb-4">
-                <img src="assets/ERP.png" alt="Deckoid ERP Logo" class="w-20 h-20 object-contain">
+                <img src="<?php echo asset_url('assets/ERP.png'); ?>" alt="Deckoid ERP Logo" class="w-20 h-20 object-contain">
             </div>
             <h1 class="text-3xl font-black text-neutral-900 tracking-tight">Deckoid<span class="text-[#6D5DFC]">ERP</span></h1>
         </div>
@@ -97,6 +97,28 @@ if (AuthController::isLoggedIn()) {
     </div>
 
     <script>
+        // Suppress all errors from external scripts/extensions to prevent page crashes
+        window.addEventListener('error', function(event) {
+            // Log to console but don't throw
+            if (event.error) {
+                console.debug('External script error (suppressed):', event.error.message);
+            }
+            return true; // Prevent error propagation
+        }, true);
+
+        // Suppress unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(event) {
+            console.debug('Promise rejection (suppressed):', event.reason);
+            event.preventDefault(); // Prevent error propagation
+        });
+
+        // Suppress console errors from external sources
+        const originalError = console.error;
+        console.error = function() {
+            // Still log to console but don't crash
+            originalError.apply(console, arguments);
+        };
+
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -119,23 +141,38 @@ if (AuthController::isLoggedIn()) {
                 const response = await fetch('api/auth.php/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
                     body: JSON.stringify(data)
                 });
 
                 const result = await response.json();
+                console.log('Login Response:', { status: response.status, ok: response.ok, result });
 
-                if (response.ok) {
+                if (response.ok && result.success) {
                     messageDiv.className = 'mt-6 p-4 rounded-2xl bg-green-50 text-green-600 block';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => {
                         window.location.href = 'admin/dashboard.php';
                     }, 800);
                 } else {
-                    throw new Error(result.error || 'Invalid credentials provided');
+                    // Show user-friendly error message
+                    let errorMsg = result.message || result.error || 'Login failed. Please try again.';
+                    
+                    // Add specific guidance for common errors
+                    if (response.status === 400 && errorMsg === 'Invalid credentials') {
+                        errorMsg = 'Invalid username or password. Please check and try again.';
+                    }
+                    if (response.status === 400 && errorMsg.includes('required')) {
+                        errorMsg = 'Please enter both username and password.';
+                    }
+                    
+                    throw new Error(errorMsg);
                 }
             } catch (error) {
+                const errorMsg = error.message || 'An error occurred during login. Please try again.';
                 messageDiv.className = 'mt-6 p-4 rounded-2xl bg-red-50 text-red-600 block';
-                messageDiv.textContent = error.message;
+                messageDiv.textContent = errorMsg;
+                console.error('Login Error:', error);
                 
                 loginButton.disabled = false;
                 loginButton.innerHTML = `

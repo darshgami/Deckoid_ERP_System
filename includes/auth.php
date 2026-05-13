@@ -7,6 +7,46 @@ require_once __DIR__ . '/utils.php';
 class AuthController
 {
     /**
+     * Verify user password against supported legacy formats and migrate to bcrypt when needed.
+     */
+    private static function verifyAndUpgradePassword($db, array $user, $plainPassword)
+    {
+        $storedHash = (string)($user['password_hash'] ?? '');
+
+        if ($storedHash === '') {
+            return false;
+        }
+
+        // Preferred path: modern password_hash() formats (bcrypt/argon).
+        if (password_verify($plainPassword, $storedHash)) {
+            if (password_needs_rehash($storedHash, PASSWORD_BCRYPT, ['cost' => 12])) {
+                $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+                $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
+                $stmt->execute([$newHash, $user['id']]);
+            }
+            return true;
+        }
+
+        // Backward compatibility for legacy production data formats.
+        $legacyMatched =
+            hash_equals($storedHash, $plainPassword) ||
+            hash_equals($storedHash, md5($plainPassword)) ||
+            hash_equals($storedHash, sha1($plainPassword)) ||
+            hash_equals($storedHash, hash('sha256', $plainPassword));
+
+        if (!$legacyMatched) {
+            return false;
+        }
+
+        // Auto-upgrade legacy hash/plaintext to bcrypt after successful validation.
+        $newHash = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
+        $stmt = $db->prepare("UPDATE users SET password_hash = ? WHERE id = ?");
+        $stmt->execute([$newHash, $user['id']]);
+
+        return true;
+    }
+
+    /**
      * Register a new user
      * Uses BCRYPT for password hashing as per requirement
      */
@@ -76,11 +116,11 @@ class AuthController
         $password = $data['password'];
 
         $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT id, password_hash, status, role, full_name FROM users WHERE username = ? OR email = ?");
+        $stmt = $db->prepare("SELECT id, username, password_hash, status, role, full_name FROM users WHERE username = ? OR email = ?");
         $stmt->execute([$username, $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user || !password_verify($password, $user['password_hash'])) {
+        if (!$user || !self::verifyAndUpgradePassword($db, $user, $password)) {
             throw new Exception('Invalid credentials');
         }
 
@@ -93,7 +133,7 @@ class AuthController
 
         // Store user info in session
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $username;
+        $_SESSION['username'] = $user['username'] ?? $username;
         $_SESSION['role'] = $user['role'];
         $_SESSION['full_name'] = $user['full_name'];
         $_SESSION['last_activity'] = time();
@@ -106,7 +146,7 @@ class AuthController
             'message' => 'Login successful',
             'user' => [
                 'id' => $user['id'],
-                'username' => $username,
+                'username' => $user['username'] ?? $username,
                 'role' => $user['role']
             ]
         ];

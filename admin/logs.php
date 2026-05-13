@@ -45,7 +45,7 @@ layout_start('Activity Logs - Deckoid ERP');
             
             const data = res.data;
 
-            if (data.data.length === 0 && page === 1) {
+            if (!data?.data || (data.data.length === 0 && page === 1)) {
                 container.innerHTML = '<div class="text-center py-12 text-neutral-400 font-medium text-sm">No activity logs found.</div>';
                 loadMoreBtn.classList.add('hidden');
                 return;

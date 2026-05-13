@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../config/env.php';
+
 /**
  * Secure Session Management Configuration
  * 
@@ -12,14 +14,25 @@
 
 function start_secure_session() {
     if (session_status() === PHP_SESSION_NONE) {
+        $isHttps = (!empty($_SERVER['HTTPS']) && strtolower((string)$_SERVER['HTTPS']) !== 'off')
+            || (!empty($_SERVER['SERVER_PORT']) && (string)$_SERVER['SERVER_PORT'] === '443')
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && stripos((string)$_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false)
+            || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower((string)$_SERVER['HTTP_X_FORWARDED_SSL']) === 'on');
+
+        $sameSite = Env::get('SESSION_SAMESITE', 'Lax');
+        $sameSite = ucfirst(strtolower((string)$sameSite));
+        if (!in_array($sameSite, ['Lax', 'Strict', 'None'], true)) {
+            $sameSite = 'Lax';
+        }
+
         // Set session cookie parameters
         session_set_cookie_params([
             'lifetime' => 0, // Session cookie expires when browser closes
             'path' => '/',
             'domain' => '', // Use current domain
-            'secure' => isset($_SERVER['HTTPS']), // True if HTTPS is on
+            'secure' => $isHttps,
             'httponly' => true,
-            'samesite' => 'Strict'
+            'samesite' => $sameSite
         ]);
 
         session_start();

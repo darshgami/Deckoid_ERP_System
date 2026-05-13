@@ -25,7 +25,7 @@ $menuItems[] = ['label' => 'Profile', 'url' => 'profile.php', 'icon' => 'M10.325
         <div class="h-20 flex items-center px-5 justify-between flex-shrink-0 border-b border-neutral-50 logo-area">
             <a href="dashboard.php" class="flex items-center gap-3 overflow-hidden min-w-0 group">
                 <div class="flex-shrink-0">
-                    <img src="../assets/ERP.png" alt="Deckoid ERP" class="w-10 h-10 object-contain">
+                    <img src="<?php echo asset_url('assets/ERP.png'); ?>" alt="Deckoid ERP" class="w-10 h-10 object-contain">
                 </div>
                 <span class="text-xl font-bold tracking-tight text-neutral-900 sidebar-text whitespace-nowrap">Deckoid<span class="text-primary-600">ERP</span></span>
             </a>

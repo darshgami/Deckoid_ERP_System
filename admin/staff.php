@@ -121,7 +121,7 @@ layout_start('Staff Management - Deckoid ERP');
             if (!res.success) throw new Error(res.message);
             
             const tbody = document.getElementById('staffTableBody');
-            if (res.data.users.length === 0) {
+            if (!res.data?.users || res.data.users.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-20 text-center text-neutral-400">No staff accounts found.</td></tr>`;
                 return;
             }
