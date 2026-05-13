@@ -115,4 +115,40 @@ CREATE TABLE IF NOT EXISTS lead_activity_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
+-- Create invoices table
+CREATE TABLE IF NOT EXISTS invoices (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    invoice_number VARCHAR(50) UNIQUE NOT NULL,
+    invoice_date DATE NOT NULL,
+    invoice_type ENUM('With GST', 'Without GST') NOT NULL,
+    party_name VARCHAR(255) NOT NULL,
+    mobile_number VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    gstin VARCHAR(15) NULL,
+    place_of_supply VARCHAR(100) NULL,
+    sub_total DECIMAL(12,2) NOT NULL,
+    gst_total DECIMAL(12,2) DEFAULT 0.00,
+    grand_total DECIMAL(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Create invoice_items table
+CREATE TABLE IF NOT EXISTS invoice_items (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    invoice_id CHAR(36) NOT NULL,
+    service_name VARCHAR(255) NOT NULL,
+    hsn_sac VARCHAR(20) NULL,
+    qty DECIMAL(12,3) NOT NULL,
+    rate DECIMAL(12,2) NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+);
+
+-- Indexes for invoices
+CREATE INDEX idx_invoices_number ON invoices(invoice_number);
+CREATE INDEX idx_invoices_date ON invoices(invoice_date);
+CREATE INDEX idx_invoices_party ON invoices(party_name);
+
 COMMIT;
