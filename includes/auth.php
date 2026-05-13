@@ -55,35 +55,39 @@ class AuthController
         // Start session if not started
         start_secure_session();
 
-        // Validate input
-        if (!isset($data['full_name']) || !isset($data['email']) || !isset($data['username']) || !isset($data['password'])) {
-            throw new Exception('Missing required fields');
+        // Professional Validation
+        $validator = new Validator();
+        $rules = [
+            'full_name' => 'required|min:3',
+            'email' => 'required|email',
+            'username' => 'required|min:3',
+            'password' => 'required|min:8',
+            'role' => 'required'
+        ];
+
+        if (!$validator->validate($data, $rules)) {
+            throw new Exception($validator->getFirstError());
         }
 
         $fullName = trim($data['full_name']);
         $email = trim($data['email']);
         $username = trim($data['username']);
         $password = $data['password'];
-        $role = $data['role'] ?? 'staff'; // Default to staff
+        $role = $data['role'] ?? 'staff';
 
-        if (empty($fullName) || empty($email) || empty($username) || empty($password)) {
-            throw new Exception('All fields are required');
-        }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Invalid email format');
-        }
-
-        if (strlen($password) < 8) {
-            throw new Exception('Password must be at least 8 characters');
-        }
-
-        // Check if user already exists
+        // Check if username already exists
         $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
-        $stmt->execute([$email, $username]);
+        $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->execute([$username]);
         if ($stmt->fetch()) {
-            throw new Exception('User already exists');
+            throw new Exception("Username '$username' is already taken.");
+        }
+
+        // Check if email already exists
+        $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            throw new Exception("Email address '$email' is already registered.");
         }
 
         // Hash password using BCRYPT

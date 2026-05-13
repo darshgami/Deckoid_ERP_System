@@ -222,3 +222,94 @@ function asset_url($path) {
 
     return '/' . ($basePath !== '' ? $basePath . '/' : '') . $path;
 }
+
+/**
+ * CSRF Protection Helpers
+ */
+function csrf_token() {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function verify_csrf($token) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    return !empty($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], (string)$token);
+}
+
+/**
+ * Professional ERP Validator Class
+ */
+class Validator {
+    private $errors = [];
+
+    /**
+     * Validate data against specified rules
+     * Rules format: 'field_name' => 'required|email|min:3'
+     */
+    public function validate($data, $rules) {
+        foreach ($rules as $field => $fieldRules) {
+            $value = isset($data[$field]) ? trim((string)$data[$field]) : '';
+            $fieldRulesArray = explode('|', $fieldRules);
+
+            foreach ($fieldRulesArray as $rule) {
+                // Required check
+                if ($rule === 'required' && ($value === '')) {
+                    $this->addError($field, ucfirst(str_replace('_', ' ', $field)) . " is required");
+                    break; // Skip further rules if empty
+                }
+
+                if ($value === '') continue; // Skip other rules if empty and not required
+
+                // Email check
+                if ($rule === 'email' && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    $this->addError($field, "Invalid email format");
+                }
+
+                // Numeric check
+                if ($rule === 'numeric' && !is_numeric($value)) {
+                    $this->addError($field, ucfirst(str_replace('_', ' ', $field)) . " must be a numeric value");
+                }
+
+                // Min length check
+                if (strpos($rule, 'min:') === 0) {
+                    $min = (int)substr($rule, 4);
+                    if (strlen($value) < $min) {
+                        $this->addError($field, ucfirst(str_replace('_', ' ', $field)) . " must be at least $min characters");
+                    }
+                }
+
+                // Mobile number check
+                if ($rule === 'mobile' && !preg_match('/^[0-9]{10,15}$/', $value)) {
+                    $this->addError($field, "Invalid mobile number (10-15 digits)");
+                }
+                
+                // GSTIN format check
+                if ($rule === 'gstin' && !preg_match('/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/', $value)) {
+                    $this->addError($field, "Invalid GSTIN format");
+                }
+            }
+        }
+        return empty($this->errors);
+    }
+
+    public function addError($field, $message) {
+        if (!isset($this->errors[$field])) {
+            $this->errors[$field] = $message;
+        }
+    }
+
+    public function getErrors() {
+        return $this->errors;
+    }
+
+    public function getFirstError() {
+        return !empty($this->errors) ? reset($this->errors) : null;
+    }
+}

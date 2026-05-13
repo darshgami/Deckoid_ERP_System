@@ -17,6 +17,7 @@ if (AuthController::isLoggedIn()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Deckoid ERP System</title>
+    <link rel="icon" type="image/png" href="<?php echo asset_url('assets/ERP.png'); ?>">
     <link rel="stylesheet" href="<?php echo asset_url('assets/css/output.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -96,46 +97,70 @@ if (AuthController::isLoggedIn()) {
         </div>
     </div>
 
+    <style>
+        .input-error {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+            margin-left: 4px;
+        }
+    </style>
+
     <script>
-        // Suppress all errors from external scripts/extensions to prevent page crashes
-        window.addEventListener('error', function(event) {
-            // Log to console but don't throw
-            if (event.error) {
-                console.debug('External script error (suppressed):', event.error.message);
-            }
-            return true; // Prevent error propagation
-        }, true);
-
-        // Suppress unhandled promise rejections
-        window.addEventListener('unhandledrejection', function(event) {
-            console.debug('Promise rejection (suppressed):', event.reason);
-            event.preventDefault(); // Prevent error propagation
-        });
-
-        // Suppress console errors from external sources
-        const originalError = console.error;
-        console.error = function() {
-            // Still log to console but don't crash
-            originalError.apply(console, arguments);
-        };
-
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const loginButton = document.getElementById('loginButton');
             const messageDiv = document.getElementById('message');
+            
+            // Clear previous errors
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            messageDiv.classList.add('hidden');
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            // Simple frontend validation
+            let isValid = true;
+            if (!data.username || data.username.trim() === '') {
+                const userInp = document.getElementById('username');
+                userInp.classList.add('input-error');
+                const err = document.createElement('p');
+                err.className = 'error-message';
+                err.textContent = 'Username is required';
+                userInp.parentNode.appendChild(err);
+                isValid = false;
+            }
+            if (!data.password || data.password.trim() === '') {
+                const passInp = document.getElementById('password');
+                passInp.classList.add('input-error');
+                const err = document.createElement('p');
+                err.className = 'error-message';
+                err.textContent = 'Password is required';
+                passInp.parentNode.appendChild(err);
+                isValid = false;
+            }
+
+            if (!isValid) return;
 
             loginButton.disabled = true;
+            const originalBtnContent = loginButton.innerHTML;
             loginButton.innerHTML = `
                 <svg class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                <span>Loading...</span>
+                <span class="tracking-widest uppercase text-[10px] font-black">Login...</span>
             `;
-
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
 
             try {
                 const response = await fetch('api/auth.php/login', {
@@ -146,36 +171,20 @@ if (AuthController::isLoggedIn()) {
                 });
 
                 const result = await response.json();
-                console.log('Login Response:', { status: response.status, ok: response.ok, result });
 
                 if (response.ok && result.success) {
                     setTimeout(() => {
                         window.location.href = 'admin/dashboard.php';
                     }, 800);
                 } else {
-                    let errorMsg = result.message || result.error || 'Login failed. Please try again.';
-                    
-                    // Add specific guidance for common errors
-                    if (response.status === 400 && errorMsg === 'Invalid credentials') {
-                        errorMsg = 'Invalid username or password. Please check and try again.';
-                    }
-                    if (response.status === 400 && errorMsg.includes('required')) {
-                        errorMsg = 'Please enter both username and password.';
-                    }
-                    
-                    throw new Error(errorMsg);
+                    throw new Error(result.message || 'Invalid username or password');
                 }
             } catch (error) {
-                const errorMsg = error.message || 'An error occurred during login. Please try again.';
-                messageDiv.className = 'mt-6 p-4 rounded-2xl bg-red-50 text-red-600 block';
-                messageDiv.textContent = errorMsg;
-                console.error('Login Error:', error);
+                messageDiv.className = 'mt-6 p-4 rounded-2xl bg-red-50 text-red-600 block text-center text-xs font-bold';
+                messageDiv.textContent = error.message;
                 
                 loginButton.disabled = false;
-                loginButton.innerHTML = `
-                    <span class="tracking-wide">Sign in</span>
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                `;
+                loginButton.innerHTML = originalBtnContent;
             }
         });
     </script>

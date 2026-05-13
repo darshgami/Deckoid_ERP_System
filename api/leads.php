@@ -32,12 +32,22 @@ try {
             }
         }
 
-        // Validate required fields
-        $required = ['lead_date', 'company_client_name', 'contact_person', 'mobile_number', 'source_of_lead', 'lead_category', 'lead_status', 'deal_status', 'payment_status'];
-        foreach ($required as $field) {
-            if (!isset($input[$field]) || $input[$field] === '' || $input[$field] === null) {
-                throw new Exception("The field '{$field}' is required.");
-            }
+        // Professional Validation
+        $validator = new Validator();
+        $rules = [
+            'lead_date' => 'required',
+            'company_client_name' => 'required|min:3',
+            'contact_person' => 'required|min:3',
+            'mobile_number' => 'required|mobile',
+            'source_of_lead' => 'required',
+            'lead_category' => 'required',
+            'lead_status' => 'required',
+            'deal_status' => 'required',
+            'payment_status' => 'required'
+        ];
+
+        if (!$validator->validate($input, $rules)) {
+            throw new Exception($validator->getFirstError());
         }
 
         // Generate Lead ID DK0001 format with retry logic for race conditions
@@ -156,6 +166,16 @@ try {
             $params[] = $_GET['service'];
         }
 
+        if (isset($_GET['date_from']) && !empty($_GET['date_from'])) {
+            $where[] = "lead_date >= ?";
+            $params[] = $_GET['date_from'];
+        }
+
+        if (isset($_GET['date_to']) && !empty($_GET['date_to'])) {
+            $where[] = "lead_date <= ?";
+            $params[] = $_GET['date_to'];
+        }
+
         if (isset($_GET['has_followup']) && $_GET['has_followup'] === 'true') {
             $where[] = "next_followup_date IS NOT NULL";
             
@@ -250,6 +270,26 @@ try {
             'project_start_date', 'project_status', 'reference_by',
             'website_social_link', 'remarks_notes'
         ];
+
+        // Validation for updated fields
+        $validator = new Validator();
+        $rules = [];
+        if (isset($input['mobile_number'])) $rules['mobile_number'] = 'mobile';
+        if (isset($input['email_id'])) $rules['email_id'] = 'email';
+        if (isset($input['company_client_name'])) $rules['company_client_name'] = 'min:3';
+        
+        if (!empty($rules) && !$validator->validate($input, $rules)) {
+            throw new Exception($validator->getFirstError());
+        }
+
+        // Check for mobile duplicate if mobile is being updated
+        if (isset($input['mobile_number'])) {
+            $stmt = $db->prepare("SELECT id FROM leads WHERE mobile_number = ? AND id != ?");
+            $stmt->execute([$input['mobile_number'], $id]);
+            if ($stmt->fetch()) {
+                throw new Exception('A lead with this mobile number already exists');
+            }
+        }
 
         foreach ($allowedFields as $field) {
             if (array_key_exists($field, $input)) {

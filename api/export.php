@@ -44,6 +44,30 @@ try {
         $params[] = $_GET['status'];
     }
 
+    // Date Range Validation & Filtering
+    $dateFrom = $_GET['date_from'] ?? null;
+    $dateTo = $_GET['date_to'] ?? null;
+
+    if ($dateFrom && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFrom)) {
+        throw new Exception('Invalid start date format');
+    }
+    if ($dateTo && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateTo)) {
+        throw new Exception('Invalid end date format');
+    }
+
+    if ($dateFrom && $dateTo && $dateTo < $dateFrom) {
+        throw new Exception('End date cannot be earlier than start date');
+    }
+
+    if ($dateFrom) {
+        $where[] = "lead_date >= ?";
+        $params[] = $dateFrom;
+    }
+    if ($dateTo) {
+        $where[] = "lead_date <= ?";
+        $params[] = $dateTo;
+    }
+
     $whereClause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
     // Get filtered leads

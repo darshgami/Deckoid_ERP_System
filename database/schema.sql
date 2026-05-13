@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS leads (
     lead_date DATE NOT NULL,
     company_client_name VARCHAR(255) NOT NULL,
     contact_person VARCHAR(150) NOT NULL,
-    mobile_number VARCHAR(20) NOT NULL,
+    mobile_number VARCHAR(20) UNIQUE NOT NULL,
     alternative_number VARCHAR(20) NULL,
     email_id VARCHAR(255) NULL,
     city VARCHAR(100) NULL,
@@ -129,8 +129,10 @@ CREATE TABLE IF NOT EXISTS invoices (
     sub_total DECIMAL(12,2) NOT NULL,
     gst_total DECIMAL(12,2) DEFAULT 0.00,
     grand_total DECIMAL(12,2) NOT NULL,
+    created_by CHAR(36) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Create invoice_items table

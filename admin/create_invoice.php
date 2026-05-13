@@ -242,25 +242,93 @@ if ($lastInvoice) {
 
     document.getElementById('invoiceForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        const formData = new FormData(this);
         const data = {};
-        new FormData(this).forEach((v, k) => {
+        formData.forEach((v, k) => {
             if (k.endsWith('[]')) {
                 const ck = k.slice(0, -2);
                 if (!data[ck]) data[ck] = [];
                 data[ck].push(v);
             } else data[k] = v;
         });
+
+        // Recalculate totals to ensure integrity
         const amounts = Array.from(document.querySelectorAll('[name="amount[]"]')).map(el => parseFloat(el.value) || 0);
         data.sub_total = amounts.reduce((a, b) => a + b, 0);
         data.gst_total = data.invoice_type === 'With GST' ? Math.round((data.sub_total * 0.18) * 100) / 100 : 0;
         data.grand_total = data.sub_total + data.gst_total;
 
+        // Frontend Validation
+        let isValid = true;
+        document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        document.querySelectorAll('.error-message').forEach(el => el.remove());
+
+        const setError = (name, msg) => {
+            const input = document.querySelector(`[name="${name}"]`);
+            if (input) {
+                input.classList.add('input-error');
+                const err = document.createElement('p');
+                err.className = 'error-message';
+                err.textContent = msg;
+                input.closest('.space-y-1.5')?.appendChild(err);
+                input.focus();
+            }
+            isValid = false;
+        };
+
+        if (!data.invoice_number) setError('invoice_number', 'Invoice number is required');
+        if (!data.invoice_date) setError('invoice_date', 'Invoice date is required');
+        if (!data.party_name || data.party_name.length < 3) setError('party_name', 'Party name must be at least 3 characters');
+        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.address) setError('address', 'Address is required');
+        
+        if (data.invoice_type === 'With GST') {
+            if (!data.gstin || !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(data.gstin)) setError('gstin', 'Valid GSTIN required');
+            if (!data.place_of_supply) setError('place_of_supply', 'Place of supply required');
+        }
+
+        if (data.grand_total <= 0) {
+            showToast('Please add at least one service with a rate', 'error');
+            isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // Submit
         try {
-            const res = await fetch('../api/sales.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+
+            const res = await fetch('../api/sales.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(data) 
+            });
+            
             const r = await res.json();
-            if (r.success) window.location.href = `print_invoice.php?id=${r.id}`;
-            else alert(r.message);
-        } catch (e) { alert('Save failed'); }
+            
+            if (r.success) {
+                showToast('Invoice created successfully!');
+                setTimeout(() => window.location.href = `print_invoice.php?id=${r.id}`, 1000);
+            } else {
+                showToast(r.message || 'Validation failed', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                
+                // If it's a duplicate invoice error, focus the field
+                if (r.message && r.message.toLowerCase().includes('invoice number')) {
+                    document.getElementById('invoice_number').classList.add('input-error');
+                    document.getElementById('invoice_number').focus();
+                }
+            }
+        } catch (e) { 
+            showToast('System error occurred', 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
     });
 
     addRow();

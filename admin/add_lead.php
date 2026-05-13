@@ -328,14 +328,54 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
     document.getElementById('addLeadForm').onsubmit = async function(e) {
         e.preventDefault();
+        
         const btn = document.getElementById('saveLeadBtn');
         const icon = document.getElementById('loadingIcon');
         
-        btn.disabled = true;
-        icon.classList.remove('hidden');
+        // Clear previous validation states
+        this.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        this.querySelectorAll('.error-message').forEach(el => el.remove());
 
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
+
+        // Final validation before submission
+        let isValid = true;
+        const setError = (name, msg) => {
+            const input = this.querySelector(`[name="${name}"]`);
+            if (input) {
+                input.classList.add('input-error');
+                const err = document.createElement('p');
+                err.className = 'error-message';
+                err.textContent = msg;
+                input.closest('.space-y-1.5')?.appendChild(err);
+            }
+            isValid = false;
+        };
+
+        if (!data.lead_date) setError('lead_date', 'Lead date is required');
+        if (!data.company_client_name || data.company_client_name.length < 3) setError('company_client_name', 'Company name must be at least 3 characters');
+        if (!data.contact_person || data.contact_person.length < 3) setError('contact_person', 'Contact person required');
+        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.source_of_lead) setError('source_of_lead', 'Source is required');
+
+        if (!isValid) {
+            showToast('Please fix errors in the form', 'error');
+            // If error is in another tab, switch to it
+            const firstErr = this.querySelector('.input-error');
+            if (firstErr) {
+                const tabContent = firstErr.closest('.tab-content');
+                if (tabContent) {
+                    const tabId = tabContent.id.replace('content-', '');
+                    switchTab(tabId);
+                    firstErr.focus();
+                }
+            }
+            return;
+        }
+
+        btn.disabled = true;
+        icon.classList.remove('hidden');
 
         try {
             const response = await fetch('../api/leads.php', {
@@ -346,14 +386,20 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
             const result = await response.json();
 
-            if (response.ok) {
+            if (result.success) {
                 showToast('Lead added successfully!', 'success');
-                setTimeout(() => window.location.href = 'leads.php', 1500);
+                setTimeout(() => window.location.href = 'leads.php', 1000);
             } else {
-                throw new Error(result.message || 'Failed to add lead');
+                showToast(result.message || 'Failed to add lead', 'error');
+                // Check if it's a mobile duplicate error
+                if (result.message && result.message.toLowerCase().includes('mobile')) {
+                    switchTab('basic');
+                    setError('mobile_number', result.message);
+                }
             }
         } catch (error) {
-            showToast(error.message, 'error');
+            showToast('System error occurred', 'error');
+        } finally {
             btn.disabled = false;
             icon.classList.add('hidden');
         }

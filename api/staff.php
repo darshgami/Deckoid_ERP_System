@@ -21,22 +21,27 @@ try {
 
     } elseif ($method === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-
-        // Validate required fields
-        if (empty($input['full_name']) || empty($input['username']) || empty($input['email']) || empty($input['password'])) {
-            throw new Exception('Please fill in all required fields.');
+        
+        if (!$input) {
+            ApiResponse::send(ApiResponse::error('Invalid input data'), 400);
         }
 
-        // Data array for AuthController::register
-        $data = [
-            'full_name' => $input['full_name'],
-            'email' => $input['email'],
-            'username' => $input['username'],
-            'password' => $input['password'],
-            'role' => $input['role'] ?? 'staff'
+        // Professional Validation
+        $validator = new Validator();
+        $rules = [
+            'full_name' => 'required|min:3',
+            'username' => 'required|min:3',
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+            'role' => 'required'
         ];
 
-        $result = AuthController::register($data);
+        if (!$validator->validate($input, $rules)) {
+            ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
+        }
+
+        // Register user via AuthController
+        $result = AuthController::register($input);
         ApiResponse::send(ApiResponse::success('Staff account created successfully', ['user_id' => $result['user_id']]));
 
     } elseif ($method === 'PUT') {

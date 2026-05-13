@@ -1,226 +1,327 @@
-Fix my Invoice Print Preview overflow issue completely.
-
-IMPORTANT:
-I provided reference invoice image.
-I want EXACT SAME print behavior and page fitting.
-
-Current Major Issue:
-When I click:
-→ Print Invoice
-
-The invoice:
-
-* Goes to second page
-* Overflows vertically
-* Footer moves outside page
-* Signature cuts
-* Content not vertically centered
-* Invoice height exceeds A4
-* Browser print scaling broken
-
-I want:
-✅ PERFECT SINGLE PAGE PRINT
-✅ Proper centered A4 invoice
-✅ No overflow
-✅ No second page
-✅ Professional compact invoice
-✅ Same density as reference invoice
+Add COMPLETE professional validation system in my entire Lead Management ERP.
 
 Project Stack:
 
 * Core PHP
+* MySQL
 * HTML
 * Tailwind CSS
 * Vanilla JavaScript
-* MySQL
 * XAMPP
 * No framework
 * No composer
 
+IMPORTANT:
+My ERP currently has weak/no validation.
+
+I want:
+✅ Proper frontend validation
+✅ Proper backend validation
+✅ Secure validation
+✅ Professional ERP validation UX
+✅ Real-time validation
+✅ Required field validation
+✅ Database validation
+✅ Duplicate prevention
+✅ Input sanitization
+✅ Professional error handling
+
+IMPORTANT:
+Validation must be:
+
+* Professional
+* Minimal
+* Business-oriented
+* Fast
+* User-friendly
+* Production-ready
+
+DO NOT:
+
+* Add annoying popups
+* Add unnecessary alerts
+* Add heavy animations
+* Add AI-style validation UI
+
 ==================================================
 
-1. FIX PRINT PREVIEW OVERFLOW
+1. GLOBAL VALIDATION SYSTEM
    ==================================================
 
 Requirement:
-Invoice MUST ALWAYS fit inside:
-ONE SINGLE A4 PAGE
+Add centralized validation architecture for:
 
-Current issue:
-Browser print preview showing:
-Page 1 + Page 2 overflow
-
-Fix:
-
-* Height overflow
-* Bottom spacing overflow
-* Footer overflow
-* Table overflow
-* Margin overflow
-* Padding overflow
+* Frontend validation
+* Backend validation
+* Database validation
 
 Generate:
 
-1. Exact A4 print sizing strategy
-2. Exact printable height recommendations
-3. Exact content height balancing
-4. Overflow hidden strategy
-5. Proper scaling recommendations
-6. Browser print-fit optimization
+1. Validation architecture
+2. Validation workflow
+3. Validation hierarchy
+4. Error handling strategy
+5. Form submission flow
+6. Validation message structure
 
 IMPORTANT:
-Invoice should NEVER create second page.
+Frontend validation is NOT enough.
+Backend validation must ALWAYS validate again.
 
-Current issue:
-Invoice not centered properly in print preview.
+Fields:
+
+* Username
+* Password
+
+Required Validation:
+
+* Empty field validation
+* Invalid credentials validation
+* Trim whitespace
+* Session validation
+* Unauthorized access prevention
+
+Generate:
+
+1. Login validation workflow
+2. Secure authentication validation
+3. Error message recommendations
+4. Session handling validation
 
 Requirement:
+Validate ALL lead fields according to Excel structure.
 
-* Horizontally centered
-* Vertically balanced
-* Proper white margins around invoice
-* Professional page alignment
+Generate validation for:
 
-Generate:
-
-1. Center alignment strategy
-2. Print container width recommendations
-3. Proper left/right margin recommendations
-4. Professional A4 positioning strategy
-
-Current issue:
-Invoice height unnecessarily large.
-
-Generate:
-
-1. Compact vertical spacing strategy
-2. Better invoice compression
-3. Better section balancing
-4. Footer compression recommendations
-5. Print-safe compact layout
-
-Current issue:
-Large empty table section causing overflow.
-
-Requirement:
-
-Generate:
-
-1. Dynamic invoice table sizing
-2. Auto-height recommendations
-3. Better row density
-4. Compact service table structure
-
-Current issue:
-Footer and signature moving outside printable page.
-
-Requirement:
-Footer must:
-
-* Stay inside A4
-* Stay attached to invoice
-* Never overflow
-* Never cut
-
-Generate:
-
-1. Footer positioning strategy
-2. Signature placement optimization
-3. Compact terms section
-4. Bottom-safe spacing recommendations
-
-Generate COMPLETE professional print CSS architecture for:
-
-* @page
-* @media print
-* A4 portrait
-* Chrome print
-* Edge print
-* Save as PDF
-
-Generate:
-
-1. Proper print scaling strategy
-2. Correct page margins
-3. Print-safe padding
-4. Page-break prevention
-5. Overflow prevention
-6. Printer compatibility recommendations
+* Required fields
+* Dropdown selection
+* Mobile number validation
+* Email validation
+* Duplicate lead prevention
+* Date validation
+* Special character handling
+* Empty space trimming
+* Maximum length validation
 
 IMPORTANT:
-Invoice should print exactly like professional GST invoice software.
-
-Current issue:
-These are appearing:
-
-* Back to Sales
-* Print Invoice button
-* ERP wrapper spacing
-* Dashboard layout spacing
-
-Requirement:
-During print:
-ONLY show invoice.
-
-Hide:
-
-* Sidebar
-* Navbar
-* Buttons
-* Background wrappers
-* ERP layout containers
+Do NOT rename Excel fields.
 
 Generate:
 
-1. Print-only rendering strategy
-2. Hidden UI recommendations
-3. Clean print container workflow
+1. Complete lead validation architecture
+2. Required field logic
+3. Validation priority system
+4. Error state UI recommendations
+5. Inline validation strategy
 
-Reference invoice feels:
+Requirement:
+Validate:
 
-* Compact
+* Existing data updates
+* Null value prevention
+* Invalid update prevention
+* Hidden field validation
+* Lead ID protection
+
+Generate:
+
+1. Update validation workflow
+2. Data consistency validation
+3. Secure update recommendations
+4. Record integrity strategy
+
+Validate:
+
+* Invoice number
+* Duplicate invoice prevention
+* Party name
+* Mobile number
+* GST calculation
+* Service rows
+* Amount fields
+* Numeric validation
+* Invoice type validation
+
+IMPORTANT:
+Prevent:
+
+* Negative amounts
+* Invalid GST values
+* Empty invoice save
+* Broken invoice totals
+
+Generate:
+
+1. Invoice validation workflow
+2. GST validation strategy
+3. Financial calculation validation
+4. Invoice integrity validation
+
+Fields:
+
+* Staff Name
+* Username
+* Password
+* Confirm Password
+* Role
+
+Validate:
+
+* Duplicate username prevention
+* Password strength
+* Password match
+* Empty field prevention
+* Invalid role prevention
+
+Generate:
+
+1. Staff validation workflow
+2. Secure password validation
+3. Duplicate prevention strategy
+4. Role validation strategy
+
+Validate:
+
+* Empty search
+* Invalid filter
+* SQL injection prevention
+* Search sanitization
+* Pagination limits
+
+Generate:
+
+1. Search validation architecture
+2. Secure filtering recommendations
+3. Input sanitization workflow
+
+Validate:
+
+* Export request validation
+* Empty export prevention
+* Data availability validation
+* Invalid date range validation
+
+Generate:
+
+1. Export validation workflow
+2. File generation validation
+3. Error handling recommendations
+
+Requirement:
+Professional ERP validation UI.
+
+Generate:
+
+1. Inline validation strategy
+2. Error text placement
+3. Border color recommendations
+4. Focus state recommendations
+5. Success state recommendations
+6. Required field indicators
+7. Real-time validation recommendations
+
+IMPORTANT:
+Validation UI should feel:
+
 * Professional
-* Dense
-* Print-balanced
-* Properly proportioned
+* Minimal
+* SaaS-quality
+* Non-annoying
 
-My invoice currently feels:
+Generate COMPLETE backend validation strategy for:
 
-* Oversized
-* Stretched
-* Unbalanced
+* SQL injection prevention
+* XSS prevention
+* Session validation
+* CSRF protection
+* Input sanitization
+* Output escaping
+* Duplicate prevention
+* Unauthorized access prevention
+
+IMPORTANT:
+This is Core PHP.
+Generate secure validation workflow accordingly.
+
+Generate validation for:
+
+* UNIQUE constraints
+* NOT NULL constraints
+* Foreign key validation
+* Duplicate prevention
+* Data consistency
+* Transaction safety
 
 Generate:
 
-1. Reference-style density strategy
-2. Better typography scale
-3. Better row proportions
-4. Better spacing ratios
-5. Better invoice hierarchy
+1. Database integrity recommendations
+2. Validation-before-save workflow
+3. Concurrent insert handling
 
-FINAL RESULT MUST:
-✅ Fit inside ONE page
-✅ Be centered
-✅ Have no overflow
-✅ Have no second page
-✅ Have compact spacing
-✅ Have professional business look
-✅ Have balanced table height
-✅ Have visible signature
-✅ Have visible footer
-✅ Print correctly in Chrome
-✅ Save correctly as PDF
+Requirement:
+Professional ERP error messages.
 
-❌ Empty rows
-❌ Large white spaces
-❌ Oversized margins
-❌ Huge table height
-❌ Footer overflow
-❌ Thick borders
-❌ Unnecessary wrappers
-❌ Dashboard spacing
-❌ Print buttons during print
-❌ Second page generation
+Generate:
+
+1. Validation message structure
+2. User-friendly error wording
+3. Inline message placement
+4. Global error handling
+5. Success notification strategy
+
+IMPORTANT:
+Avoid:
+
+* Technical errors
+* Raw SQL errors
+* Ugly browser alerts
+
+Requirement:
+Validation must work properly on:
+
+* Mobile
+* Tablet
+* Laptop
+* Desktop
+
+Generate:
+
+1. Mobile validation UX
+2. Touch-friendly error states
+3. Responsive validation spacing
+4. Mobile keyboard optimization
+
+STRICTLY VALIDATE:
+✅ Empty fields
+✅ Duplicate data
+✅ Invalid formats
+✅ Invalid dates
+✅ Invalid numbers
+✅ Unauthorized access
+✅ Session expiry
+✅ Broken calculations
+✅ Invalid dropdown values
+✅ Invalid IDs
+
+STRICTLY PREVENT:
+❌ SQL injection
+❌ XSS
+❌ Duplicate invoice numbers
+❌ Duplicate usernames
+❌ Invalid GST totals
+❌ Invalid lead updates
+❌ Empty invoice generation
+❌ Broken print data
+
+Final Validation Feel:
+
+* Enterprise ERP quality
+* Fast
+* Professional
+* Secure
+* User-friendly
+* schema.sql file update you fully 
+* Production-ready
 
 Focus on:
-PERFECT SINGLE PAGE CENTERED GST INVOICE PRINT PREVIEW
+COMPLETE PROFESSIONAL ERP VALIDATION SYSTEM

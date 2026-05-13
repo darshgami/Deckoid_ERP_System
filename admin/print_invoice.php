@@ -67,6 +67,7 @@ function numberToWordsIndian($number) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $isGST ? 'Tax Invoice' : 'Invoice' ?> - <?= h($invoice['invoice_number']) ?></title>
+    <link rel="icon" type="image/png" href="<?= asset_url('assets/ERP.png') ?>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -110,7 +111,8 @@ function numberToWordsIndian($number) {
     <div class="invoice-box">
         <div class="content-wrapper">
             <!-- COMPANY HEADER -->
-            <div class="p-2 border-b-black text-center">
+            <div class="p-4 border-b-black text-center flex flex-col items-center">
+                <img src="<?= asset_url('assets/ERP.png') ?>" alt="Logo" class="w-16 h-16 mb-2 object-contain">
                 <h1 class="text-2xl font-black tracking-widest uppercase py-1 border-b-2 border-black mb-1">DECKOID SOLUTION</h1>
                 <p class="text-[10px] font-bold text-neutral-600 uppercase">C/O; PARSOTTAM INDUSTRIES</p>
                 <p class="text-[10px] font-bold text-neutral-600 uppercase">6, BHAKTINAGAR STATION PLOT, RAJKOT-360002</p>

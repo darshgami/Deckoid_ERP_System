@@ -82,8 +82,41 @@ if ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
     
     if (!$data) {
-        echo json_encode(['success' => false, 'message' => 'Invalid data']);
-        exit;
+        ApiResponse::send(ApiResponse::error('Invalid request data'), 400);
+    }
+
+    // Server-side Validation
+    $validator = new Validator();
+    $rules = [
+        'invoice_number' => 'required|min:3',
+        'invoice_date' => 'required',
+        'party_name' => 'required|min:3',
+        'mobile_number' => 'required|mobile',
+        'address' => 'required',
+        'sub_total' => 'required|numeric',
+        'grand_total' => 'required|numeric'
+    ];
+
+    // Conditional GST Validation
+    if ($data['invoice_type'] === 'With GST') {
+        $rules['gstin'] = 'required|gstin';
+        $rules['place_of_supply'] = 'required';
+    }
+
+    if (!$validator->validate($data, $rules)) {
+        ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
+    }
+
+    // Numeric consistency check (Prevent negative or zero totals)
+    if ($data['grand_total'] <= 0) {
+        ApiResponse::send(ApiResponse::error('Grand total must be greater than zero'), 400);
+    }
+
+    // Duplicate Invoice Number Check (Security & Data Integrity)
+    $stmt = $db->prepare("SELECT id FROM invoices WHERE invoice_number = ?");
+    $stmt->execute([$data['invoice_number']]);
+    if ($stmt->fetch()) {
+        ApiResponse::send(ApiResponse::error("Invoice number '" . h($data['invoice_number']) . "' already exists"), 400);
     }
 
     try {
@@ -92,22 +125,21 @@ if ($method === 'POST') {
         $invoice_id = generateUUID();
         
         // Insert into invoices
-        $stmt = $db->prepare("INSERT INTO invoices (id, invoice_number, invoice_date, invoice_type, party_name, address, mobile_number, gstin, place_of_supply, sub_total, gst_total, grand_total, amount_in_words, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO invoices (id, invoice_number, invoice_date, invoice_type, party_name, address, mobile_number, gstin, place_of_supply, sub_total, gst_total, grand_total, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         $stmt->execute([
             $invoice_id,
-            $data['invoice_number'],
+            trim($data['invoice_number']),
             $data['invoice_date'],
             $data['invoice_type'],
-            $data['party_name'],
-            $data['address'],
-            $data['mobile_number'],
+            trim($data['party_name']),
+            trim($data['address']),
+            trim($data['mobile_number']),
             $data['gstin'] ?? null,
             $data['place_of_supply'] ?? null,
             $data['sub_total'],
             $data['gst_total'],
             $data['grand_total'],
-            $data['amount_in_words'],
             $_SESSION['user_id']
         ]);
 

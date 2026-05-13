@@ -34,8 +34,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Filters Bar -->
 <div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="relative group">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div class="relative group lg:col-span-2">
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
@@ -53,6 +53,11 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             <option value="Not Interested">Not Interested</option>
             <option value="Lost">Lost</option>
         </select>
+        <div class="flex items-center gap-2">
+            <input type="date" id="dateFrom" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-[11px] font-bold">
+            <span class="text-neutral-400 text-xs font-bold">TO</span>
+            <input type="date" id="dateTo" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-[11px] font-bold">
+        </div>
         <select id="serviceFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm cursor-pointer">
             <option value="">All Services</option>
             <option value="Facebook & Google Ads">Facebook & Google Ads</option>
@@ -63,8 +68,9 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             <option value="Social Media Management">Social Media Management</option>
             <option value="AI Video Making">AI Video Making</option>
         </select>
-        <button onclick="loadLeads()" class="w-full bg-neutral-900 text-white font-bold rounded-xl py-2.5 hover:bg-neutral-800 transition-all text-sm">
-            Apply Filters
+        <button onclick="loadLeads(1)" class="w-full bg-neutral-900 text-white font-bold rounded-xl py-2.5 hover:bg-neutral-800 transition-all text-sm flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            Apply
         </button>
     </div>
 </div>
@@ -402,10 +408,23 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         const search = document.getElementById('search').value;
         const status = document.getElementById('statusFilter').value;
         const service = document.getElementById('serviceFilter').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
 
-        const params = new URLSearchParams({ page, limit: 10, search, status, service });
+        const tbody = document.getElementById('leadsTableBody');
+        tbody.innerHTML = `<tr><td colspan="15" class="px-6 py-20 text-center"><div class="flex flex-col items-center gap-2"><div class="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div><span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Loading...</span></div></td></tr>`;
 
         try {
+            const params = new URLSearchParams({
+                page,
+                limit: 10,
+                search,
+                status,
+                service,
+                date_from: dateFrom,
+                date_to: dateTo
+            });
+
             const response = await fetch(`../api/leads.php?${params}`);
             const res = await response.json();
             
@@ -704,12 +723,14 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
     document.getElementById('leadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
         const saveBtn = document.getElementById('saveLeadBtn');
         const loadingIcon = document.getElementById('loadingIcon');
         const id = document.getElementById('lead_id_input').value;
         
-        saveBtn.disabled = true;
-        loadingIcon.classList.remove('hidden');
+        // Clear previous validation states
+        this.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+        this.querySelectorAll('.error-message').forEach(el => el.remove());
 
         const formData = new FormData(this);
         const data = Object.fromEntries(formData.entries());
@@ -724,6 +745,34 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         for (const key in data) {
             if (data[key] === '' && key !== 'id') data[key] = null;
         }
+
+        // Frontend Validation
+        let isValid = true;
+        const setError = (name, msg) => {
+            const input = this.querySelector(`[name="${name}"]`);
+            if (input) {
+                input.classList.add('input-error');
+                const err = document.createElement('p');
+                err.className = 'error-message';
+                err.textContent = msg;
+                input.closest('.space-y-1.5')?.appendChild(err);
+            }
+            isValid = false;
+        };
+
+        if (!data.lead_date) setError('lead_date', 'Lead date is required');
+        if (!data.company_client_name || data.company_client_name.length < 3) setError('company_client_name', 'Company name must be at least 3 characters');
+        if (!data.contact_person || data.contact_person.length < 3) setError('contact_person', 'Contact person required');
+        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.source_of_lead) setError('source_of_lead', 'Source is required');
+
+        if (!isValid) {
+            showToast('Please fix the errors before saving', 'error');
+            return;
+        }
+
+        saveBtn.disabled = true;
+        loadingIcon.classList.remove('hidden');
 
         try {
             const url = id ? `../api/leads.php?id=${id}` : '../api/leads.php';
@@ -742,10 +791,14 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 closeLeadModal();
                 loadLeads(id ? currentPage : 1);
             } else {
-                throw new Error(res.message || 'Something went wrong');
+                showToast(res.message || 'Validation failed', 'error');
+                // Highlight mobile number if it's a duplicate error
+                if (res.message && res.message.toLowerCase().includes('mobile')) {
+                    setError('mobile_number', res.message);
+                }
             }
         } catch (error) {
-            showToast(error.message, 'error');
+            showToast('System error: ' + error.message, 'error');
         } finally {
             saveBtn.disabled = false;
             loadingIcon.classList.add('hidden');
@@ -756,7 +809,22 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         const search = document.getElementById('search').value;
         const status = document.getElementById('statusFilter').value;
         const service = document.getElementById('serviceFilter').value;
-        const params = new URLSearchParams({ search, status, service });
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+
+        // Date validation before export
+        if (dateFrom && dateTo && dateTo < dateFrom) {
+            showToast('End date cannot be before start date', 'error');
+            return;
+        }
+
+        const params = new URLSearchParams({ 
+            search, 
+            status, 
+            service,
+            date_from: dateFrom,
+            date_to: dateTo
+        });
 
         window.location.href = `../api/export.php?${params}`;
     }
