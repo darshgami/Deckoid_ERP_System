@@ -241,43 +241,47 @@ layout_start('Dashboard - Deckoid ERP');
 
             // Update Recent Activity
             const activityList = document.getElementById('recentActivityList');
-            if (data.recent_activity && data.recent_activity.length > 0) {
-                activityList.innerHTML = data.recent_activity.map(log => `
-                    <div class="flex gap-4 relative">
-                        <div class="w-[22px] h-[22px] rounded-full border-4 border-white ${log.activity_type === 'created' ? 'bg-green-500' : (log.activity_type === 'deleted' ? 'bg-red-500' : 'bg-primary-500')} z-10 shadow-sm flex-shrink-0"></div>
-                        <div class="flex-1 -mt-1">
-                            <div class="flex items-center justify-between gap-2">
-                                <p class="text-[11px] font-bold text-neutral-900 leading-tight">
-                                    <span class="text-primary-600">@${log.user_name || 'System'}</span> 
-                                    ${log.activity_type} lead for <span class="text-neutral-500">${log.company_client_name}</span>
-                                </p>
-                                <span class="text-[9px] font-black text-neutral-300 uppercase whitespace-nowrap">${formatTimeAgo(log.created_at)}</span>
+            if (activityList) {
+                if (data.recent_activity && data.recent_activity.length > 0) {
+                    activityList.innerHTML = data.recent_activity.map(log => `
+                        <div class="flex gap-4 relative">
+                            <div class="w-[22px] h-[22px] rounded-full border-4 border-white ${log.activity_type === 'created' ? 'bg-green-500' : (log.activity_type === 'deleted' ? 'bg-red-500' : 'bg-primary-500')} z-10 shadow-sm flex-shrink-0"></div>
+                            <div class="flex-1 -mt-1">
+                                <div class="flex items-center justify-between gap-2">
+                                    <p class="text-[11px] font-bold text-neutral-900 leading-tight">
+                                        <span class="text-primary-600">@${log.user_name || 'System'}</span> 
+                                        ${log.activity_type} lead for <span class="text-neutral-500">${log.company_client_name}</span>
+                                    </p>
+                                    <span class="text-[9px] font-black text-neutral-300 uppercase whitespace-nowrap">${formatTimeAgo(log.created_at)}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `).join('');
-            } else {
-                activityList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No recent activity</div>`;
+                    `).join('');
+                } else {
+                    activityList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No recent activity</div>`;
+                }
             }
 
             // Update Top Performers
             const performersList = document.getElementById('topPerformersList');
-            if (data.user_stats && data.user_stats.length > 0) {
-                performersList.innerHTML = data.user_stats.map(user => `
-                    <div class="flex items-center justify-between p-3 rounded-xl bg-neutral-50/50 hover:bg-neutral-50 transition-all border border-transparent hover:border-neutral-100 group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-white border border-neutral-100 text-primary-600 rounded-lg flex items-center justify-center font-black text-xs group-hover:bg-primary-600 group-hover:text-white transition-all">
-                                ${user.full_name.charAt(0)}
+            if (performersList) {
+                if (data.user_stats && data.user_stats.length > 0) {
+                    performersList.innerHTML = data.user_stats.map(user => `
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-neutral-50/50 hover:bg-neutral-50 transition-all border border-transparent hover:border-neutral-100 group">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-white border border-neutral-100 text-primary-600 rounded-lg flex items-center justify-center font-black text-xs group-hover:bg-primary-600 group-hover:text-white transition-all">
+                                    ${user.full_name.charAt(0)}
+                                </div>
+                                <span class="text-[11px] font-bold text-neutral-700">${user.full_name}</span>
                             </div>
-                            <span class="text-[11px] font-bold text-neutral-700">${user.full_name}</span>
+                            <div class="px-2 py-1 bg-white rounded-lg border border-neutral-100 shadow-sm text-[10px] font-black text-neutral-900 group-hover:border-primary-100 group-hover:text-primary-600 transition-all">
+                                ${user.count} Leads
+                            </div>
                         </div>
-                        <div class="px-2 py-1 bg-white rounded-lg border border-neutral-100 shadow-sm text-[10px] font-black text-neutral-900 group-hover:border-primary-100 group-hover:text-primary-600 transition-all">
-                            ${user.count} Leads
-                        </div>
-                    </div>
-                `).join('');
-            } else {
-                performersList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No data available</div>`;
+                    `).join('');
+                } else {
+                    performersList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No data available</div>`;
+                }
             }
 
 

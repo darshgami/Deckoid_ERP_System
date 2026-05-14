@@ -18,25 +18,27 @@ $db = Database::getInstance();
     </a>
 </div>
 
-<!-- Search & Filters -->
-<div class="bg-white p-5 rounded-2xl shadow-sm border border-neutral-100 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
-        <div class="md:col-span-6 relative group">
-            <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div class="bg-white p-4 rounded-[2rem] shadow-sm border border-neutral-100 mb-8">
+    <div class="flex flex-col md:flex-row items-center gap-4">
+        <!-- Search -->
+        <div class="relative flex-[2] w-full md:w-auto group">
+            <span class="absolute inset-y-0 left-5 flex items-center text-neutral-400 group-focus-within:text-primary-500 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </span>
             <input type="text" id="search" placeholder="Search party or invoice number..." 
-                   class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium">
+                   class="w-full bg-neutral-50/80 border-transparent rounded-2xl py-3.5 pl-14 pr-6 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-bold text-neutral-700 placeholder:text-neutral-400 placeholder:font-medium">
         </div>
-        <div class="md:col-span-3">
-            <select id="typeFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-bold cursor-pointer">
+        <!-- Type Filter -->
+        <div class="w-full md:flex-1">
+            <select id="typeFilter" class="w-full bg-neutral-50/80 border-transparent rounded-2xl py-3.5 px-6 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-black text-neutral-900 cursor-pointer appearance-none">
                 <option value="">All Types</option>
-                <option value="With GST">GST</option>
-                <option value="Without GST">Non-GST</option>
+                <option value="With GST">With GST</option>
+                <option value="Without GST">Without GST</option>
             </select>
         </div>
-        <div class="md:col-span-3">
-            <button onclick="loadInvoices()" class="w-full py-2.5 bg-neutral-900 text-white font-black rounded-xl hover:bg-neutral-800 transition-all text-sm">
+        <!-- Filter Button -->
+        <div class="w-full md:w-64">
+            <button onclick="loadInvoices()" class="w-full py-3.5 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 shadow-xl shadow-primary-200 transition-all text-xs uppercase tracking-[0.15em] flex items-center justify-center">
                 Filter
             </button>
         </div>
