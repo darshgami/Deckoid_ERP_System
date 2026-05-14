@@ -3,7 +3,7 @@
  * Global Sidebar Component
  */
 $current_page = basename($_SERVER['PHP_SELF']);
-$role = $_SESSION['role'] ?? 'staff';
+$role = strtolower(trim($_SESSION['role'] ?? 'staff'));
 
 $menuItems = [
     ['label' => 'Dashboard', 'url' => 'dashboard.php', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
@@ -13,7 +13,6 @@ $menuItems = [
 
 if ($role === 'admin') {
     $menuItems[] = ['label' => 'Followups', 'url' => 'followups.php', 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'];
-    $menuItems[] = ['label' => 'Activity Logs', 'url' => 'logs.php', 'icon' => 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'];
     $menuItems[] = ['label' => 'Staff Management', 'url' => 'staff.php', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'];
     $menuItems[] = ['label' => 'Sales', 'url' => 'sales.php', 'icon' => 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z'];
 }

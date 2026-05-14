@@ -9,20 +9,37 @@ require_once '../config/env.php';
 require_once '../includes/database.php';
 
 $db = Database::getInstance();
-$stmt = $db->query("SELECT invoice_number FROM invoices ORDER BY created_at DESC LIMIT 1");
-$lastInvoice = $stmt->fetch();
+$invoiceId = $_GET['id'] ?? null;
+$invoice = null;
+
+if ($invoiceId) {
+    $stmt = $db->prepare("SELECT * FROM invoices WHERE id = ?");
+    $stmt->execute([$invoiceId]);
+    $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$invoice) {
+        header("Location: sales.php");
+        exit;
+    }
+}
+
 $nextNumber = "DE0001";
-if ($lastInvoice) {
-    $lastNum = (int)preg_replace('/[^0-9]/', '', $lastInvoice['invoice_number']);
-    $nextNumber = "DE" . str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
+if (!$invoiceId) {
+    $stmt = $db->query("SELECT invoice_number FROM invoices ORDER BY created_at DESC LIMIT 1");
+    $lastInvoice = $stmt->fetch();
+    if ($lastInvoice) {
+        $lastNum = (int)preg_replace('/[^0-9]/', '', $lastInvoice['invoice_number']);
+        $nextNumber = "DE" . str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
+    }
+} else {
+    $nextNumber = $invoice['invoice_number'];
 }
 ?>
 
 <div class="max-w-5xl mx-auto">
-    <form id="invoiceForm" class="space-y-6 pb-20">
+    <form id="invoiceForm" class="space-y-6 pb-20" novalidate>
         <!-- Header -->
         <div class="flex items-center justify-between mb-8">
-            <h1 class="text-2xl font-black text-neutral-900 tracking-tight">New Sales Invoice</h1>
+            <h1 class="text-2xl font-black text-neutral-900 tracking-tight"><?= $invoiceId ? 'Edit Sales Invoice' : 'New Sales Invoice' ?></h1>
             <a href="sales.php" class="text-xs font-black text-neutral-400 uppercase tracking-widest hover:text-primary-600 transition-all flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 Back to List
@@ -46,13 +63,13 @@ if ($lastInvoice) {
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Type</label>
                         <select name="invoice_type" id="invoice_type" onchange="toggleGSTFields()" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all cursor-pointer">
-                            <option value="With GST">With GST (18%)</option>
-                            <option value="Without GST">Without GST</option>
+                            <option value="With GST" <?= ($invoice['invoice_type'] ?? '') === 'With GST' ? 'selected' : '' ?>>With GST (18%)</option>
+                            <option value="Without GST" <?= ($invoice['invoice_type'] ?? '') === 'Without GST' ? 'selected' : '' ?>>Without GST</option>
                         </select>
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Date</label>
-                        <input type="date" name="invoice_date" value="<?= date('Y-m-d') ?>" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                        <input type="date" name="invoice_date" value="<?= $invoice['invoice_date'] ?? date('Y-m-d') ?>" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Number</label>
@@ -64,25 +81,25 @@ if ($lastInvoice) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Party Name</label>
-                        <input type="text" name="party_name" placeholder="M/s. Party Name" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                        <input type="text" name="party_name" value="<?= htmlspecialchars($invoice['party_name'] ?? '') ?>" placeholder="M/s. Party Name" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Mobile Number</label>
-                            <input type="text" name="mobile_number" placeholder="Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                            <input type="text" name="mobile_number" value="<?= htmlspecialchars($invoice['mobile_number'] ?? '') ?>" placeholder="Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Place of Supply</label>
-                            <input type="text" name="place_of_supply" placeholder="State/City" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                            <input type="text" name="place_of_supply" value="<?= htmlspecialchars($invoice['place_of_supply'] ?? '') ?>" placeholder="State/City" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
                         </div>
                     </div>
                     <div class="md:col-span-2 space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Address</label>
-                        <textarea name="address" rows="2" placeholder="Client's Address" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all resize-none"></textarea>
+                        <textarea name="address" rows="2" placeholder="Client's Address" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all resize-none"><?= htmlspecialchars($invoice['address'] ?? '') ?></textarea>
                     </div>
                     <div id="gstinField" class="md:col-span-2 space-y-1.5">
                         <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Party GSTIN</label>
-                        <input type="text" name="gstin" placeholder="GST Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all uppercase tracking-widest">
+                        <input type="text" name="gstin" value="<?= htmlspecialchars($invoice['gstin'] ?? '') ?>" placeholder="GST Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all uppercase tracking-widest">
                     </div>
                 </div>
 
@@ -134,7 +151,7 @@ if ($lastInvoice) {
                             <input type="hidden" name="amount_in_words" id="amountInWordsInput">
                         </div>
                         <button type="submit" class="w-full py-4 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-900/20 uppercase tracking-widest text-xs">
-                            Save & Print
+                            <?= $invoiceId ? 'Update Invoice' : 'Save & Print' ?>
                         </button>
                     </div>
                 </div>
@@ -146,25 +163,62 @@ if ($lastInvoice) {
 <script>
     const servicesList = ["Facebook & Google Ads", "Website Design & Development", "Graphics Design", "Search Engine Optimization", "Video Editing", "Social Media Management", "AI Video Making", "Other"];
     let rowCount = 0;
+    const id = "<?= $invoiceId ?>";
 
-    function addRow() {
+    async function loadInvoiceData() {
+        if (!id) {
+            addRow();
+            toggleGSTFields();
+            return;
+        }
+
+        try {
+            const response = await fetch(`../api/sales.php?id=${id}`);
+            const res = await response.json();
+            if (res.success) {
+                const invoice = res.data;
+                if (invoice.items && invoice.items.length > 0) {
+                    invoice.items.forEach(item => {
+                        addRow(item);
+                    });
+                } else {
+                    addRow();
+                }
+                calculateTotals();
+                toggleGSTFields();
+            }
+        } catch (error) {
+            console.error('Error loading invoice data:', error);
+            addRow();
+        }
+    }
+
+    function addRow(data = null) {
         rowCount++;
         const tr = document.createElement('tr');
         tr.className = 'text-sm font-bold hover:bg-neutral-50 transition-colors';
+
+        let isOther = false;
+        let serviceValue = data ? data.service_name : '';
+        if (data && !servicesList.includes(data.service_name)) {
+            isOther = true;
+            serviceValue = 'Other';
+        }
+
         tr.innerHTML = `
             <td class="px-4 py-4 text-xs text-neutral-400 font-black border-r border-neutral-100">${rowCount}</td>
             <td class="px-4 py-4 border-r border-neutral-100">
                 <select name="service_name[]" onchange="handleServiceChange(this)" class="w-full bg-transparent rounded-lg py-1 px-1 text-xs font-bold outline-none">
                     <option value="">Select Service</option>
-                    ${servicesList.map(s => `<option value="${s}">${s}</option>`).join('')}
+                    ${servicesList.map(s => `<option value="${s}" ${serviceValue === s ? 'selected' : ''}>${s}</option>`).join('')}
                 </select>
-                <textarea name="custom_service[]" placeholder="Description" class="hidden w-full mt-2 bg-white border border-neutral-100 rounded-lg py-2 px-3 text-xs resize-none" rows="2"></textarea>
+                <textarea name="custom_service[]" placeholder="Description" class="${isOther ? '' : 'hidden'} w-full mt-2 bg-white border border-neutral-100 rounded-lg py-2 px-3 text-xs resize-none" rows="2">${isOther ? data.service_name : ''}</textarea>
             </td>
-            <td class="hsn-col px-4 py-4 border-r border-neutral-100"><input type="text" name="hsn_sac[]" value="9983" class="w-full bg-transparent border-transparent text-center text-xs font-black opacity-60"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="qty[]" value="1.000" step="0.001" oninput="calculateRow(this)" class="w-full bg-transparent text-center text-xs font-black outline-none"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="rate[]" value="0.00" step="0.01" oninput="calculateRow(this)" class="w-full bg-transparent text-right text-xs font-black outline-none"></td>
+            <td class="hsn-col px-4 py-4 border-r border-neutral-100"><input type="text" name="hsn_sac[]" value="${data ? data.hsn_sac : '9983'}" class="w-full bg-transparent border-transparent text-center text-xs font-black opacity-60"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="qty[]" value="${data ? data.qty : '1.000'}" step="0.001" oninput="calculateRow(this)" class="w-full bg-transparent text-center text-xs font-black outline-none"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="rate[]" value="${data ? data.rate : '0.00'}" step="0.01" oninput="calculateRow(this)" class="w-full bg-transparent text-right text-xs font-black outline-none"></td>
             <td class="gst-col px-4 py-4 border-r border-neutral-100"><input type="text" value="18.00" readonly class="w-full bg-transparent border-transparent text-center text-xs font-black opacity-40"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="text" name="amount[]" value="0.00" readonly class="w-full bg-transparent border-transparent text-right text-xs font-black outline-none"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="text" name="amount[]" value="${data ? data.amount : '0.00'}" readonly class="w-full bg-transparent border-transparent text-right text-xs font-black outline-none"></td>
             <td class="px-4 py-4 text-center">
                 <button type="button" onclick="this.closest('tr').remove(); calculateTotals(); updateRowNumbers();" class="text-neutral-300 hover:text-red-500 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -270,8 +324,8 @@ if ($lastInvoice) {
                 input.classList.add('input-error');
                 const err = document.createElement('p');
                 err.className = 'error-message';
-                err.textContent = msg;
-                input.closest('.space-y-1.5')?.appendChild(err);
+                err.innerHTML = `<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> ${msg}`;
+                input.closest('.space-y-1\\.5')?.appendChild(err);
                 input.focus();
             }
             isValid = false;
@@ -280,7 +334,7 @@ if ($lastInvoice) {
         if (!data.invoice_number) setError('invoice_number', 'Invoice number is required');
         if (!data.invoice_date) setError('invoice_date', 'Invoice date is required');
         if (!data.party_name || data.party_name.length < 3) setError('party_name', 'Party name must be at least 3 characters');
-        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.mobile_number || !/^[0-9]{10}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10 digits)');
         if (!data.address) setError('address', 'Address is required');
         
         if (data.invoice_type === 'With GST') {
@@ -302,8 +356,8 @@ if ($lastInvoice) {
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 mx-auto" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
 
-            const res = await fetch('../api/sales.php', { 
-                method: 'POST', 
+            const res = await fetch(`../api/sales.php${id ? '?id=' + id : ''}`, { 
+                method: id ? 'PUT' : 'POST', 
                 headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify(data) 
             });
@@ -311,8 +365,8 @@ if ($lastInvoice) {
             const r = await res.json();
             
             if (r.success) {
-                showToast('Invoice created successfully!');
-                setTimeout(() => window.location.href = `print_invoice.php?id=${r.id}`, 1000);
+                showToast(id ? 'Invoice updated successfully!' : 'Invoice created successfully!');
+                setTimeout(() => window.location.href = `print_invoice.php?id=${id || r.id}`, 1000);
             } else {
                 showToast(r.message || 'Validation failed', 'error');
                 submitBtn.disabled = false;
@@ -331,8 +385,7 @@ if ($lastInvoice) {
         }
     });
 
-    addRow();
-    toggleGSTFields();
+    loadInvoiceData();
 </script>
 
 <?php layout_end(); ?>

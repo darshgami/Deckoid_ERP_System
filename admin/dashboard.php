@@ -167,41 +167,6 @@ layout_start('Dashboard - Deckoid ERP');
                 </table>
             </div>
         </div>
-
-        <!-- Recent Activity & Team Performance -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-            <!-- Recent Activity Timeline -->
-            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
-                <div class="px-5 py-4 lg:px-6 lg:py-4 border-b border-neutral-50 flex items-center justify-between bg-neutral-50/30">
-                    <div>
-                        <h3 class="text-lg font-bold text-neutral-900">Recent Activity</h3>
-                        <p class="text-neutral-400 text-xs font-medium">Real-time system updates</p>
-                    </div>
-                    <a href="logs.php" class="text-primary-600 text-[10px] font-black uppercase tracking-widest hover:text-primary-700 transition-colors">View Logs</a>
-                </div>
-                <div class="p-6 relative">
-                    <div class="space-y-6 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1.5px] before:bg-neutral-50" id="recentActivityList">
-                        <!-- Activity items via JS -->
-                        <div class="flex flex-col items-center py-10 text-neutral-400">
-                            <div class="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest">Fetching Activity...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Team Performance / Top Users -->
-            <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
-                <div class="px-5 py-4 lg:px-6 lg:py-4 border-b border-neutral-50 bg-neutral-50/30">
-                    <h3 class="text-lg font-bold text-neutral-900">Top Performers</h3>
-                    <p class="text-neutral-400 text-xs font-medium">Leads assigned per staff</p>
-                </div>
-                <div class="p-5 space-y-4" id="topPerformersList">
-                    <!-- Performers via JS -->
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
 </div>

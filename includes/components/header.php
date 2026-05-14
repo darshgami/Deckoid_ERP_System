@@ -69,6 +69,27 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #ccc;
         }
+        /* Form Validation Styles */
+        .error-message {
+            color: #dc2626;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 6px;
+            margin-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            animation: fadeInError 0.2s ease-out;
+        }
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .input-error {
+            border: 1.5px solid #ef4444 !important;
+            background-color: #fff1f2 !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.05) !important;
+        }
     </style>
 </head>
 <body class="text-neutral-900 antialiased">

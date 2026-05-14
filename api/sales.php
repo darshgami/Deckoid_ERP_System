@@ -19,6 +19,24 @@ if ($method === 'GET') {
         exit;
     }
 
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $stmt = $db->prepare("SELECT * FROM invoices WHERE id = ?");
+        $stmt->execute([$id]);
+        $invoice = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$invoice) {
+            ApiResponse::send(ApiResponse::error('Invoice not found'), 404);
+        }
+
+        $stmt = $db->prepare("SELECT * FROM invoice_items WHERE invoice_id = ? ORDER BY created_at ASC");
+        $stmt->execute([$id]);
+        $invoice['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['success' => true, 'data' => $invoice]);
+        exit;
+    }
+
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
     $offset = ($page - 1) * $limit;
@@ -167,6 +185,94 @@ if ($method === 'POST') {
 
         $db->commit();
         echo json_encode(['success' => true, 'message' => 'Invoice saved successfully', 'id' => $invoice_id]);
+    } catch (Exception $e) {
+        $db->rollBack();
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+}
+
+if ($method === 'PUT') {
+    $id = $_GET['id'] ?? null;
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    if (!$id || !$data) {
+        ApiResponse::send(ApiResponse::error('Invalid request'), 400);
+    }
+
+    // Server-side Validation
+    $validator = new Validator();
+    $rules = [
+        'invoice_number' => 'required|min:3',
+        'invoice_date' => 'required',
+        'party_name' => 'required|min:3',
+        'mobile_number' => 'required|mobile',
+        'address' => 'required',
+        'sub_total' => 'required|numeric',
+        'grand_total' => 'required|numeric'
+    ];
+
+    if ($data['invoice_type'] === 'With GST') {
+        $rules['gstin'] = 'required|gstin';
+        $rules['place_of_supply'] = 'required';
+    }
+
+    if (!$validator->validate($data, $rules)) {
+        ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
+    }
+
+    // Duplicate Check excluding current
+    $stmt = $db->prepare("SELECT id FROM invoices WHERE invoice_number = ? AND id != ?");
+    $stmt->execute([$data['invoice_number'], $id]);
+    if ($stmt->fetch()) {
+        ApiResponse::send(ApiResponse::error("Invoice number '" . h($data['invoice_number']) . "' already exists"), 400);
+    }
+
+    try {
+        $db->beginTransaction();
+
+        $stmt = $db->prepare("UPDATE invoices SET invoice_number = ?, invoice_date = ?, invoice_type = ?, party_name = ?, address = ?, mobile_number = ?, gstin = ?, place_of_supply = ?, sub_total = ?, gst_total = ?, grand_total = ? WHERE id = ?");
+        
+        $stmt->execute([
+            trim($data['invoice_number']),
+            $data['invoice_date'],
+            $data['invoice_type'],
+            trim($data['party_name']),
+            trim($data['address']),
+            trim($data['mobile_number']),
+            $data['gstin'] ?? null,
+            $data['place_of_supply'] ?? null,
+            $data['sub_total'],
+            $data['gst_total'],
+            $data['grand_total'],
+            $id
+        ]);
+
+        // Refresh items: Delete and Re-insert
+        $db->prepare("DELETE FROM invoice_items WHERE invoice_id = ?")->execute([$id]);
+
+        $itemStmt = $db->prepare("INSERT INTO invoice_items (id, invoice_id, service_name, hsn_sac, qty, rate, amount) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        
+        for ($i = 0; $i < count($data['service_name']); $i++) {
+            $service = $data['service_name'][$i];
+            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
+                $service = $data['custom_service'][$i];
+            }
+
+            if (empty($service)) continue;
+
+            $itemStmt->execute([
+                generateUUID(),
+                $id,
+                $service,
+                $data['hsn_sac'][$i],
+                $data['qty'][$i],
+                $data['rate'][$i],
+                $data['amount'][$i]
+            ]);
+        }
+
+        $db->commit();
+        echo json_encode(['success' => true, 'message' => 'Invoice updated successfully']);
     } catch (Exception $e) {
         $db->rollBack();
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);

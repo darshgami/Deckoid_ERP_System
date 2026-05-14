@@ -1,5 +1,4 @@
 -- Deckoid ERP System Database Schema
--- Optimized for XAMPP (MariaDB/MySQL)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -98,6 +97,7 @@ CREATE INDEX idx_leads_city ON leads(city);
 CREATE INDEX idx_leads_deal_status ON leads(deal_status);
 CREATE INDEX idx_leads_payment_status ON leads(payment_status);
 CREATE INDEX idx_leads_assigned_to ON leads(assigned_to);
+CREATE INDEX idx_leads_created_by ON leads(created_by);
 
 -- Create lead_activity_logs table
 CREATE TABLE IF NOT EXISTS lead_activity_logs (
@@ -152,5 +152,6 @@ CREATE TABLE IF NOT EXISTS invoice_items (
 CREATE INDEX idx_invoices_number ON invoices(invoice_number);
 CREATE INDEX idx_invoices_date ON invoices(invoice_date);
 CREATE INDEX idx_invoices_party ON invoices(party_name);
+CREATE INDEX idx_invoices_created_by ON invoices(created_by);
 
 COMMIT;

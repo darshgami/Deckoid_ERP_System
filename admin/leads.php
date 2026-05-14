@@ -19,10 +19,6 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         <p class="text-neutral-500 text-sm mt-1">Manage and track your sales opportunities efficiently.</p>
     </div>
     <div class="flex items-center gap-2">
-        <button onclick="openAddLeadModal()" class="px-4 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 flex items-center gap-2 text-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-            Add New Lead
-        </button>
         <?php if ($_SESSION['role'] === 'admin'): ?>
         <button onclick="exportLeads()" class="px-4 py-2 bg-white border border-neutral-200 text-neutral-700 font-semibold rounded-xl hover:bg-neutral-50 transition-all shadow-sm flex items-center gap-2 text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -34,8 +30,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Filters Bar -->
 <div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        <div class="relative group lg:col-span-2">
+    <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4">
+        <div class="relative group">
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary-500">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
@@ -53,11 +49,6 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             <option value="Not Interested">Not Interested</option>
             <option value="Lost">Lost</option>
         </select>
-        <div class="flex items-center gap-2">
-            <input type="date" id="dateFrom" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-[11px] font-bold">
-            <span class="text-neutral-400 text-xs font-bold">TO</span>
-            <input type="date" id="dateTo" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-[11px] font-bold">
-        </div>
         <select id="serviceFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm cursor-pointer">
             <option value="">All Services</option>
             <option value="Facebook & Google Ads">Facebook & Google Ads</option>
@@ -152,7 +143,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 <button onclick="switchTab('project')" class="tab-btn px-4 py-3 text-xs font-bold border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 whitespace-nowrap" id="tab-project">Project & Others</button>
             </div>
 
-            <form id="leadForm" class="p-6 lg:p-8 max-h-[70vh] overflow-y-auto">
+            <form id="leadForm" class="p-6 lg:p-8 max-h-[70vh] overflow-y-auto" novalidate>
                 <input type="hidden" name="id" id="lead_id_input">
                 
                 <!-- Basic Info Tab -->
@@ -408,8 +399,6 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         const search = document.getElementById('search').value;
         const status = document.getElementById('statusFilter').value;
         const service = document.getElementById('serviceFilter').value;
-        const dateFrom = document.getElementById('dateFrom').value;
-        const dateTo = document.getElementById('dateTo').value;
 
         const tbody = document.getElementById('leadsTableBody');
         tbody.innerHTML = `<tr><td colspan="15" class="px-6 py-20 text-center"><div class="flex flex-col items-center gap-2"><div class="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div><span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Loading...</span></div></td></tr>`;
@@ -420,9 +409,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 limit: 10,
                 search,
                 status,
-                service,
-                date_from: dateFrom,
-                date_to: dateTo
+                service
             });
 
             const response = await fetch(`../api/leads.php?${params}`);
@@ -754,8 +741,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 input.classList.add('input-error');
                 const err = document.createElement('p');
                 err.className = 'error-message';
-                err.textContent = msg;
-                input.closest('.space-y-1.5')?.appendChild(err);
+                err.innerHTML = `<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> ${msg}`;
+                input.closest('.space-y-1\\.5')?.appendChild(err);
             }
             isValid = false;
         };
@@ -763,11 +750,21 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         if (!data.lead_date) setError('lead_date', 'Lead date is required');
         if (!data.company_client_name || data.company_client_name.length < 3) setError('company_client_name', 'Company name must be at least 3 characters');
         if (!data.contact_person || data.contact_person.length < 3) setError('contact_person', 'Contact person required');
-        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.mobile_number || !/^[0-9]{10}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10 digits)');
         if (!data.source_of_lead) setError('source_of_lead', 'Source is required');
 
         if (!isValid) {
             showToast('Please fix the errors before saving', 'error');
+            // If error is in another tab, switch to it
+            const firstErr = this.querySelector('.input-error');
+            if (firstErr) {
+                const tabContent = firstErr.closest('.tab-content');
+                if (tabContent) {
+                    const tabId = tabContent.id.replace('content-', '');
+                    switchTab(tabId);
+                    setTimeout(() => firstErr.focus(), 100);
+                }
+            }
             return;
         }
 
@@ -809,21 +806,11 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         const search = document.getElementById('search').value;
         const status = document.getElementById('statusFilter').value;
         const service = document.getElementById('serviceFilter').value;
-        const dateFrom = document.getElementById('dateFrom').value;
-        const dateTo = document.getElementById('dateTo').value;
-
-        // Date validation before export
-        if (dateFrom && dateTo && dateTo < dateFrom) {
-            showToast('End date cannot be before start date', 'error');
-            return;
-        }
 
         const params = new URLSearchParams({ 
             search, 
             status, 
-            service,
-            date_from: dateFrom,
-            date_to: dateTo
+            service
         });
 
         window.location.href = `../api/export.php?${params}`;

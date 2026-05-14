@@ -32,7 +32,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         </button>
     </div>
 
-    <form id="addLeadForm" class="p-6 lg:p-8">
+    <form id="addLeadForm" class="p-6 lg:p-8" novalidate>
         <!-- Basic Information Tab -->
         <div id="content-basic" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -347,8 +347,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 input.classList.add('input-error');
                 const err = document.createElement('p');
                 err.className = 'error-message';
-                err.textContent = msg;
-                input.closest('.space-y-1.5')?.appendChild(err);
+                err.innerHTML = `<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> ${msg}`;
+                input.closest('.space-y-1\\.5')?.appendChild(err);
             }
             isValid = false;
         };
@@ -356,7 +356,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         if (!data.lead_date) setError('lead_date', 'Lead date is required');
         if (!data.company_client_name || data.company_client_name.length < 3) setError('company_client_name', 'Company name must be at least 3 characters');
         if (!data.contact_person || data.contact_person.length < 3) setError('contact_person', 'Contact person required');
-        if (!data.mobile_number || !/^[0-9]{10,15}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10-15 digits)');
+        if (!data.mobile_number || !/^[0-9]{10}$/.test(data.mobile_number)) setError('mobile_number', 'Valid mobile number required (10 digits)');
         if (!data.source_of_lead) setError('source_of_lead', 'Source is required');
 
         if (!isValid) {

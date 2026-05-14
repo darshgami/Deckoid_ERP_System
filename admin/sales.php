@@ -102,13 +102,25 @@ $db = Database::getInstance();
                     </td>
                     <td class="px-6 py-4 text-right font-black text-neutral-900">₹${parseFloat(inv.grand_total).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="px-6 py-4 text-right">
-                        <div class="flex items-center justify-end gap-2">
-                            <button onclick="printInvoice('${inv.id}')" class="p-2 text-neutral-400 hover:text-primary-600 transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <div class="relative inline-block text-left">
+                            <button onclick="toggleActions(event, '${inv.id}')" class="p-2 text-neutral-400 hover:text-neutral-900 transition-all rounded-lg hover:bg-neutral-100">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg>
                             </button>
-                            <button onclick="deleteInvoice('${inv.id}')" class="p-2 text-neutral-400 hover:text-red-600 transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            </button>
+                            <div id="dropdown-${inv.id}" class="hidden absolute right-0 mt-1 w-40 bg-white rounded-xl shadow-xl border border-neutral-100 z-50 py-1.5 overflow-hidden">
+                                <a href="create_invoice.php?id=${inv.id}" class="flex items-center gap-2.5 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-neutral-600 hover:bg-neutral-50 hover:text-primary-600 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    Edit
+                                </a>
+                                <button onclick="printInvoice('${inv.id}')" class="w-full flex items-center gap-2.5 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-neutral-600 hover:bg-neutral-50 hover:text-primary-600 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    Print
+                                </button>
+                                <div class="h-px bg-neutral-100 my-1"></div>
+                                <button onclick="deleteInvoice('${inv.id}')" class="w-full flex items-center gap-2.5 px-4 py-2 text-[11px] font-black uppercase tracking-widest text-red-500 hover:bg-red-50 transition-all">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -136,6 +148,22 @@ $db = Database::getInstance();
     }
 
     function printInvoice(id) { window.open(`print_invoice.php?id=${id}`, '_blank'); }
+
+    function toggleActions(event, id) {
+        event.stopPropagation();
+        const dropdown = document.getElementById(`dropdown-${id}`);
+        const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+        
+        allDropdowns.forEach(d => {
+            if (d.id !== `dropdown-${id}`) d.classList.add('hidden');
+        });
+        
+        dropdown.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.classList.add('hidden'));
+    });
 
     async function deleteInvoice(id) {
         if (!confirm('Delete this record?')) return;
