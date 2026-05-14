@@ -20,13 +20,76 @@
     
     <style>
         :root {
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            /* Typography Tokens */
+            --text-xs: 12px;
+            --text-sm: 13px;
+            --text-base: 14px;
+            --text-md: 15px;
+            --text-lg: 16px;
+            --text-xl: 20px;
+            --text-2xl: 24px;
+            --text-3xl: 30px;
+
+            /* Font Weights */
+            --font-normal: 400;
+            --font-medium: 500;
+            --font-semibold: 600;
+
+            /* Color System */
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --primary-light: #eef2ff;
+
+            /* Radius & Shadows */
+            --radius: 12px;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.2s ease;
         }
-        body { 
-            font-family: var(--font-sans);
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-size: var(--text-base);
+            background-color: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Sidebar Styles */
+        .sidebar-item-active {
+            background-color: var(--primary-light) !important;
+            color: var(--primary) !important;
+            font-weight: var(--font-medium) !important;
+            border-right: 3px solid var(--primary);
+        }
+
+        /* Standardized Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Form Validation */
+        .error-message {
+            color: #dc2626;
+            font-size: 11px;
+            font-weight: var(--font-medium);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .input-error {
+            border-color: #ef4444 !important;
+            background-color: #fff1f2 !important;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.05) !important;
         }
     </style>
-    
     <!-- Production CSS -->
     <link href="<?php echo asset_url('assets/css/output.css'); ?>" rel="stylesheet">
     
@@ -43,53 +106,6 @@
             };
         }
     </script>
-    
-    <style>
-        .sidebar-item-active {
-            background-color: #f5f3ff;
-            color: #7c3aed;
-            border-right: 3px solid #7c3aed;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #ddd;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ccc;
-        }
-        /* Form Validation Styles */
-        .error-message {
-            color: #dc2626;
-            font-size: 11px;
-            font-weight: 600;
-            margin-top: 6px;
-            margin-left: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            animation: fadeInError 0.2s ease-out;
-        }
-        @keyframes fadeInError {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .input-error {
-            border: 1.5px solid #ef4444 !important;
-            background-color: #fff1f2 !important;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.05) !important;
-        }
-    </style>
 </head>
+
 <body class="text-neutral-900 antialiased">

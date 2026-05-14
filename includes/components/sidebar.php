@@ -27,10 +27,10 @@ $menuItems[] = ['label' => 'Profile', 'url' => 'profile.php', 'icon' => 'M10.325
                 <div class="flex-shrink-0">
                     <img src="<?php echo asset_url('assets/ERP.png'); ?>" alt="Deckoid ERP" class="w-10 h-10 object-contain">
                 </div>
-                <span class="text-xl font-bold tracking-tight text-neutral-900 sidebar-text whitespace-nowrap">Deckoid<span class="text-primary-600">ERP</span></span>
+                <span class="text-xl font-semibold tracking-tight text-neutral-900 sidebar-text whitespace-nowrap">Deckoid<span class="text-primary">ERP</span></span>
             </a>
             <!-- Toggle Button (Desktop Collapsible) -->
-            <button onclick="toggleSidebarCollapse()" class="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 text-neutral-400 hover:text-primary-600 transition-all duration-200" id="sidebarCollapseBtn" aria-label="Toggle Sidebar">
+            <button onclick="toggleSidebarCollapse()" class="hidden lg:flex p-2 rounded-lg hover:bg-neutral-100 text-neutral-400 hover:text-primary transition-all duration-200" id="sidebarCollapseBtn" aria-label="Toggle Sidebar">
                 <svg class="w-5 h-5 transition-transform duration-300" id="collapseIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 19l-7-7 7-7" />
                 </svg>
@@ -66,10 +66,10 @@ $menuItems[] = ['label' => 'Profile', 'url' => 'profile.php', 'icon' => 'M10.325
                 }
                 ?>
                 <a href="<?php echo $item['url']; ?>" 
-                   class="group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 relative <?php echo $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-neutral-500 hover:bg-neutral-50 hover:text-primary-600'; ?>"
+                   class="group flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-300 relative <?php echo $isActive ? 'bg-primary text-white shadow-lg shadow-primary/25 translate-x-1' : 'text-neutral-500 hover:bg-neutral-50 hover:text-primary'; ?>"
                    aria-current="<?php echo $isActive ? 'page' : 'false'; ?>">
                     <div class="flex-shrink-0">
-                        <svg class="w-6 h-6 <?php echo $isActive ? 'text-white' : 'text-neutral-400 group-hover:text-primary-600'; ?> transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 <?php echo $isActive ? 'text-white' : 'text-neutral-400 group-hover:text-primary'; ?> transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="<?php echo $item['icon']; ?>" />
                         </svg>
                     </div>
@@ -77,24 +77,24 @@ $menuItems[] = ['label' => 'Profile', 'url' => 'profile.php', 'icon' => 'M10.325
                         <?php echo $item['label']; ?>
                     </span>
                     <?php if ($isActive): ?>
-                        <div class="absolute right-3 w-1.5 h-1.5 bg-white rounded-full"></div>
+                        <div class="absolute right-3 w-1.5 h-1.5 bg-white rounded-full shadow-sm"></div>
                     <?php endif; ?>
                 </a>
             <?php endforeach; ?>
         </nav>
 
         <!-- User Profile Area -->
-        <div class="p-4 border-t border-neutral-100 mt-auto bg-white transition-all duration-300 overflow-hidden">
-            <div class="flex items-center gap-3 p-2 rounded-xl bg-neutral-50 hover:bg-neutral-100 transition-all group relative min-w-0">
-                <div class="w-10 h-10 bg-primary-600 rounded-lg flex-shrink-0 flex items-center justify-center text-white font-black shadow-lg shadow-primary-100 group-hover:scale-105 transition-transform">
+        <div class="p-4 border-t border-neutral-100 mt-auto bg-white/50">
+            <div class="flex items-center gap-3 p-3 rounded-2xl bg-neutral-50/80 border border-neutral-100 hover:bg-neutral-100/50 transition-all group relative min-w-0">
+                <div class="w-10 h-10 bg-primary rounded-xl flex-shrink-0 flex items-center justify-center text-white font-semibold shadow-md shadow-primary/20 group-hover:scale-105 transition-transform">
                     <?php echo strtoupper(substr($_SESSION['username'] ?? 'A', 0, 1)); ?>
                 </div>
                 <div class="flex-1 min-w-0 sidebar-text">
-                    <p class="text-sm font-black text-neutral-900 truncate"><?php echo $_SESSION['full_name'] ?? 'Admin User'; ?></p>
-                    <p class="text-[10px] font-black text-neutral-400 truncate uppercase tracking-widest mt-0.5"><?php echo $_SESSION['role'] ?? 'Administrator'; ?></p>
+                    <p class="text-xs font-bold text-neutral-900 truncate"><?php echo $_SESSION['full_name'] ?? 'Admin User'; ?></p>
+                    <p class="text-[9px] font-bold text-neutral-400 truncate uppercase tracking-widest mt-0.5"><?php echo $_SESSION['role'] ?? 'Administrator'; ?></p>
                 </div>
                 <button onclick="logout()" class="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all sidebar-text" title="Logout">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                 </button>

@@ -7,19 +7,19 @@ layout_start('Activity Logs - Deckoid ERP');
 ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-black text-neutral-900 tracking-tight">Activity Logs</h1>
-    <p class="text-neutral-500 text-sm mt-1 font-medium">Track all system changes and lead updates in real-time.</p>
+    <h1 class="text-xl lg:text-2xl font-semibold text-neutral-900 tracking-tight">Activity Logs</h1>
+    <p class="text-neutral-500 text-sm mt-0.5">Track all system changes and lead updates in real-time.</p>
 </div>
 
 <!-- Logs Timeline -->
-<div class="bg-white rounded-xl shadow-sm border border-neutral-100 p-6 lg:p-8 relative overflow-hidden glass-card">
+<div class="glass-card bg-white rounded-xl shadow-sm border border-neutral-100 p-6 lg:p-8 relative overflow-hidden">
     <div class="space-y-8 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-[1.5px] before:bg-neutral-100" id="logsContainer">
         <!-- Logs will be loaded here -->
     </div>
     
     <!-- Load More -->
     <div class="mt-8 text-center">
-        <button id="loadMoreBtn" onclick="loadLogs(nextPage)" class="px-6 py-2.5 bg-neutral-50 text-neutral-600 font-bold rounded-xl hover:bg-primary-50 hover:text-primary-600 transition-all border border-neutral-100 text-xs">Load More Activity</button>
+        <button id="loadMoreBtn" onclick="loadLogs(nextPage)" class="btn btn-secondary text-xs px-6 py-2.5">Load More Activity</button>
     </div>
 </div>
 
@@ -74,13 +74,13 @@ layout_start('Activity Logs - Deckoid ERP');
                         </div>
                         <div class="flex-1 pb-2">
                             <div class="flex items-center justify-between mb-0.5">
-                                <h4 class="text-sm font-bold text-neutral-900 capitalize">${log.activity_type} Lead</h4>
-                                <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">${dateStr} • ${timeStr}</span>
+                                <h4 class="text-sm font-semibold text-neutral-900 capitalize">${log.activity_type} Lead</h4>
+                                <span class="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">${dateStr} • ${timeStr}</span>
                             </div>
                             <p class="text-xs text-neutral-500 font-medium">
-                                <span class="text-primary-600 font-bold">@${log.user_name || 'System'}</span> 
+                                <span class="text-primary font-semibold">@${log.user_name || 'System'}</span> 
                                 ${log.notes || `processed lead for`} 
-                                <span class="text-neutral-900 font-bold">${log.company_client_name}</span>
+                                <span class="text-neutral-900 font-semibold">${log.company_client_name}</span>
                             </p>
                         </div>
                     </div>

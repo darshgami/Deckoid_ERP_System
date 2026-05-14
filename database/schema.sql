@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Indexes for users (using CREATE INDEX IF NOT EXISTS)
+-- Indexes for users
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_users_status ON users(status);
 
@@ -153,5 +153,89 @@ CREATE INDEX idx_invoices_number ON invoices(invoice_number);
 CREATE INDEX idx_invoices_date ON invoices(invoice_date);
 CREATE INDEX idx_invoices_party ON invoices(party_name);
 CREATE INDEX idx_invoices_created_by ON invoices(created_by);
+
+-- Create projects table
+CREATE TABLE IF NOT EXISTS projects (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    lead_id CHAR(36) NULL,
+    name VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    status ENUM('Planning', 'Active', 'On Hold', 'Completed', 'Cancelled') DEFAULT 'Planning',
+    start_date DATE NULL,
+    end_date DATE NULL,
+    budget DECIMAL(12,2) DEFAULT 0.00,
+    created_by CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE SET NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Create tasks table
+CREATE TABLE IF NOT EXISTS tasks (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    project_id CHAR(36) NULL,
+    assigned_to CHAR(36) NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NULL,
+    priority ENUM('Low', 'Medium', 'High', 'Urgent') DEFAULT 'Medium',
+    status ENUM('Todo', 'In Progress', 'Review', 'Done') DEFAULT 'Todo',
+    due_date DATETIME NULL,
+    created_by CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Create leave_requests table
+CREATE TABLE IF NOT EXISTS leave_requests (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    leave_type VARCHAR(100) NOT NULL,
+    reason TEXT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+    approved_by CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Create kpis table
+CREATE TABLE IF NOT EXISTS kpis (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    metric_name VARCHAR(255) NOT NULL,
+    target_value DECIMAL(12,2) NOT NULL,
+    actual_value DECIMAL(12,2) DEFAULT 0.00,
+    period_month TINYINT NOT NULL,
+    period_year SMALLINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Create notifications table
+CREATE TABLE IF NOT EXISTS notifications (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    user_id CHAR(36) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    link VARCHAR(255) NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Additional Indexes
+CREATE INDEX idx_projects_status ON projects(status);
+CREATE INDEX idx_tasks_status ON tasks(status);
+CREATE INDEX idx_tasks_assigned ON tasks(assigned_to);
+CREATE INDEX idx_leaves_status ON leave_requests(status);
+CREATE INDEX idx_notifications_user_unread ON notifications(user_id, is_read);
 
 COMMIT;

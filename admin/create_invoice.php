@@ -38,22 +38,25 @@ if (!$invoiceId) {
 <div class="max-w-5xl mx-auto">
     <form id="invoiceForm" class="space-y-6 pb-20" novalidate>
         <!-- Header -->
-        <div class="flex items-center justify-between mb-8">
-            <h1 class="text-2xl font-black text-neutral-900 tracking-tight"><?= $invoiceId ? 'Edit Sales Invoice' : 'New Sales Invoice' ?></h1>
-            <a href="sales.php" class="text-xs font-black text-neutral-400 uppercase tracking-widest hover:text-primary-600 transition-all flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-xl lg:text-2xl font-semibold text-neutral-900 tracking-tight"><?= $invoiceId ? 'Edit Sales Invoice' : 'New Sales Invoice' ?></h1>
+                <p class="text-neutral-500 text-sm mt-0.5">Generate professional billing documents.</p>
+            </div>
+            <a href="sales.php" class="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider hover:text-primary transition-all flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 Back to List
             </a>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100 overflow-hidden">
-            <!-- Business Header (Mirroring Screenshot) -->
-            <div class="p-8 border-b border-neutral-50 text-center">
-                <h2 class="text-3xl font-black text-neutral-900 uppercase tracking-tighter">DECKOID SOLUTION</h2>
-                <p class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">6, Bhaktinagar Station Plot, Rajkot-360002</p>
-                <p class="text-[10px] font-bold text-neutral-500 mt-1">9426225742/9586536724</p>
-                <div class="flex justify-center items-center gap-4 mt-2 text-[11px] font-bold text-neutral-500">
-                    <a href="https://www.deckoidsolution.com" target="_blank" class="hover:text-primary-600 uppercase">www.deckoidsolution.com</a>
+        <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden glass-card">
+            <!-- Business Header -->
+            <div class="p-8 border-b border-neutral-100 text-center bg-neutral-50/30">
+                <h2 class="text-2xl font-bold text-neutral-900 uppercase tracking-tight">DECKOID SOLUTION</h2>
+                <p class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider mt-1">6, Bhaktinagar Station Plot, Rajkot-360002</p>
+                <p class="text-[11px] font-semibold text-neutral-400 mt-0.5">9426225742 / 9586536724</p>
+                <div class="flex justify-center items-center gap-4 mt-2 text-[11px] font-semibold text-primary">
+                    <a href="https://www.deckoidsolution.com" target="_blank" class="hover:underline uppercase tracking-wider">www.deckoidsolution.com</a>
                 </div>
             </div>
 
@@ -61,53 +64,53 @@ if (!$invoiceId) {
                 <!-- Basic Details -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Type</label>
-                        <select name="invoice_type" id="invoice_type" onchange="toggleGSTFields()" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all cursor-pointer">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Type</label>
+                        <select name="invoice_type" id="invoice_type" onchange="toggleGSTFields()" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all cursor-pointer">
                             <option value="With GST" <?= ($invoice['invoice_type'] ?? '') === 'With GST' ? 'selected' : '' ?>>With GST (18%)</option>
                             <option value="Without GST" <?= ($invoice['invoice_type'] ?? '') === 'Without GST' ? 'selected' : '' ?>>Without GST</option>
                         </select>
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Date</label>
-                        <input type="date" name="invoice_date" value="<?= $invoice['invoice_date'] ?? date('Y-m-d') ?>" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Date</label>
+                        <input type="date" name="invoice_date" value="<?= $invoice['invoice_date'] ?? date('Y-m-d') ?>" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                     </div>
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Invoice Number</label>
-                        <input type="text" name="invoice_number" id="invoice_number" value="<?= $nextNumber ?>" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-black uppercase outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Number</label>
+                        <input type="text" name="invoice_number" id="invoice_number" value="<?= $nextNumber ?>" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-bold uppercase outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                     </div>
                 </div>
 
                 <!-- Party Details -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Party Name</label>
-                        <input type="text" name="party_name" value="<?= htmlspecialchars($invoice['party_name'] ?? '') ?>" placeholder="M/s. Party Name" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Party Name</label>
+                        <input type="text" name="party_name" value="<?= htmlspecialchars($invoice['party_name'] ?? '') ?>" placeholder="M/s. Party Name" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Mobile Number</label>
-                            <input type="text" name="mobile_number" value="<?= htmlspecialchars($invoice['mobile_number'] ?? '') ?>" placeholder="Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                            <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number</label>
+                            <input type="text" name="mobile_number" value="<?= htmlspecialchars($invoice['mobile_number'] ?? '') ?>" placeholder="Number" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Place of Supply</label>
-                            <input type="text" name="place_of_supply" value="<?= htmlspecialchars($invoice['place_of_supply'] ?? '') ?>" placeholder="State/City" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all">
+                            <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Place of Supply</label>
+                            <input type="text" name="place_of_supply" value="<?= htmlspecialchars($invoice['place_of_supply'] ?? '') ?>" placeholder="State/City" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                         </div>
                     </div>
                     <div class="md:col-span-2 space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Address</label>
-                        <textarea name="address" rows="2" placeholder="Client's Address" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-medium outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all resize-none"><?= htmlspecialchars($invoice['address'] ?? '') ?></textarea>
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Address</label>
+                        <textarea name="address" rows="2" placeholder="Client's Address" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-medium outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all resize-none"><?= htmlspecialchars($invoice['address'] ?? '') ?></textarea>
                     </div>
                     <div id="gstinField" class="md:col-span-2 space-y-1.5">
-                        <label class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Party GSTIN</label>
-                        <input type="text" name="gstin" value="<?= htmlspecialchars($invoice['gstin'] ?? '') ?>" placeholder="GST Number" class="w-full bg-neutral-50 border-transparent rounded-xl py-3 px-4 text-sm font-bold outline-none focus:bg-white focus:ring-4 focus:ring-primary-50 transition-all uppercase tracking-widest">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Party GSTIN</label>
+                        <input type="text" name="gstin" value="<?= htmlspecialchars($invoice['gstin'] ?? '') ?>" placeholder="GST Number" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all uppercase tracking-widest">
                     </div>
                 </div>
 
                 <!-- Items Table -->
-                <div class="mb-10 rounded-2xl border border-neutral-200 overflow-hidden shadow-sm">
+                <div class="mb-10 rounded-xl border border-neutral-200 overflow-hidden shadow-sm">
                     <table class="w-full border-collapse border-spacing-0">
                         <thead>
-                            <tr class="bg-neutral-900 text-white text-[9px] font-black uppercase tracking-widest">
+                            <tr class="bg-neutral-900 text-white text-[11px] font-medium uppercase tracking-wider">
                                 <th class="px-4 py-4 text-left w-12 border-r border-white/10">Sr</th>
                                 <th class="px-4 py-4 text-left border-r border-white/10">Service Name</th>
                                 <th class="hsn-col px-4 py-4 text-center w-24 border-r border-white/10">HSN/SAC</th>
@@ -121,8 +124,8 @@ if (!$invoiceId) {
                         <tbody id="invoiceItems" class="divide-y divide-neutral-200"></tbody>
                     </table>
                     <div class="p-4 bg-neutral-50/50">
-                        <button type="button" onclick="addRow()" class="text-[10px] font-black text-primary-600 uppercase tracking-widest flex items-center gap-2 hover:text-primary-700">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <button type="button" onclick="addRow()" class="text-[11px] font-semibold text-primary uppercase tracking-wider flex items-center gap-2 hover:text-primary-dark transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             Add Service Row
                         </button>
                     </div>
@@ -130,27 +133,27 @@ if (!$invoiceId) {
 
                 <!-- Summary -->
                 <div class="flex justify-end">
-                    <div class="w-full md:w-80 bg-neutral-900 rounded-3xl p-8 text-white space-y-6">
+                    <div class="w-full md:w-80 bg-neutral-900 rounded-xl p-8 text-white space-y-6 shadow-xl">
                         <div class="space-y-4 border-b border-white/10 pb-6">
                             <div class="flex justify-between text-xs">
-                                <span class="text-neutral-400 font-bold uppercase tracking-widest">Sub Total</span>
-                                <span class="font-black" id="subTotalDisplay">₹0.00</span>
+                                <span class="text-neutral-400 font-semibold uppercase tracking-wider">Sub Total</span>
+                                <span class="font-bold" id="subTotalDisplay">₹0.00</span>
                             </div>
                             <div id="gstAmountSection" class="flex justify-between text-xs">
-                                <span class="text-neutral-400 font-bold uppercase tracking-widest">Integrated Tax (18%)</span>
-                                <span class="font-black" id="gstTotalDisplay">₹0.00</span>
+                                <span class="text-neutral-400 font-semibold uppercase tracking-wider">Integrated Tax (18%)</span>
+                                <span class="font-bold" id="gstTotalDisplay">₹0.00</span>
                             </div>
                         </div>
                         <div class="space-y-1">
-                            <span class="text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em]">Grand Total</span>
-                            <div class="text-3xl font-black" id="grandTotalDisplay">₹0.00</div>
+                            <span class="text-[10px] text-neutral-500 font-semibold uppercase tracking-[0.2em]">Grand Total</span>
+                            <div class="text-3xl font-bold tracking-tight" id="grandTotalDisplay">₹0.00</div>
                         </div>
                         <div class="pt-2">
-                            <p class="text-[9px] font-black text-neutral-500 uppercase tracking-widest mb-1">Amount In Words</p>
-                            <p class="text-[10px] font-bold italic opacity-80 uppercase" id="amountInWordsDisplay">Zero Only</p>
+                            <p class="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider mb-1">Amount In Words</p>
+                            <p class="text-[11px] font-medium italic text-neutral-300 uppercase leading-relaxed" id="amountInWordsDisplay">Zero Only</p>
                             <input type="hidden" name="amount_in_words" id="amountInWordsInput">
                         </div>
-                        <button type="submit" class="w-full py-4 bg-primary-600 text-white font-black rounded-2xl hover:bg-primary-700 transition-all shadow-xl shadow-primary-900/20 uppercase tracking-widest text-xs">
+                        <button type="submit" class="btn btn-primary w-full py-4 text-xs uppercase tracking-widest shadow-xl shadow-primary/30 rounded-xl hover:scale-[1.02] active:scale-95 transition-all">
                             <?= $invoiceId ? 'Update Invoice' : 'Save & Print' ?>
                         </button>
                     </div>
@@ -196,7 +199,7 @@ if (!$invoiceId) {
     function addRow(data = null) {
         rowCount++;
         const tr = document.createElement('tr');
-        tr.className = 'text-sm font-bold hover:bg-neutral-50 transition-colors';
+        tr.className = 'text-sm font-semibold hover:bg-neutral-50 transition-colors';
 
         let isOther = false;
         let serviceValue = data ? data.service_name : '';
@@ -206,19 +209,19 @@ if (!$invoiceId) {
         }
 
         tr.innerHTML = `
-            <td class="px-4 py-4 text-xs text-neutral-400 font-black border-r border-neutral-100">${rowCount}</td>
+            <td class="px-4 py-4 text-xs text-neutral-400 font-semibold border-r border-neutral-100">${rowCount}</td>
             <td class="px-4 py-4 border-r border-neutral-100">
-                <select name="service_name[]" onchange="handleServiceChange(this)" class="w-full bg-transparent rounded-lg py-1 px-1 text-xs font-bold outline-none">
+                <select name="service_name[]" onchange="handleServiceChange(this)" class="w-full bg-transparent rounded-lg py-1 px-1 text-xs font-semibold outline-none cursor-pointer">
                     <option value="">Select Service</option>
                     ${servicesList.map(s => `<option value="${s}" ${serviceValue === s ? 'selected' : ''}>${s}</option>`).join('')}
                 </select>
                 <textarea name="custom_service[]" placeholder="Description" class="${isOther ? '' : 'hidden'} w-full mt-2 bg-white border border-neutral-100 rounded-lg py-2 px-3 text-xs resize-none" rows="2">${isOther ? data.service_name : ''}</textarea>
             </td>
-            <td class="hsn-col px-4 py-4 border-r border-neutral-100"><input type="text" name="hsn_sac[]" value="${data ? data.hsn_sac : '9983'}" class="w-full bg-transparent border-transparent text-center text-xs font-black opacity-60"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="qty[]" value="${data ? data.qty : '1.000'}" step="0.001" oninput="calculateRow(this)" class="w-full bg-transparent text-center text-xs font-black outline-none"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="rate[]" value="${data ? data.rate : '0.00'}" step="0.01" oninput="calculateRow(this)" class="w-full bg-transparent text-right text-xs font-black outline-none"></td>
-            <td class="gst-col px-4 py-4 border-r border-neutral-100"><input type="text" value="18.00" readonly class="w-full bg-transparent border-transparent text-center text-xs font-black opacity-40"></td>
-            <td class="px-4 py-4 border-r border-neutral-100"><input type="text" name="amount[]" value="${data ? data.amount : '0.00'}" readonly class="w-full bg-transparent border-transparent text-right text-xs font-black outline-none"></td>
+            <td class="hsn-col px-4 py-4 border-r border-neutral-100"><input type="text" name="hsn_sac[]" value="${data ? data.hsn_sac : '9983'}" class="w-full bg-transparent border-transparent text-center text-xs font-semibold opacity-60"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="qty[]" value="${data ? data.qty : '1.000'}" step="0.001" oninput="calculateRow(this)" class="w-full bg-transparent text-center text-xs font-semibold outline-none"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="rate[]" value="${data ? data.rate : '0.00'}" step="0.01" oninput="calculateRow(this)" class="w-full bg-transparent text-right text-xs font-semibold outline-none"></td>
+            <td class="gst-col px-4 py-4 border-r border-neutral-100"><input type="text" value="18.00" readonly class="w-full bg-transparent border-transparent text-center text-xs font-semibold opacity-40"></td>
+            <td class="px-4 py-4 border-r border-neutral-100"><input type="text" name="amount[]" value="${data ? data.amount : '0.00'}" readonly class="w-full bg-transparent border-transparent text-right text-xs font-semibold outline-none"></td>
             <td class="px-4 py-4 text-center">
                 <button type="button" onclick="this.closest('tr').remove(); calculateTotals(); updateRowNumbers();" class="text-neutral-300 hover:text-red-500 transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>

@@ -15,9 +15,31 @@ try {
     $method = $_SERVER['REQUEST_METHOD'];
 
     if ($method === 'GET') {
-        $stmt = $db->query("SELECT id, full_name, email, username, role, status, last_login_at, created_at FROM users ORDER BY created_at DESC");
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+        $offset = ($page - 1) * $limit;
+
+        // Get total count
+        $countStmt = $db->query("SELECT COUNT(*) FROM users");
+        $totalItems = (int)$countStmt->fetchColumn();
+        $totalPages = ceil($totalItems / $limit);
+
+        // Get paginated data
+        $stmt = $db->prepare("SELECT id, full_name, email, username, role, status, last_login_at, created_at FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        ApiResponse::send(ApiResponse::success('Staff list retrieved', ['users' => $users]));
+
+        ApiResponse::send(ApiResponse::success('Staff list retrieved', [
+            'users' => $users,
+            'pagination' => [
+                'page' => $page,
+                'limit' => $limit,
+                'total' => $totalItems,
+                'pages' => $totalPages
+            ]
+        ]));
 
     } elseif ($method === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
@@ -45,16 +67,54 @@ try {
         ApiResponse::send(ApiResponse::success('Staff account created successfully', ['user_id' => $result['user_id']]));
 
     } elseif ($method === 'PUT') {
-        // Update status
         $input = json_decode(file_get_contents('php://input'), true);
         
-        if (empty($input['id']) || empty($input['status'])) {
-            throw new Exception('Missing ID or status');
+        if (empty($input['id'])) {
+            throw new Exception('Missing User ID');
         }
 
-        $stmt = $db->prepare("UPDATE users SET status = ? WHERE id = ?");
-        $stmt->execute([$input['status'], $input['id']]);
-        echo json_encode(['message' => 'Status updated successfully']);
+        // Check if this is a status-only update or a full update
+        if (isset($input['status']) && count($input) === 2) {
+            $stmt = $db->prepare("UPDATE users SET status = ? WHERE id = ?");
+            $stmt->execute([$input['status'], $input['id']]);
+            ApiResponse::send(ApiResponse::success('Status updated successfully'));
+        } else {
+            // Full update
+            $validator = new Validator();
+            $rules = [
+                'full_name' => 'required|min:3',
+                'username' => 'required|min:3',
+                'email' => 'required|email',
+                'role' => 'required'
+            ];
+
+            if (!$validator->validate($input, $rules)) {
+                ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
+            }
+
+            $sql = "UPDATE users SET full_name = ?, username = ?, email = ?, role = ? WHERE id = ?";
+            $params = [$input['full_name'], $input['username'], $input['email'], $input['role'], $input['id']];
+            
+            // Handle optional password update
+            if (!empty($input['password'])) {
+                if (strlen($input['password']) < 8) {
+                    throw new Exception('Password must be at least 8 characters');
+                }
+                $sql = "UPDATE users SET full_name = ?, username = ?, email = ?, role = ?, password_hash = ? WHERE id = ?";
+                $params = [
+                    $input['full_name'], 
+                    $input['username'], 
+                    $input['email'], 
+                    $input['role'], 
+                    password_hash($input['password'], PASSWORD_DEFAULT),
+                    $input['id']
+                ];
+            }
+
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            ApiResponse::send(ApiResponse::success('Staff account updated successfully'));
+        }
 
     } elseif ($method === 'DELETE') {
         $id = $_GET['id'] ?? null;

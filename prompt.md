@@ -1,327 +1,177 @@
-Add COMPLETE professional validation system in my entire Lead Management ERP.
+You are a senior SaaS frontend architect and backend engineer.
 
-Project Stack:
-
-* Core PHP
-* MySQL
-* HTML
-* Tailwind CSS
-* Vanilla JavaScript
-* XAMPP
-* No framework
-* No composer
+Add a production-grade reusable pagination system across the ENTIRE project.
 
 IMPORTANT:
-My ERP currently has weak/no validation.
-
-I want:
-✅ Proper frontend validation
-✅ Proper backend validation
-✅ Secure validation
-✅ Professional ERP validation UX
-✅ Real-time validation
-✅ Required field validation
-✅ Database validation
-✅ Duplicate prevention
-✅ Input sanitization
-✅ Professional error handling
-
-IMPORTANT:
-Validation must be:
-
-* Professional
-* Minimal
-* Business-oriented
-* Fast
-* User-friendly
-* Production-ready
-
-DO NOT:
-
-* Add annoying popups
-* Add unnecessary alerts
-* Add heavy animations
-* Add AI-style validation UI
-
-==================================================
-
-1. GLOBAL VALIDATION SYSTEM
-   ==================================================
-
-Requirement:
-Add centralized validation architecture for:
-
-* Frontend validation
-* Backend validation
-* Database validation
-
-Generate:
-
-1. Validation architecture
-2. Validation workflow
-3. Validation hierarchy
-4. Error handling strategy
-5. Form submission flow
-6. Validation message structure
-
-IMPORTANT:
-Frontend validation is NOT enough.
-Backend validation must ALWAYS validate again.
-
-Fields:
-
-* Username
-* Password
-
-Required Validation:
-
-* Empty field validation
-* Invalid credentials validation
-* Trim whitespace
-* Session validation
-* Unauthorized access prevention
-
-Generate:
-
-1. Login validation workflow
-2. Secure authentication validation
-3. Error message recommendations
-4. Session handling validation
-
-Requirement:
-Validate ALL lead fields according to Excel structure.
-
-Generate validation for:
-
-* Required fields
-* Dropdown selection
-* Mobile number validation
-* Email validation
-* Duplicate lead prevention
-* Date validation
-* Special character handling
-* Empty space trimming
-* Maximum length validation
-
-IMPORTANT:
-Do NOT rename Excel fields.
-
-Generate:
 
-1. Complete lead validation architecture
-2. Required field logic
-3. Validation priority system
-4. Error state UI recommendations
-5. Inline validation strategy
+* Do NOT break existing functionality
+* Do NOT hardcode values
+* Use reusable architecture
+* Use scalable enterprise patterns
 
-Requirement:
-Validate:
+---
 
-* Existing data updates
-* Null value prevention
-* Invalid update prevention
-* Hidden field validation
-* Lead ID protection
+## GLOBAL REQUIREMENTS
 
-Generate:
+Add pagination to ALL:
 
-1. Update validation workflow
-2. Data consistency validation
-3. Secure update recommendations
-4. Record integrity strategy
+* tables
+* list views
+* admin pages
+* dashboard modules
+* data grids
 
-Validate:
+Examples:
 
-* Invoice number
-* Duplicate invoice prevention
-* Party name
-* Mobile number
-* GST calculation
-* Service rows
-* Amount fields
-* Numeric validation
-* Invoice type validation
-
-IMPORTANT:
-Prevent:
+* Projects
+* Tasks
+* Team Members
+* KPI Management
+* Leave Requests
+* Users
+* Reports
+* Notifications
+* Activity Logs
 
-* Negative amounts
-* Invalid GST values
-* Empty invoice save
-* Broken invoice totals
-
-Generate:
-
-1. Invoice validation workflow
-2. GST validation strategy
-3. Financial calculation validation
-4. Invoice integrity validation
+---
 
-Fields:
+## FRONTEND REQUIREMENTS
 
-* Staff Name
-* Username
-* Password
-* Confirm Password
-* Role
+Create ONE reusable pagination component.
 
-Validate:
+Example:
+components/common/TablePagination
 
-* Duplicate username prevention
-* Password strength
-* Password match
-* Empty field prevention
-* Invalid role prevention
+The component must support:
 
-Generate:
+* current page
+* total pages
+* total items
+* rows per page
+* next/previous
+* responsive layout
 
-1. Staff validation workflow
-2. Secure password validation
-3. Duplicate prevention strategy
-4. Role validation strategy
+Rows per page options:
+10
+25
+50
+100
 
-Validate:
+Default:
+10
 
-* Empty search
-* Invalid filter
-* SQL injection prevention
-* Search sanitization
-* Pagination limits
+---
 
-Generate:
+## UI/UX REQUIREMENTS
 
-1. Search validation architecture
-2. Secure filtering recommendations
-3. Input sanitization workflow
+The pagination must:
 
-Validate:
+* look modern SaaS-level
+* compact and clean
+* responsive
+* accessible
+* keyboard-friendly
 
-* Export request validation
-* Empty export prevention
-* Data availability validation
-* Invalid date range validation
-
-Generate:
-
-1. Export validation workflow
-2. File generation validation
-3. Error handling recommendations
-
-Requirement:
-Professional ERP validation UI.
-
-Generate:
-
-1. Inline validation strategy
-2. Error text placement
-3. Border color recommendations
-4. Focus state recommendations
-5. Success state recommendations
-6. Required field indicators
-7. Real-time validation recommendations
-
-IMPORTANT:
-Validation UI should feel:
-
-* Professional
-* Minimal
-* SaaS-quality
-* Non-annoying
-
-Generate COMPLETE backend validation strategy for:
-
-* SQL injection prevention
-* XSS prevention
-* Session validation
-* CSRF protection
-* Input sanitization
-* Output escaping
-* Duplicate prevention
-* Unauthorized access prevention
-
-IMPORTANT:
-This is Core PHP.
-Generate secure validation workflow accordingly.
-
-Generate validation for:
-
-* UNIQUE constraints
-* NOT NULL constraints
-* Foreign key validation
-* Duplicate prevention
-* Data consistency
-* Transaction safety
-
-Generate:
-
-1. Database integrity recommendations
-2. Validation-before-save workflow
-3. Concurrent insert handling
-
-Requirement:
-Professional ERP error messages.
-
-Generate:
-
-1. Validation message structure
-2. User-friendly error wording
-3. Inline message placement
-4. Global error handling
-5. Success notification strategy
-
-IMPORTANT:
-Avoid:
-
-* Technical errors
-* Raw SQL errors
-* Ugly browser alerts
-
-Requirement:
-Validation must work properly on:
-
-* Mobile
-* Tablet
-* Laptop
-* Desktop
-
-Generate:
-
-1. Mobile validation UX
-2. Touch-friendly error states
-3. Responsive validation spacing
-4. Mobile keyboard optimization
-
-STRICTLY VALIDATE:
-✅ Empty fields
-✅ Duplicate data
-✅ Invalid formats
-✅ Invalid dates
-✅ Invalid numbers
-✅ Unauthorized access
-✅ Session expiry
-✅ Broken calculations
-✅ Invalid dropdown values
-✅ Invalid IDs
-
-STRICTLY PREVENT:
-❌ SQL injection
-❌ XSS
-❌ Duplicate invoice numbers
-❌ Duplicate usernames
-❌ Invalid GST totals
-❌ Invalid lead updates
-❌ Empty invoice generation
-❌ Broken print data
-
-Final Validation Feel:
-
-* Enterprise ERP quality
-* Fast
-* Professional
-* Secure
-* User-friendly
-* schema.sql file update you fully 
-* Production-ready
-
-Focus on:
-COMPLETE PROFESSIONAL ERP VALIDATION SYSTEM
+Desktop:
+
+* show page numbers
+* show next/prev
+* show total item count
+
+Mobile:
+
+* compact mode
+* touch-friendly
+
+Use:
+
+* subtle borders
+* consistent spacing
+* modern hover states
+* no oversized controls
+
+---
+
+## BACKEND REQUIREMENTS
+
+Implement SERVER-SIDE pagination.
+
+Do NOT use frontend-only slicing.
+
+Use:
+
+* page
+* limit
+* offset
+
+Support:
+
+* search
+* filters
+* sorting
+
+API Example:
+GET /api/projects?page=1&limit=10
+
+Response Example:
+{
+"data": [],
+"pagination": {
+"page": 1,
+"limit": 10,
+"totalItems": 250,
+"totalPages": 25
+}
+}
+
+---
+
+## DATABASE REQUIREMENTS
+
+Use optimized SQL queries.
+
+Example:
+LIMIT and OFFSET
+
+Add proper indexes if needed.
+
+Avoid loading unnecessary rows.
+
+---
+
+## TABLE IMPROVEMENTS
+
+Improve all tables:
+
+* reduce oversized row heights
+* improve alignment
+* smaller typography
+* proper overflow handling
+* sticky headers
+* responsive layout
+
+Use:
+font-size: 13px
+
+---
+
+## FINAL REQUIREMENTS
+
+Apply pagination consistently across the ENTIRE project.
+
+Ensure:
+
+* scalable architecture
+* reusable components
+* consistent UI
+* mobile responsiveness
+* high performance
+* SaaS-level polish
+
+The final experience should feel similar to:
+
+* Linear
+* Jira
+* ClickUp
+* Notion
+* Asana

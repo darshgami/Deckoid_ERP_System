@@ -14,20 +14,20 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="mb-6">
-    <h1 class="text-2xl font-black text-neutral-900 tracking-tight">Add New Lead</h1>
-    <p class="text-neutral-500 text-sm mt-1 font-medium">Create a new potential business opportunity.</p>
+    <h1 class="text-xl lg:text-2xl font-semibold text-neutral-900 tracking-tight">Add New Lead</h1>
+    <p class="text-neutral-500 text-sm mt-0.5">Create a new potential business opportunity.</p>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden glass-card">
     <!-- Form Tabs -->
     <div class="flex border-b border-neutral-100 bg-neutral-50/50">
-        <button onclick="switchTab('basic')" id="tab-basic" class="flex-1 px-6 py-4 text-xs font-bold transition-all border-b-2 border-primary-600 text-primary-600 uppercase tracking-widest">
+        <button onclick="switchTab('basic')" id="tab-basic" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-primary text-primary uppercase tracking-wider">
             1. Basic Information
         </button>
-        <button onclick="switchTab('sales')" id="tab-sales" class="flex-1 px-6 py-4 text-xs font-bold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-widest">
+        <button onclick="switchTab('sales')" id="tab-sales" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-wider">
             2. Sales Tracking
         </button>
-        <button onclick="switchTab('project')" id="tab-project" class="flex-1 px-6 py-4 text-xs font-bold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-widest">
+        <button onclick="switchTab('project')" id="tab-project" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-wider">
             3. Project & Others
         </button>
     </div>
@@ -37,36 +37,36 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         <div id="content-basic" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead ID</label>
-                    <input type="text" readonly value="Auto-generated" class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm font-bold cursor-not-allowed">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead ID</label>
+                    <input type="text" readonly value="Auto-generated" class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm font-medium cursor-not-allowed">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead Date *</label>
-                    <input type="date" name="lead_date" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead Date *</label>
+                    <input type="date" name="lead_date" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Company/Client Name *</label>
-                    <input type="text" name="company_client_name" required placeholder="Enter company name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Company/Client Name *</label>
+                    <input type="text" name="company_client_name" required placeholder="Enter company name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Contact Person *</label>
-                    <input type="text" name="contact_person" required placeholder="Full name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Contact Person *</label>
+                    <input type="text" name="contact_person" required placeholder="Full name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number *</label>
-                    <input type="text" name="mobile_number" required placeholder="Phone number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number *</label>
+                    <input type="text" name="mobile_number" required placeholder="Phone number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Email ID</label>
-                    <input type="email" name="email_id" placeholder="email@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email ID</label>
+                    <input type="email" name="email_id" placeholder="email@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Alternative Number</label>
-                    <input type="text" name="alternative_number" placeholder="Other contact number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Alternative Number</label>
+                    <input type="text" name="alternative_number" placeholder="Other contact number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Source of Lead *</label>
-                    <select name="source_of_lead" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Source of Lead *</label>
+                    <select name="source_of_lead" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none cursor-pointer text-sm">
                         <option value="Indiamart">IndiaMart</option>
                         <option value="Facebook">Facebook</option>
                         <option value="Instagram">Instagram</option>
@@ -80,8 +80,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In</label>
-                    <select name="service_interested_in" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In</label>
+                    <select name="service_interested_in" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none cursor-pointer text-sm">
                         <option value="Facebook & Google Ads">Facebook & Google Ads</option>
                         <option value="Website Design & Development">Website Design & Development</option>
                         <option value="Graphics Design">Graphics Design</option>
@@ -92,8 +92,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="md:col-span-2 lg:col-span-3 space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Requirement Details</label>
-                    <textarea name="requirement_details" rows="2" placeholder="Specific requirements or project details..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none resize-none text-sm"></textarea>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Requirement Details</label>
+                    <phone placeholder="Specific requirements or project details..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none resize-none text-sm"></phone>
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         <div id="content-sales" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead Category *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead Category *</label>
                     <select name="lead_category" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="Hot">🔥 Hot</option>
                         <option value="Warm">☀️ Warm</option>
@@ -110,7 +110,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead Status *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead Status *</label>
                     <select name="lead_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="New">New</option>
                         <option value="Interested">Interested</option>
@@ -123,7 +123,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Priority</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Priority</label>
                     <select name="priority" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="High">High</option>
                         <option value="Medium" selected>Medium</option>
@@ -131,7 +131,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Assigned To</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Assigned To</label>
                     <select name="assigned_to" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="">Select Staff</option>
                         <?php foreach ($users as $user): ?>
@@ -140,7 +140,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Deal Status *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Deal Status *</label>
                     <select name="deal_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="Open">Open</option>
                         <option value="Won">Won</option>
@@ -149,15 +149,15 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Estimated Budget</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Estimated Budget</label>
                     <input type="number" name="estimated_budget" placeholder="0.00" step="0.01" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Next Follow-up Date</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Next Follow-up Date</label>
                     <input type="date" name="next_followup_date" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="md:col-span-2 lg:col-span-3 space-y-3">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Process Checklist</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Process Checklist</label>
                     <div class="flex flex-wrap gap-4">
                         <label class="flex items-center gap-2 cursor-pointer group">
                             <input type="checkbox" name="proposal_sent" value="1" class="w-4 h-4 rounded border-neutral-300 text-primary-600 focus:ring-primary-500 transition-all">
@@ -174,7 +174,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
                 <div class="md:col-span-2 lg:col-span-3 space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Last Follow-up Notes</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Last Follow-up Notes</label>
                     <textarea name="last_followup_notes" rows="2" placeholder="Summary of last conversation..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none resize-none text-sm"></textarea>
                 </div>
             </div>
@@ -184,15 +184,15 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         <div id="content-project" class="tab-content hidden space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">City</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">City</label>
                     <input type="text" name="city" placeholder="City name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">State</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">State</label>
                     <input type="text" name="state" placeholder="State name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status *</label>
                     <select name="payment_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="Pending">Pending</option>
                         <option value="Partial">Partial</option>
@@ -200,7 +200,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Project Status</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Project Status</label>
                     <select name="project_status" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="">Select Status</option>
                         <option value="Not Started">Not Started</option>
@@ -210,27 +210,27 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Expected Closing Date</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Expected Closing Date</label>
                     <input type="date" name="expected_closing_date" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Client Onboard Date</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Client Onboard Date</label>
                     <input type="date" name="client_onboard_date" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Project Start Date</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Project Start Date</label>
                     <input type="date" name="project_start_date" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Reference By</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Reference By</label>
                     <input type="text" name="reference_by" placeholder="Referral name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Website/Social Link</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Website/Social Link</label>
                     <input type="text" name="website_social_link" placeholder="https://..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="md:col-span-2 lg:col-span-3 space-y-1.5">
-                    <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Remarks/Notes</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Remarks/Notes</label>
                     <textarea name="remarks_notes" rows="2" placeholder="Additional notes..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none resize-none text-sm"></textarea>
                 </div>
             </div>
@@ -238,20 +238,20 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="flex items-center justify-between mt-6 pt-6 border-t border-neutral-100">
             <div class="flex gap-3">
-                <button type="button" id="cancelBtn" onclick="window.location.href='leads.php'" class="px-6 py-2 bg-neutral-100 text-neutral-600 font-bold rounded-xl hover:bg-neutral-200 transition-all text-sm hidden">
+                <button type="button" id="cancelBtn" onclick="window.location.href='leads.php'" class="btn btn-secondary text-sm hidden">
                     Cancel
                 </button>
-                <button type="button" id="prevBtn" onclick="navigate('prev')" class="px-6 py-2 bg-neutral-100 text-neutral-600 font-bold rounded-xl hover:bg-neutral-200 transition-all text-sm hidden">
+                <button type="button" id="prevBtn" onclick="navigate('prev')" class="btn btn-secondary text-sm hidden">
                     Previous
                 </button>
             </div>
             
             <div class="flex gap-3">
-                <button type="button" id="nextBtn" onclick="navigate('next')" class="px-6 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all flex items-center gap-2 text-sm">
+                <button type="button" id="nextBtn" onclick="navigate('next')" class="btn btn-primary px-8 py-2.5 rounded-xl flex items-center gap-2 text-sm shadow-lg shadow-primary/20">
                     <span>Next Step</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 </button>
-                <button type="submit" id="saveLeadBtn" class="px-6 py-2 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-200 transition-all flex items-center gap-2 text-sm hidden">
+                <button type="submit" id="saveLeadBtn" class="btn btn-primary px-8 py-2.5 rounded-xl flex items-center gap-2 text-sm shadow-lg shadow-primary/20 hidden">
                     <span>Save Lead Details</span>
                     <svg id="loadingIcon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </button>
@@ -270,13 +270,13 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         document.getElementById('content-' + tab).classList.remove('hidden');
         
         document.querySelectorAll('[id^="tab-"]').forEach(t => {
-            t.classList.remove('border-primary-600', 'text-primary-600');
+            t.classList.remove('border-primary', 'text-primary');
             t.classList.add('border-transparent', 'text-neutral-400');
         });
         
         const activeTab = document.getElementById('tab-' + tab);
         activeTab.classList.remove('border-transparent', 'text-neutral-400');
-        activeTab.classList.add('border-primary-600', 'text-primary-600');
+        activeTab.classList.add('border-primary', 'text-primary');
 
         // Update Buttons Visibility
         const prevBtn = document.getElementById('prevBtn');
@@ -347,7 +347,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 input.classList.add('input-error');
                 const err = document.createElement('p');
                 err.className = 'error-message';
-                err.innerHTML = `<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> ${msg}`;
+                err.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> ${msg}`;
                 input.closest('.space-y-1\\.5')?.appendChild(err);
             }
             isValid = false;

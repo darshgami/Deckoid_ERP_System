@@ -12,9 +12,8 @@ layout_start('Dashboard - Deckoid ERP');
         
         <!-- Welcome Hero Section -->
         <div class="relative overflow-hidden">
-            <div class="relative z-10">
-                <h1 class="text-2xl lg:text-3xl font-black tracking-tight mb-2">Hello, <?php echo explode(' ', $_SESSION['full_name'] ?? 'Admin')[0]; ?>!</h1>
-            </div>
+                <h1 class="text-xl lg:text-2xl font-semibold mb-1">Hello, <?php echo explode(' ', $_SESSION['full_name'] ?? 'Admin')[0]; ?>!</h1>
+                <p class="text-sm text-neutral-500">Here's what's happening with your leads today.</p>
         </div>
 
         <!-- Statistics Grid -->
@@ -27,8 +26,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-[10px] uppercase tracking-widest">Total Leads</p>
-                    <h3 class="text-2xl font-black text-neutral-900 mt-0.5" id="statTotalLeads">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">Total Leads</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statTotalLeads">0</h3>
                 </div>
                 <div class="absolute bottom-0 right-0 w-24 h-24 bg-primary-50/50 rounded-tl-full -mr-8 -mb-8 transition-all group-hover:scale-150"></div>
             </div>
@@ -41,8 +40,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-[10px] uppercase tracking-widest">New Leads</p>
-                    <h3 class="text-2xl font-black text-neutral-900 mt-0.5" id="statNewLeads">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">New Leads</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statNewLeads">0</h3>
                 </div>
             </div>
 
@@ -54,8 +53,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Followups</p>
-                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statFollowupLeads">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">Followups</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statFollowupLeads">0</h3>
                 </div>
             </div>
 
@@ -67,8 +66,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Converted</p>
-                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statConvertedLeads">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">Converted</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statConvertedLeads">0</h3>
                 </div>
             </div>
 
@@ -80,8 +79,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Lost Leads</p>
-                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statLostLeads">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">Lost Leads</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statLostLeads">0</h3>
                 </div>
             </div>
 
@@ -93,8 +92,8 @@ layout_start('Dashboard - Deckoid ERP');
                     </div>
                 </div>
                 <div>
-                    <p class="text-neutral-400 font-bold text-xs uppercase tracking-widest">Pending Payments</p>
-                    <h3 class="text-3xl font-black text-neutral-900 mt-1" id="statPendingPayments">0</h3>
+                    <p class="text-neutral-500 font-medium text-[11px] uppercase tracking-wider">Pending Payments</p>
+                    <h3 class="text-xl font-semibold text-neutral-900 mt-0.5" id="statPendingPayments">0</h3>
                 </div>
             </div>
         </div>
@@ -105,7 +104,7 @@ layout_start('Dashboard - Deckoid ERP');
             <div class="bg-white p-5 lg:p-6 rounded-xl shadow-sm border border-neutral-100">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h3 class="text-lg font-bold text-neutral-900">Lead Growth</h3>
+                        <h3 class="text-lg font-semibold text-neutral-900">Lead Growth</h3>
                         <p class="text-neutral-400 text-xs font-medium">Monthly lead registration trend</p>
                     </div>
                     <select class="bg-neutral-50 border-none text-[10px] font-bold rounded-lg px-3 py-1.5 outline-none">
@@ -122,7 +121,7 @@ layout_start('Dashboard - Deckoid ERP');
             <div class="bg-white p-5 lg:p-6 rounded-xl shadow-sm border border-neutral-100">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h3 class="text-lg font-bold text-neutral-900">Lead Sources</h3>
+                        <h3 class="text-lg font-semibold text-neutral-900">Lead Sources</h3>
                         <p class="text-neutral-400 text-xs font-medium">Where your leads come from</p>
                     </div>
                 </div>
@@ -136,10 +135,10 @@ layout_start('Dashboard - Deckoid ERP');
         <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
             <div class="px-5 py-4 lg:px-6 lg:py-4 border-b border-neutral-50 flex items-center justify-between bg-neutral-50/30">
                 <div>
-                    <h3 class="text-lg font-bold text-neutral-900">Latest Registered Leads</h3>
-                    <p class="text-neutral-400 text-xs font-medium">Manage your most recent opportunities</p>
+                    <h3 class="text-md font-semibold text-neutral-900">Latest Registered Leads</h3>
+                    <p class="text-neutral-500 text-xs mt-0.5">Manage your most recent opportunities</p>
                 </div>
-                <a href="leads.php" class="px-4 py-2 bg-white border border-neutral-200 text-neutral-600 font-bold rounded-lg hover:bg-primary-600 hover:text-white hover:border-primary-600 transition-all text-xs shadow-sm">
+                <a href="leads.php" class="px-4 py-2 bg-white border border-neutral-200 text-neutral-600 font-semibold rounded-lg hover:bg-primary hover:text-white hover:border-primary transition-all text-xs shadow-sm">
                     View All Leads
                 </a>
             </div>
@@ -147,10 +146,10 @@ layout_start('Dashboard - Deckoid ERP');
                 <table class="w-full">
                     <thead>
                         <tr class="bg-neutral-50/50">
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Client Name</th>
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Category</th>
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[10px] font-black text-neutral-400 uppercase tracking-widest">Status</th>
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-right text-[10px] font-black text-neutral-400 uppercase tracking-widest">Action</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Client Name</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Category</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-right text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
                     <tbody id="recentLeadsTable" class="divide-y divide-neutral-50">
@@ -158,8 +157,8 @@ layout_start('Dashboard - Deckoid ERP');
                         <tr>
                             <td colspan="4" class="px-8 py-12 text-center">
                                 <div class="flex flex-col items-center gap-2">
-                                    <div class="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-                                    <span class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Loading Data...</span>
+                                    <div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                    <span class="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Loading Data...</span>
                                 </div>
                             </td>
                         </tr>
@@ -210,12 +209,12 @@ layout_start('Dashboard - Deckoid ERP');
                     <tr class="hover:bg-neutral-50/50 transition-colors group">
                         <td class="px-5 py-3 lg:px-6 lg:py-3">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 bg-neutral-100 rounded-lg flex-shrink-0 flex items-center justify-center text-neutral-600 font-bold text-[10px] group-hover:bg-primary-600 group-hover:text-white transition-all">
+                                <div class="w-8 h-8 bg-neutral-100 rounded-lg flex-shrink-0 flex items-center justify-center text-neutral-600 font-medium text-[11px] group-hover:bg-primary-600 group-hover:text-white transition-all">
                                     ${lead.company_client_name.charAt(0)}
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="font-bold text-neutral-900 text-[13px] group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
-                                    <span class="text-[9px] text-neutral-400 font-bold uppercase tracking-tight">${lead.contact_person}</span>
+                                    <span class="font-semibold text-neutral-900 text-[13px] group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
+                                    <span class="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">${lead.contact_person}</span>
                                 </div>
                             </div>
                         </td>
@@ -225,7 +224,7 @@ layout_start('Dashboard - Deckoid ERP');
                         <td class="px-5 py-3 lg:px-6 lg:py-3">
                             <div class="flex items-center gap-2">
                                 <div class="w-1.5 h-1.5 rounded-full ${lead.lead_status === 'Converted' ? 'bg-green-500' : 'bg-primary-500'}"></div>
-                                <span class="text-[11px] font-bold text-neutral-700">${lead.lead_status}</span>
+                                <span class="text-[12px] font-medium text-neutral-600">${lead.lead_status}</span>
                             </div>
                         </td>
                         <td class="px-5 py-3 lg:px-6 lg:py-3 text-right">
@@ -236,7 +235,7 @@ layout_start('Dashboard - Deckoid ERP');
                     </tr>
                 `).join('');
             } else {
-                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-16 text-center text-neutral-400 font-bold text-sm">No recent leads found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="px-8 py-16 text-center text-neutral-400 font-semibold text-sm">No recent leads found.</td></tr>`;
             }
 
             // Update Recent Activity
@@ -248,17 +247,17 @@ layout_start('Dashboard - Deckoid ERP');
                             <div class="w-[22px] h-[22px] rounded-full border-4 border-white ${log.activity_type === 'created' ? 'bg-green-500' : (log.activity_type === 'deleted' ? 'bg-red-500' : 'bg-primary-500')} z-10 shadow-sm flex-shrink-0"></div>
                             <div class="flex-1 -mt-1">
                                 <div class="flex items-center justify-between gap-2">
-                                    <p class="text-[11px] font-bold text-neutral-900 leading-tight">
-                                        <span class="text-primary-600">@${log.user_name || 'System'}</span> 
-                                        ${log.activity_type} lead for <span class="text-neutral-500">${log.company_client_name}</span>
+                                    <p class="text-[12px] font-medium text-neutral-600 leading-tight">
+                                        <span class="text-primary font-semibold">@${log.user_name || 'System'}</span> 
+                                        ${log.activity_type} lead for <span class="text-neutral-900 font-semibold">${log.company_client_name}</span>
                                     </p>
-                                    <span class="text-[9px] font-black text-neutral-300 uppercase whitespace-nowrap">${formatTimeAgo(log.created_at)}</span>
+                                    <span class="text-[10px] font-medium text-neutral-400 uppercase whitespace-nowrap">${formatTimeAgo(log.created_at)}</span>
                                 </div>
                             </div>
                         </div>
                     `).join('');
                 } else {
-                    activityList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No recent activity</div>`;
+                    activityList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-semibold uppercase tracking-widest">No recent activity</div>`;
                 }
             }
 
@@ -269,18 +268,18 @@ layout_start('Dashboard - Deckoid ERP');
                     performersList.innerHTML = data.user_stats.map(user => `
                         <div class="flex items-center justify-between p-3 rounded-xl bg-neutral-50/50 hover:bg-neutral-50 transition-all border border-transparent hover:border-neutral-100 group">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-white border border-neutral-100 text-primary-600 rounded-lg flex items-center justify-center font-black text-xs group-hover:bg-primary-600 group-hover:text-white transition-all">
+                                <div class="w-8 h-8 bg-white border border-neutral-100 text-primary rounded-lg flex items-center justify-center font-bold text-xs group-hover:bg-primary group-hover:text-white transition-all">
                                     ${user.full_name.charAt(0)}
                                 </div>
-                                <span class="text-[11px] font-bold text-neutral-700">${user.full_name}</span>
+                                <span class="text-[12px] font-medium text-neutral-600">${user.full_name}</span>
                             </div>
-                            <div class="px-2 py-1 bg-white rounded-lg border border-neutral-100 shadow-sm text-[10px] font-black text-neutral-900 group-hover:border-primary-100 group-hover:text-primary-600 transition-all">
+                            <div class="px-2 py-1 bg-white rounded-lg border border-neutral-100 shadow-sm text-[11px] font-semibold text-neutral-900 group-hover:border-primary-100 group-hover:text-primary-600 transition-all">
                                 ${user.count} Leads
                             </div>
                         </div>
                     `).join('');
                 } else {
-                    performersList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-bold uppercase tracking-widest">No data available</div>`;
+                    performersList.innerHTML = `<div class="text-center py-6 text-neutral-400 text-[10px] font-semibold uppercase tracking-widest">No data available</div>`;
                 }
             }
 
@@ -291,7 +290,7 @@ layout_start('Dashboard - Deckoid ERP');
     }
 
     function renderCategoryBadge(category) {
-        if (!category) return '<span class="text-neutral-400 font-bold text-[10px]">-</span>';
+        if (!category) return '<span class="text-neutral-400 font-semibold text-[10px]">-</span>';
         
         let styles = '';
         let label = category;
@@ -313,7 +312,7 @@ layout_start('Dashboard - Deckoid ERP');
                 styles = 'background-color: #f3f4f6; color: #4b5563;';
         }
         
-        return `<span class="px-2.5 py-1 text-[10px] font-black rounded-lg uppercase tracking-wider shadow-sm hover:brightness-95 transition-all cursor-default whitespace-nowrap inline-block" style="${styles}">${label}</span>`;
+        return `<span class="px-2.5 py-1 text-[10px] font-semibold rounded-lg uppercase tracking-wider shadow-sm hover:brightness-95 transition-all cursor-default whitespace-nowrap inline-block" style="${styles}">${label}</span>`;
     }
 
     function renderMonthlyChart(stats) {
@@ -353,11 +352,11 @@ layout_start('Dashboard - Deckoid ERP');
                     y: {
                         beginAtZero: true,
                         grid: { color: '#f5f7fb' },
-                        ticks: { font: { weight: 'bold', size: 10 }, color: '#9ca3af' }
+                        ticks: { font: { weight: '600', size: 10 }, color: '#9ca3af' }
                     },
                     x: {
                         grid: { display: false },
-                        ticks: { font: { weight: 'bold', size: 10 }, color: '#9ca3af' }
+                        ticks: { font: { weight: '600', size: 10 }, color: '#9ca3af' }
                     }
                 }
             }
@@ -389,7 +388,7 @@ layout_start('Dashboard - Deckoid ERP');
                         labels: {
                             padding: 20,
                             usePointStyle: true,
-                            font: { weight: 'bold', size: 11, family: 'Inter' },
+                            font: { weight: '600', size: 11, family: 'Inter' },
                             color: '#4b5563'
                         }
                     }
