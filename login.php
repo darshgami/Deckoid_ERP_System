@@ -153,11 +153,14 @@ if (AuthController::isLoggedIn()) {
             `;
 
             try {
-                const response = await fetch('api/auth.php/login', {
+                const response = await fetch('api/auth.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'same-origin',
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({
+                        action: 'login',
+                        ...data
+                    })
                 });
 
                 const result = await response.json();

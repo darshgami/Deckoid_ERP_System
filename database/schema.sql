@@ -5,8 +5,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 -- Create database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS lead_management;
-USE lead_management;
+
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (

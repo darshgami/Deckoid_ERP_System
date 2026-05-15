@@ -117,7 +117,12 @@
         async function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 try {
-                    await fetch('../api/auth.php/logout', { method: 'POST' });
+                    await fetch('../api/auth.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'same-origin',
+                        body: JSON.stringify({ action: 'logout' })
+                    });
                     window.location.href = '../login.php';
                 } catch (error) {
                     console.error('Logout failed:', error);

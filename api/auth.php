@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
-$path = $_SERVER['REQUEST_URI'];
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
 
 try {
     if ($method === 'POST') {
@@ -28,20 +28,31 @@ try {
         // Ensure $input is an array
         $input = is_array($input) ? $input : [];
 
-        if (strpos($path, '/register') !== false) {
+        $action = $input['action'] ?? ($_GET['action'] ?? '');
+        if ($action === '') {
+            if (strpos($requestPath, '/register') !== false) {
+                $action = 'register';
+            } elseif (strpos($requestPath, '/login') !== false) {
+                $action = 'login';
+            } elseif (strpos($requestPath, '/logout') !== false) {
+                $action = 'logout';
+            }
+        }
+
+        if ($action === 'register') {
             $result = AuthController::register($input);
             ApiResponse::send(ApiResponse::success($result['message'], ['user_id' => $result['user_id']]));
-        } elseif (strpos($path, '/login') !== false) {
+        } elseif ($action === 'login') {
             $result = AuthController::login($input);
             ApiResponse::send(ApiResponse::success($result['message'], ['user' => $result['user']]));
-        } elseif (strpos($path, '/logout') !== false) {
+        } elseif ($action === 'logout') {
             $result = AuthController::logout();
             ApiResponse::send(ApiResponse::success($result['message']));
         } else {
             ApiResponse::send(ApiResponse::error('The requested endpoint was not found'), 404);
         }
     } elseif ($method === 'GET') {
-        if (strpos($path, '/status') !== false) {
+        if (strpos($requestPath, '/status') !== false || (($_GET['action'] ?? '') === 'status')) {
             ApiResponse::send(ApiResponse::success('Auth status retrieved', [
                 'isLoggedIn' => AuthController::isLoggedIn(),
                 'user' => [
@@ -65,6 +76,15 @@ try {
     $safeMessages = ['User already exists', 'Invalid credentials', 'Account is inactive', 'Missing required fields', 'Password must be at least 8 characters', 'All fields are required', 'Invalid email format', 'Username and password are required'];
     
     $userFriendlyMessage = in_array($message, $safeMessages) ? $message : 'Something went wrong while processing your request. Please try again.';
-    
-    ApiResponse::send(ApiResponse::error($userFriendlyMessage), 400);
+
+    $statusCode = 400;
+    if ($message === 'Invalid credentials' || $message === 'Username and password are required') {
+        $statusCode = 401;
+    } elseif ($message === 'Account is inactive') {
+        $statusCode = 403;
+    } elseif ($message !== '' && in_array($message, ['User already exists', 'Missing required fields', 'Password must be at least 8 characters', 'All fields are required', 'Invalid email format'], true)) {
+        $statusCode = 422;
+    }
+
+    ApiResponse::send(ApiResponse::error($userFriendlyMessage), $statusCode);
 }
