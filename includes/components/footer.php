@@ -45,6 +45,17 @@
         // For backward compatibility with legacy calls
         window.toast = window.showToast;
 
+        // Global Date Formatter (dd/mm/yyyy)
+        window.formatDate = function(dateStr) {
+            if (!dateStr) return '-';
+            const dateOnly = dateStr.split(' ')[0];
+            const parts = dateOnly.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+            return dateStr;
+        };
+
         // Sidebar Collapse (Desktop)
 
         function toggleSidebarCollapse() {

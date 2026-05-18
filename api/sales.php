@@ -143,7 +143,7 @@ if ($method === 'POST') {
         $invoice_id = generateUUID();
         
         // Insert into invoices
-        $stmt = $db->prepare("INSERT INTO invoices (id, invoice_number, invoice_date, invoice_type, party_name, address, mobile_number, gstin, place_of_supply, sub_total, gst_total, grand_total, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO invoices (id, invoice_number, invoice_date, invoice_type, party_name, address, mobile_number, gstin, place_of_supply, sub_total, gst_total, grand_total, created_by, payment_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         $stmt->execute([
             $invoice_id,
@@ -158,7 +158,8 @@ if ($method === 'POST') {
             $data['sub_total'],
             $data['gst_total'],
             $data['grand_total'],
-            $_SESSION['user_id']
+            $_SESSION['user_id'],
+            $data['payment_status'] ?? 'Pending'
         ]);
 
         // Insert items
@@ -230,7 +231,7 @@ if ($method === 'PUT') {
     try {
         $db->beginTransaction();
 
-        $stmt = $db->prepare("UPDATE invoices SET invoice_number = ?, invoice_date = ?, invoice_type = ?, party_name = ?, address = ?, mobile_number = ?, gstin = ?, place_of_supply = ?, sub_total = ?, gst_total = ?, grand_total = ? WHERE id = ?");
+        $stmt = $db->prepare("UPDATE invoices SET invoice_number = ?, invoice_date = ?, invoice_type = ?, party_name = ?, address = ?, mobile_number = ?, gstin = ?, place_of_supply = ?, sub_total = ?, gst_total = ?, grand_total = ?, payment_status = ? WHERE id = ?");
         
         $stmt->execute([
             trim($data['invoice_number']),
@@ -244,6 +245,7 @@ if ($method === 'PUT') {
             $data['sub_total'],
             $data['gst_total'],
             $data['grand_total'],
+            $data['payment_status'] ?? 'Pending',
             $id
         ]);
 

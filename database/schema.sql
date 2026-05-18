@@ -4,9 +4,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
--- Create database if it doesn't exist
-
-
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
     id CHAR(36) PRIMARY KEY NOT NULL,
@@ -128,6 +125,7 @@ CREATE TABLE IF NOT EXISTS invoices (
     sub_total DECIMAL(12,2) NOT NULL,
     gst_total DECIMAL(12,2) DEFAULT 0.00,
     grand_total DECIMAL(12,2) NOT NULL,
+    payment_status VARCHAR(20) DEFAULT 'Pending',
     created_by CHAR(36) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

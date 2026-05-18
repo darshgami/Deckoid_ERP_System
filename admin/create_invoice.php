@@ -62,7 +62,7 @@ if (!$invoiceId) {
 
             <div class="p-8">
                 <!-- Basic Details -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Type</label>
                         <select name="invoice_type" id="invoice_type" onchange="toggleGSTFields()" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all cursor-pointer">
@@ -77,6 +77,13 @@ if (!$invoiceId) {
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Number</label>
                         <input type="text" name="invoice_number" id="invoice_number" value="<?= $nextNumber ?>" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-bold uppercase outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status</label>
+                        <select name="payment_status" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all cursor-pointer">
+                            <option value="Pending" <?= ($invoice['payment_status'] ?? '') === 'Pending' ? 'selected' : '' ?>>Pending</option>
+                            <option value="Complete" <?= ($invoice['payment_status'] ?? '') === 'Complete' ? 'selected' : '' ?>>Complete</option>
+                        </select>
                     </div>
                 </div>
 
@@ -164,7 +171,7 @@ if (!$invoiceId) {
 </div>
 
 <script>
-    const servicesList = ["Facebook & Google Ads", "Website Design & Development", "Graphics Design", "Search Engine Optimization", "Video Editing", "Social Media Management", "AI Video Making", "Other"];
+    const servicesList = ["Facebook Ads","Google Ads","Website Design & Development","Graphics Design","Search Engine Optimization","Video Editing","Social Media Management","AI Video Making","Other"];
     let rowCount = 0;
     const id = "<?= $invoiceId ?>";
 

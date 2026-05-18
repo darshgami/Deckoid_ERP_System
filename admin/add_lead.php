@@ -21,13 +21,13 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden glass-card">
     <!-- Form Tabs -->
     <div class="flex border-b border-neutral-100 bg-neutral-50/50">
-        <button onclick="switchTab('basic')" id="tab-basic" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-primary text-primary uppercase tracking-wider">
+        <button id="tab-basic" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-primary text-primary uppercase tracking-wider cursor-default" type="button">
             1. Basic Information
         </button>
-        <button onclick="switchTab('sales')" id="tab-sales" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-wider">
+        <button id="tab-sales" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 uppercase tracking-wider cursor-default" type="button">
             2. Sales Tracking
         </button>
-        <button onclick="switchTab('project')" id="tab-project" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 uppercase tracking-wider">
+        <button id="tab-project" class="flex-1 px-6 py-4 text-[11px] font-semibold transition-all border-b-2 border-transparent text-neutral-400 uppercase tracking-wider cursor-default" type="button">
             3. Project & Others
         </button>
     </div>
@@ -80,9 +80,10 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In *</label>
                     <select name="service_interested_in" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none cursor-pointer text-sm">
-                        <option value="Facebook & Google Ads">Facebook & Google Ads</option>
+                        <option value="Facebook Ads">Facebook Ads</option>
+                        <option value="Google Ads">Google Ads</option>
                         <option value="Website Design & Development">Website Design & Development</option>
                         <option value="Graphics Design">Graphics Design</option>
                         <option value="Search Engine Optimization">Search Engine Optimization</option>
@@ -90,10 +91,6 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                         <option value="Social Media Management">Social Media Management</option>
                         <option value="AI Video Making">AI Video Making</option>
                     </select>
-                </div>
-                <div class="md:col-span-2 lg:col-span-3 space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Requirement Details</label>
-                    <phone placeholder="Specific requirements or project details..." class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none resize-none text-sm"></phone>
                 </div>
             </div>
         </div>
@@ -131,8 +128,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Assigned To</label>
-                    <select name="assigned_to" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Assigned To *</label>
+                    <select name="assigned_to" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="">Select Staff</option>
                         <?php foreach ($users as $user): ?>
                             <option value="<?= $user['id'] ?>"><?= htmlspecialchars($user['full_name']) ?></option>

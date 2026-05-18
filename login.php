@@ -84,9 +84,7 @@ if (AuthController::isLoggedIn()) {
             </form>
 
             <div id="message" class="hidden mt-6 p-3 rounded-xl text-center text-xs font-semibold transition-all"></div>
-        </div>
-        
-        <p class="text-center text-xs text-neutral-400 mt-8">© <?php echo date('Y'); ?> Deckoid ERP System. All rights reserved.</p>
+        </div>  
     </div>
 
     <style>

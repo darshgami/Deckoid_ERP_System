@@ -111,7 +111,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
                             <div class="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center text-orange-600">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
-                            <span class="text-sm font-semibold text-neutral-700">${lead.next_followup_date || 'N/A'}</span>
+                            <span class="text-sm font-semibold text-neutral-700">${formatDate(lead.next_followup_date)}</span>
                         </div>
                     </td>
                     <td class="px-6 py-4">

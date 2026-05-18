@@ -31,7 +31,7 @@ try {
         SELECT 
             COUNT(*) as total,
             SUM(CASE WHEN lead_status = 'New' THEN 1 ELSE 0 END) as new_count,
-            SUM(CASE WHEN lead_status = 'Follow-up' THEN 1 ELSE 0 END) as followup_count,
+            SUM(CASE WHEN next_followup_date >= CURDATE() THEN 1 ELSE 0 END) as followup_count,
             SUM(CASE WHEN deal_status = 'Won' OR lead_status = 'Converted' THEN 1 ELSE 0 END) as converted_count,
             SUM(CASE WHEN deal_status = 'Lost' OR lead_status = 'Lost' THEN 1 ELSE 0 END) as lost_count,
             SUM(CASE WHEN payment_status = 'Pending' THEN 1 ELSE 0 END) as pending_payments,

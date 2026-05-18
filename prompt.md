@@ -1,177 +1,204 @@
-You are a senior SaaS frontend architect and backend engineer.
+Use this prompt to add a clean professional “Quick List” feature in your ERP.
 
-Add a production-grade reusable pagination system across the ENTIRE project.
+Add a new feature in my Lead Management ERP called:
+"Quick List"
+
+Project Stack:
+
+* Core PHP
+* MySQL
+* HTML
+* Tailwind CSS
+* Vanilla JavaScript
+* XAMPP
+* No framework
+* No composer
 
 IMPORTANT:
+This feature is ONLY for fast lead viewing by admin/staff.
 
-* Do NOT break existing functionality
-* Do NOT hardcode values
-* Use reusable architecture
-* Use scalable enterprise patterns
+Purpose:
+Admin wants to quickly see important lead data without opening full Lead List page.
 
----
+==================================================
 
-## GLOBAL REQUIREMENTS
+1. BUTTON PLACEMENT
+   ==================================================
 
-Add pagination to ALL:
+Requirement:
+On Lead List page header:
+Add new button:
 
-* tables
-* list views
-* admin pages
-* dashboard modules
-* data grids
+"Quick List"
 
-Examples:
+Placement:
 
-* Projects
-* Tasks
-* Team Members
-* KPI Management
-* Leave Requests
-* Users
-* Reports
-* Notifications
-* Activity Logs
+* Near Add Lead button
+* Modern compact button
+* Same ERP UI style
 
----
+Generate:
 
-## FRONTEND REQUIREMENTS
+1. Proper button placement strategy
+2. Responsive button behavior
+3. Compact ERP button recommendations
+4. Mobile responsive behavior
 
-Create ONE reusable pagination component.
+==================================================
+2. QUICK LIST PAGE REQUIREMENTS
+===============================
 
-Example:
-components/common/TablePagination
+Requirement:
+When user clicks:
+→ Quick List
 
-The component must support:
+Open:
+Compact Quick List Page
 
-* current page
-* total pages
-* total items
-* rows per page
-* next/previous
-* responsive layout
+IMPORTANT:
+ONLY show these fields:
 
-Rows per page options:
-10
-25
-50
-100
+* Lead ID
+* Name
+* Number
+* Remarks
 
-Default:
-10
+STRICTLY:
+Do NOT show:
 
----
+* Full lead details
+* Edit button
+* Delete button
+* Export button
+* Filters
+* Advanced search
+* Analytics
+* Status cards
+* Extra columns
+* Extra actions
 
-## UI/UX REQUIREMENTS
+This page is ONLY for:
+Fast lead viewing.
 
-The pagination must:
+==================================================
+3. QUICK LIST TABLE UI
+======================
 
-* look modern SaaS-level
-* compact and clean
-* responsive
-* accessible
-* keyboard-friendly
+Requirement:
+Create compact professional ERP table.
 
-Desktop:
+Table Columns:
+| Lead ID |
+| Name |
+| Number |
+| Remarks |
 
-* show page numbers
-* show next/prev
-* show total item count
+Design Requirements:
 
-Mobile:
+* Compact row height
+* Fast readability
+* Minimal spacing
+* Modern SaaS ERP style
+* White card container
+* Sticky header optional
+* Mobile responsive
 
-* compact mode
-* touch-friendly
+Generate:
 
-Use:
+1. Compact table structure
+2. Proper column width recommendations
+3. Better remarks text wrapping
+4. Responsive table strategy
+5. Typography recommendations
+6. ERP density optimization
 
-* subtle borders
-* consistent spacing
-* modern hover states
-* no oversized controls
+==================================================
+4. QUICK LIST PERFORMANCE
+=========================
 
----
+Requirement:
+This page must load FAST.
 
-## BACKEND REQUIREMENTS
+Generate:
 
-Implement SERVER-SIDE pagination.
+1. Optimized SQL recommendations
+2. Lightweight query strategy
+3. Minimal rendering strategy
+4. Pagination recommendations if needed
+5. Table performance optimization
 
-Do NOT use frontend-only slicing.
+IMPORTANT:
+Only fetch required fields from database.
 
-Use:
+==================================================
+5. RESPONSIVE BEHAVIOR
+======================
 
-* page
-* limit
-* offset
+Requirement:
+Quick List must work properly on:
 
-Support:
+* Mobile
+* Tablet
+* Laptop
+* Desktop
 
-* search
-* filters
-* sorting
+Generate:
 
-API Example:
-GET /api/projects?page=1&limit=10
+1. Mobile table strategy
+2. Responsive spacing recommendations
+3. Compact mobile view recommendations
+4. Overflow handling recommendations
 
-Response Example:
-{
-"data": [],
-"pagination": {
-"page": 1,
-"limit": 10,
-"totalItems": 250,
-"totalPages": 25
-}
-}
+==================================================
+6. UI DESIGN REQUIREMENTS
+=========================
 
----
+Design Style:
 
-## DATABASE REQUIREMENTS
+* Modern SaaS ERP
+* Compact layout
+* Professional business feel
+* Fast operational workflow
 
-Use optimized SQL queries.
+Colors:
 
-Example:
-LIMIT and OFFSET
+* White cards
+* Light background
+* Purple accent (#6D5DFC)
+* Minimal borders
+* Soft shadows
 
-Add proper indexes if needed.
+IMPORTANT:
+This page should feel:
 
-Avoid loading unnecessary rows.
+* Lightweight
+* Fast
+* Clean
+* Minimal
+* Productivity-focused
 
----
+==================================================
+7. IMPORTANT RESTRICTIONS
+=========================
 
-## TABLE IMPROVEMENTS
+STRICTLY DO NOT ADD:
 
-Improve all tables:
+* Edit actions
+* Delete actions
+* Export
+* Filters
+* Analytics
+* Graphs
+* Advanced features
+* Extra fields
+* Modals
+* Heavy UI
 
-* reduce oversized row heights
-* improve alignment
-* smaller typography
-* proper overflow handling
-* sticky headers
-* responsive layout
+ONLY SHOW:
+✅ Lead ID
+✅ Name
+✅ Number
+✅ Remarks
 
-Use:
-font-size: 13px
-
----
-
-## FINAL REQUIREMENTS
-
-Apply pagination consistently across the ENTIRE project.
-
-Ensure:
-
-* scalable architecture
-* reusable components
-* consistent UI
-* mobile responsiveness
-* high performance
-* SaaS-level polish
-
-The final experience should feel similar to:
-
-* Linear
-* Jira
-* ClickUp
-* Notion
-* Asana
+Focus on:
+FAST MINIMAL QUICK LEAD VIEW PAGE

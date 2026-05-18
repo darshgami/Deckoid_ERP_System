@@ -57,12 +57,13 @@ $db = Database::getInstance();
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Invoice</th>
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Party Name</th>
                     <th class="px-6 py-3 text-center text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-center text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Payment Status</th>
                     <th class="px-6 py-3 text-right text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Grand Total</th>
                     <th class="px-6 py-3 text-right text-[11px] font-bold text-neutral-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
             <tbody id="invoicesTableBody" class="divide-y divide-neutral-50 text-sm">
-                <tr><td colspan="5" class="px-6 py-20 text-center text-neutral-400">Loading...</td></tr>
+                <tr><td colspan="6" class="px-6 py-20 text-center text-neutral-400">Loading...</td></tr>
             </tbody>
         </table>
     </div>
@@ -107,7 +108,7 @@ $db = Database::getInstance();
             
             const tbody = document.getElementById('invoicesTableBody');
             if (!res.success || !res.data.invoices.length) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-20 text-center text-neutral-400">No data found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-20 text-center text-neutral-400">No data found.</td></tr>`;
                 return;
             }
 
@@ -121,6 +122,11 @@ $db = Database::getInstance();
                     <td class="px-6 py-4 text-center">
                         <span class="text-[11px] font-semibold uppercase tracking-wider ${inv.invoice_type === 'With GST' ? 'text-primary' : 'text-neutral-400'}">
                             ${inv.invoice_type}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-2 py-0.5 text-[11px] font-semibold rounded-md uppercase tracking-wider ${inv.payment_status === 'Complete' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}">
+                            ${inv.payment_status || 'Pending'}
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right font-semibold text-neutral-900">₹${parseFloat(inv.grand_total).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
@@ -151,7 +157,7 @@ $db = Database::getInstance();
 
             updatePagination(res.data.pagination);
         } catch (error) {
-            document.getElementById('invoicesTableBody').innerHTML = `<tr><td colspan="5" class="px-6 py-20 text-center text-red-500">Error loading data.</td></tr>`;
+            document.getElementById('invoicesTableBody').innerHTML = `<tr><td colspan="6" class="px-6 py-20 text-center text-red-500">Error loading data.</td></tr>`;
         }
     }
 
@@ -189,18 +195,46 @@ $db = Database::getInstance();
     function toggleActions(event, id) {
         event.stopPropagation();
         const dropdown = document.getElementById(`dropdown-${id}`);
-        const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+        const button = event.currentTarget;
+        const rect = button.getBoundingClientRect();
         
+        // Hide all other dropdowns
+        const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
         allDropdowns.forEach(d => {
             if (d.id !== `dropdown-${id}`) d.classList.add('hidden');
         });
         
-        dropdown.classList.toggle('hidden');
+        const isHidden = dropdown.classList.contains('hidden');
+        
+        if (isHidden) {
+            dropdown.classList.remove('hidden');
+            dropdown.style.position = 'fixed';
+            dropdown.style.zIndex = '1000';
+            
+            // Default position (below button, aligned to right edge of button)
+            let top = rect.bottom + 5;
+            let left = rect.right - 160; // 160px is w-40
+            
+            dropdown.style.top = `${top}px`;
+            dropdown.style.left = `${left}px`;
+            
+            // Check if it goes off screen at bottom
+            const dropRect = dropdown.getBoundingClientRect();
+            if (top + dropRect.height > window.innerHeight) {
+                dropdown.style.top = `${rect.top - dropRect.height - 5}px`;
+            }
+        } else {
+            dropdown.classList.add('hidden');
+        }
     }
 
     document.addEventListener('click', () => {
         document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.classList.add('hidden'));
     });
+
+    window.addEventListener('scroll', () => {
+        document.querySelectorAll('[id^="dropdown-"]').forEach(d => d.classList.add('hidden'));
+    }, { passive: true });
 
     async function deleteInvoice(id) {
         if (!confirm('Delete this record?')) return;

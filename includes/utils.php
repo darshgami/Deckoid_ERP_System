@@ -171,6 +171,16 @@ function formatCurrency($amount) {
 }
 
 /**
+ * Format date to DD/MM/YYYY
+ * @param string $date
+ * @return string
+ */
+function formatDate($date) {
+    if (!$date) return '';
+    return date('d/m/Y', strtotime($date));
+}
+
+/**
  * Get the application base path from APP_URL or the current request.
  */
 function app_base_path() {

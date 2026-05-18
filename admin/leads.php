@@ -19,6 +19,10 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         <p class="text-neutral-500 text-sm mt-0.5">Manage and track your sales opportunities efficiently.</p>
     </div>
     <div class="flex items-center gap-2">
+        <a href="quick_list.php" class="btn btn-primary text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            Quick List
+        </a>
         <?php if ($_SESSION['role'] === 'admin'): ?>
         <button onclick="exportLeads()" class="btn btn-secondary text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -51,7 +55,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         </select>
         <select id="serviceFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm cursor-pointer">
             <option value="">All Services</option>
-            <option value="Facebook & Google Ads">Facebook & Google Ads</option>
+            <option value="Facebook Ads">Facebook Ads</option>
+            <option value="Google Ads">Google Ads</option>
             <option value="Website Design & Development">Website Design & Development</option>
             <option value="Graphics Design">Graphics Design</option>
             <option value="Search Engine Optimization">Search Engine Optimization</option>
@@ -229,7 +234,8 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Service Interested In *</label>
                             <select name="service_interested_in" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
-                                <option value="Facebook & Google Ads">Facebook & Google Ads</option>
+                                <option value="Facebook Ads">Facebook Ads</option>
+                                <option value="Google Ads">Google Ads</option>
                                 <option value="Website Design & Development">Website Design & Development</option>
                                 <option value="Graphics Design">Graphics Design</option>
                                 <option value="Search Engine Optimization">Search Engine Optimization</option>
@@ -407,6 +413,16 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
     let leadsData = [];
     const currentRole = '<?= $_SESSION['role'] ?>';
 
+    function formatDate(dateStr) {
+        if (!dateStr) return '-';
+        const dateOnly = dateStr.split(' ')[0];
+        const parts = dateOnly.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        return dateStr;
+    }
+
     function updateLimit(limit) {
         currentLimit = limit;
         loadLeads(1);
@@ -448,7 +464,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             tbody.innerHTML = leadsData.map(lead => `
                 <tr class="hover:bg-neutral-50/50 transition-colors group">
                     <td class="px-4 py-3 text-[11px] text-neutral-500 whitespace-nowrap font-medium">${lead.lead_id || '-'}</td>
-                    <td class="px-4 py-3 text-[11px] text-neutral-500 whitespace-nowrap">${lead.lead_date || '-'}</td>
+                    <td class="px-4 py-3 text-[11px] text-neutral-500 whitespace-nowrap">${formatDate(lead.lead_date)}</td>
                     <td class="px-4 py-3 text-[13px] text-neutral-900 whitespace-nowrap font-semibold group-hover:text-primary transition-colors">${lead.company_client_name || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.contact_person || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.mobile_number || '-'}</td>
@@ -469,7 +485,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                         </span>
                     </td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.assigned_to_name || '-'}</td>
-                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.next_followup_date || '-'}</td>
+                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${formatDate(lead.next_followup_date)}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap max-w-xs truncate">${lead.last_followup_notes || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap max-w-xs truncate">${lead.requirement_details || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap font-medium">${lead.estimated_budget || '-'}</td>
@@ -477,10 +493,10 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     <td class="px-4 py-3 text-[11px] text-neutral-600 whitespace-nowrap">${lead.meeting_scheduled == 1 ? '✅ Yes' : '❌ No'}</td>
                     <td class="px-4 py-3 text-[11px] text-neutral-600 whitespace-nowrap">${lead.quotation_sent == 1 ? '✅ Yes' : '❌ No'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.deal_status || '-'}</td>
-                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.expected_closing_date || '-'}</td>
+                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${formatDate(lead.expected_closing_date)}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.payment_status || '-'}</td>
-                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.client_onboard_date || '-'}</td>
-                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.project_start_date || '-'}</td>
+                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${formatDate(lead.client_onboard_date)}</td>
+                    <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${formatDate(lead.project_start_date)}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.project_status || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.reference_by || '-'}</td>
                     <td class="px-4 py-3 text-[12px] text-neutral-600 whitespace-nowrap">${lead.website_social_link || '-'}</td>

@@ -4,6 +4,7 @@ require_once '../config/env.php';
 require_once '../includes/database.php';
 
 require_once '../includes/middleware.php';
+require_once '../includes/utils.php';
 
 header('Content-Type: application/json');
 apply_api_cors_headers('GET, OPTIONS');
@@ -117,7 +118,7 @@ try {
 
         fputcsv($output, [
             $lead['lead_id'],
-            $lead['lead_date'],
+            formatDate($lead['lead_date']),
             $lead['company_client_name'],
             $lead['contact_person'],
             $lead['mobile_number'],
@@ -131,7 +132,7 @@ try {
             $lead['lead_status'],
             $lead['priority'],
             $assignedTo,
-            $lead['next_followup_date'],
+            formatDate($lead['next_followup_date']),
             $lead['last_followup_notes'],
             $lead['requirement_details'],
             $lead['estimated_budget'],
@@ -139,10 +140,10 @@ try {
             $lead['meeting_scheduled'] ? 'Yes' : 'No',
             $lead['quotation_sent'] ? 'Yes' : 'No',
             $lead['deal_status'],
-            $lead['expected_closing_date'],
+            formatDate($lead['expected_closing_date']),
             $lead['payment_status'],
-            $lead['client_onboard_date'],
-            $lead['project_start_date'],
+            formatDate($lead['client_onboard_date']),
+            formatDate($lead['project_start_date']),
             $lead['project_status'],
             $lead['reference_by'],
             $lead['website_social_link'],
