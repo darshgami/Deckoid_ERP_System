@@ -52,12 +52,17 @@ function numberToWordsIndian($number) {
         if ($number) {
             $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
             $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
-            $str [] = ($number < 21) ? $words[$number] . ' ' . $here_digits[$counter] . $plural . ' ' . $hundred : $words[floor($number / 10) * 10] . ' ' . $words[$number % 10] . ' ' . $here_digits[$counter] . $plural . ' ' . $hundred;
+            $str [] = ($number < 21) ? $words[(int)$number] . ' ' . $here_digits[$counter] . $plural . ' ' . $hundred : $words[(int)floor($number / 10) * 10] . ' ' . $words[(int)$number % 10] . ' ' . $here_digits[$counter] . $plural . ' ' . $hundred;
         } else $str[] = null;
     }
     $Rupees = implode('', array_reverse($str));
-    $paise = ($decimal) ? "and " . ($words[$decimal / 10] . " " . $words[$decimal % 10]) . ' Paise' : '';
-    return ($Rupees ? $Rupees . 'Rupees ' : '') . $paise . "Only";
+    $decimal = (int) round($decimal);
+    $paise = '';
+    if ($decimal > 0) {
+        $paiseText = ($decimal < 21) ? $words[$decimal] : $words[(int)floor($decimal / 10) * 10] . " " . $words[$decimal % 10];
+        $paise = "and " . trim($paiseText) . ' Paise ';
+    }
+    return ($Rupees ? trim($Rupees) . ' Rupees ' : '') . $paise . "Only";
 }
 
 ?>
