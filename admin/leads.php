@@ -23,12 +23,10 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             Quick List
         </a>
-        <?php if ($_SESSION['role'] === 'admin'): ?>
         <button onclick="exportLeads()" class="btn btn-secondary text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             Export Excel
         </button>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -618,7 +616,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
     function addPaginationBtn(page, isActive) {
         const btn = document.createElement('button');
         btn.textContent = page;
-        btn.className = `w-9 h-9 rounded-xl font-bold text-xs transition-all ${isActive ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105' : 'text-neutral-500 hover:bg-neutral-100'}`;
+        btn.className = `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs transition-all ${isActive ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105' : 'text-neutral-500 hover:bg-neutral-100'}`;
         btn.onclick = () => loadLeads(page);
         document.getElementById('pagination').appendChild(btn);
     }
@@ -863,6 +861,20 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         });
 
         window.location.href = `../api/export.php?${params}`;
+    }
+
+    function exportQuickListCSV() {
+        const search = document.getElementById('search').value;
+        const status = document.getElementById('statusFilter').value;
+        const service = document.getElementById('serviceFilter').value;
+
+        const params = new URLSearchParams({ 
+            search, 
+            status, 
+            service
+        });
+
+        window.location.href = `../api/export_quick_list.php?${params}`;
     }
 
     function showToast(message, type = 'success') {

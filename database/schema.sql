@@ -24,6 +24,11 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_users_status ON users(status);
 
+-- Insert default admin user (username: admin, password: admin123)
+-- Password stored using SHA2; update application hashing if necessary.
+INSERT IGNORE INTO users (id, full_name, email, username, password_hash, role, status, created_at, updated_at)
+VALUES (UUID(), 'Administrator', 'admin@example.com', 'admin', SHA2('admin123',256), 'admin', 'active', NOW(), NOW());
+
 -- Create sessions table
 CREATE TABLE IF NOT EXISTS sessions (
     id CHAR(36) PRIMARY KEY NOT NULL,

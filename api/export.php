@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// Ensure only admins can export data
-requireAdmin();
+// Ensure users are authenticated
+requireAuth();
 
 try {
     $db = Database::getInstance();

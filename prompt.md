@@ -1,7 +1,4 @@
-Use this prompt to add a clean professional “Quick List” feature in your ERP.
-
-Add a new feature in my Lead Management ERP called:
-"Quick List"
+Update my Lead Management ERP with the following EXACT requirements.
 
 Project Stack:
 
@@ -15,124 +12,120 @@ Project Stack:
 * No composer
 
 IMPORTANT:
-This feature is ONLY for fast lead viewing by admin/staff.
-
-Purpose:
-Admin wants to quickly see important lead data without opening full Lead List page.
+Keep ERP compact, professional, and productivity-focused.
 
 ==================================================
 
-1. BUTTON PLACEMENT
+1. STAFF SIDE EXPORT CSV BUTTON
    ==================================================
 
 Requirement:
-On Lead List page header:
-Add new button:
-
-"Quick List"
+On Staff & admin Lead List page:
+Add:
+"Export CSV" button
 
 Placement:
 
-* Near Add Lead button
-* Modern compact button
-* Same ERP UI style
+* Near Quick List button
+* Same modern ERP button style
+* Compact size
+
+Behavior:
+When user clicks:
+→ Download CSV file automatically
+
+CSV must contain ONLY staff-visible lead data.
 
 Generate:
 
-1. Proper button placement strategy
-2. Responsive button behavior
-3. Compact ERP button recommendations
-4. Mobile responsive behavior
-
-==================================================
-2. QUICK LIST PAGE REQUIREMENTS
-===============================
-
-Requirement:
-When user clicks:
-→ Quick List
-
-Open:
-Compact Quick List Page
+1. CSV export workflow
+2. Proper CSV download strategy
+3. UTF-8 CSV compatibility
+4. Excel-compatible export recommendations
+5. Proper filename strategy
+6. Export security recommendations
+7. Role-based export validation
+8. Large data export optimization
 
 IMPORTANT:
-ONLY show these fields:
+
+* CSV should open properly in Excel
+* Gujarati/UTF-8 text should work properly
+* No broken columns
+* Proper column alignment required
+
+Requirement:
+Quick List page currently shows:
 
 * Lead ID
 * Name
 * Number
 * Remarks
 
-STRICTLY:
-Do NOT show:
+NOW ADD THESE TWO COLUMNS:
 
-* Full lead details
-* Edit button
-* Delete button
-* Export button
-* Filters
-* Advanced search
-* Analytics
-* Status cards
-* Extra columns
-* Extra actions
+* Last Follow-up Notes
+* Next Follow-up Date
 
-This page is ONLY for:
-Fast lead viewing.
-
-==================================================
-3. QUICK LIST TABLE UI
-======================
-
-Requirement:
-Create compact professional ERP table.
-
-Table Columns:
+Final Quick List Columns:
 | Lead ID |
 | Name |
 | Number |
 | Remarks |
-
-Design Requirements:
-
-* Compact row height
-* Fast readability
-* Minimal spacing
-* Modern SaaS ERP style
-* White card container
-* Sticky header optional
-* Mobile responsive
-
-Generate:
-
-1. Compact table structure
-2. Proper column width recommendations
-3. Better remarks text wrapping
-4. Responsive table strategy
-5. Typography recommendations
-6. ERP density optimization
-
-==================================================
-4. QUICK LIST PERFORMANCE
-=========================
-
-Requirement:
-This page must load FAST.
-
-Generate:
-
-1. Optimized SQL recommendations
-2. Lightweight query strategy
-3. Minimal rendering strategy
-4. Pagination recommendations if needed
-5. Table performance optimization
+| Last Follow-up Notes |
+| Next Follow-up Date |
 
 IMPORTANT:
-Only fetch required fields from database.
+ONLY show these fields.
+Do NOT add:
 
-==================================================
-5. RESPONSIVE BEHAVIOR
-======================
+* Edit button
+* Delete button
+* Filters
+* Analytics
+* Graphs
+* Extra actions
+
+Requirement:
+Make table compact and readable.
+
+Generate:
+
+1. Better column width distribution
+2. Follow-up notes text wrapping strategy
+3. Next follow-up date alignment
+4. Compact row height recommendations
+5. Mobile responsive behavior
+6. Better table density recommendations
+
+IMPORTANT:
+Table should feel:
+
+* Fast
+* Compact
+* Professional
+* CRM-oriented
+* Easy for admin quick viewing
+
+Requirement:
+Quick List must dynamically fetch:
+
+* Latest follow-up notes
+* Next follow-up date
+
+Generate:
+
+1. Latest follow-up fetch strategy
+2. Proper SQL optimization
+3. Null value handling
+4. Empty follow-up fallback behavior
+5. Follow-up date formatting recommendations
+
+IMPORTANT:
+If no follow-up exists:
+
+* Show "-"
+* Do NOT break layout
 
 Requirement:
 Quick List must work properly on:
@@ -144,61 +137,62 @@ Quick List must work properly on:
 
 Generate:
 
-1. Mobile table strategy
-2. Responsive spacing recommendations
-3. Compact mobile view recommendations
-4. Overflow handling recommendations
+1. Compact responsive table strategy
+2. Horizontal scroll optimization
+3. Mobile spacing recommendations
+4. Better overflow handling
 
-==================================================
-6. UI DESIGN REQUIREMENTS
-=========================
+CSV must include:
+
+* Lead ID
+* Name
+* Number
+* Remarks
+* Last Follow-up Notes
+* Next Follow-up Date
+
+Generate:
+
+1. Correct CSV column mapping
+2. Proper data escaping strategy
+3. Line-break handling
+4. Comma handling recommendations
 
 Design Style:
 
 * Modern SaaS ERP
-* Compact layout
-* Professional business feel
+* Compact business UI
+* White table card
+* Minimal borders
 * Fast operational workflow
 
 Colors:
 
 * White cards
-* Light background
+* Light gray background
 * Purple accent (#6D5DFC)
-* Minimal borders
-* Soft shadows
 
 IMPORTANT:
-This page should feel:
-
-* Lightweight
-* Fast
-* Clean
-* Minimal
-* Productivity-focused
-
-==================================================
-7. IMPORTANT RESTRICTIONS
-=========================
+Do NOT redesign ERP.
+Only extend current UI professionally.
 
 STRICTLY DO NOT ADD:
 
-* Edit actions
 * Delete actions
-* Export
-* Filters
+* Edit actions
 * Analytics
+* Charts
 * Graphs
-* Advanced features
-* Extra fields
+* Filters
 * Modals
-* Heavy UI
+* Complex features
+* Fancy animations
 
-ONLY SHOW:
-✅ Lead ID
-✅ Name
-✅ Number
-✅ Remarks
+ONLY:
+✅ Quick viewing
+✅ CSV export
+✅ Follow-up visibility
+✅ Fast operational workflow
 
 Focus on:
-FAST MINIMAL QUICK LEAD VIEW PAGE
+COMPACT QUICK LIST + PROFESSIONAL CSV EXPORT SYSTEM

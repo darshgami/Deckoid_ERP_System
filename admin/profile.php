@@ -38,10 +38,6 @@ layout_start('Settings - Deckoid ERP');
                 </div>
             </div>
 
-            <div class="space-y-1.5">
-                <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Bio / Professional Summary</label>
-                <textarea name="bio" id="prof_bio" rows="3" placeholder="Tell us about yourself..." class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm resize-none"></textarea>
-            </div>
 
             <div class="pt-2">
                 <button type="submit" id="saveProfileBtn" class="btn btn-primary px-8 py-2.5 rounded-xl shadow-lg shadow-primary/20 text-sm flex items-center gap-2">
@@ -93,7 +89,7 @@ layout_start('Settings - Deckoid ERP');
             document.getElementById('prof_username').value = user.username;
             document.getElementById('prof_email').value = user.email || '';
             document.getElementById('prof_phone').value = user.phone_number || '';
-            document.getElementById('prof_bio').value = user.bio || '';
+
         } catch (error) {
             showToast(error.message, 'error');
         }

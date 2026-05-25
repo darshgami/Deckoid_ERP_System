@@ -190,19 +190,8 @@ function app_base_path() {
         return $basePath;
     }
 
-    if (class_exists('Env')) {
-        $appUrl = trim((string) Env::get('APP_URL', ''));
-        if ($appUrl !== '') {
-            $path = parse_url($appUrl, PHP_URL_PATH);
-            $basePath = rtrim((string) $path, '/');
-
-            if ($basePath === '/' || $basePath === '.' || $basePath === '\\') {
-                $basePath = '';
-            }
-
-            return $basePath;
-        }
-    }
+    // Calculate base path dynamically based on actual script execution path
+    // This ensures it works seamlessly across any local folder name or production environment
 
     $scriptName = (string) ($_SERVER['SCRIPT_NAME'] ?? '');
     $scriptDir = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');

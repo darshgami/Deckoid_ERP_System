@@ -13,7 +13,7 @@ $offset = ($page - 1) * $limit;
 
 try {
     // Fetch only required fields for performance
-    $stmt = $db->prepare("SELECT lead_id, company_client_name, mobile_number, remarks_notes FROM leads ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
+    $stmt = $db->prepare("SELECT lead_id, company_client_name, mobile_number, remarks_notes, last_followup_notes, next_followup_date FROM leads ORDER BY created_at DESC LIMIT :limit OFFSET :offset");
     $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
     $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
     $stmt->execute();

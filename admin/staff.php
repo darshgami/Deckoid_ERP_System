@@ -367,7 +367,7 @@ layout_start('Staff Management - Deckoid ERP');
         for (let i = 1; i <= pagination.pages; i++) {
             const btn = document.createElement('button');
             btn.textContent = i;
-            btn.className = `w-9 h-9 rounded-xl font-bold text-xs transition-all ${i === pagination.page ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105' : 'text-neutral-500 hover:bg-neutral-100'}`;
+            btn.className = `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs transition-all ${i === pagination.page ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105' : 'text-neutral-500 hover:bg-neutral-100'}`;
             btn.onclick = () => loadStaff(i);
             container.appendChild(btn);
         }
