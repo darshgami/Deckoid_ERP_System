@@ -19,15 +19,32 @@ try {
         $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
         $offset = ($page - 1) * $limit;
 
+        $search = isset($_GET['search']) && trim($_GET['search']) !== '' ? trim($_GET['search']) : null;
+
+        $where = '';
+        $params = [];
+
+        if ($search) {
+            $where = 'WHERE full_name LIKE ? OR username LIKE ? OR email LIKE ?';
+            $searchParam = '%' . $search . '%';
+            $params = [$searchParam, $searchParam, $searchParam];
+        }
+
         // Get total count
-        $countStmt = $db->query("SELECT COUNT(*) FROM users");
+        $countStmt = $db->prepare("SELECT COUNT(*) FROM users $where");
+        $countStmt->execute($params);
         $totalItems = (int)$countStmt->fetchColumn();
         $totalPages = ceil($totalItems / $limit);
 
         // Get paginated data
-        $stmt = $db->prepare("SELECT id, full_name, email, username, role, status, last_login_at, created_at FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?");
-        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
-        $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+        $stmt = $db->prepare("SELECT id, full_name, email, username, role, status, last_login_at, created_at FROM users $where ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        
+        $paramIndex = 1;
+        foreach ($params as $param) {
+            $stmt->bindValue($paramIndex++, $param);
+        }
+        $stmt->bindValue($paramIndex++, $limit, PDO::PARAM_INT);
+        $stmt->bindValue($paramIndex++, $offset, PDO::PARAM_INT);
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -133,6 +150,6 @@ try {
         http_response_code(405);
         ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
-} catch (Exception $e) {
+} catch (Throwable $e) {
     ApiResponse::send(ApiResponse::error($e->getMessage()), 400);
 }

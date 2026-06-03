@@ -56,7 +56,7 @@ class DatabaseSetup
         $this->log("\n==========================================", "green");
         $this->log("   SETUP COMPLETED SUCCESSFULLY!          ", "green");
         $this->log("==========================================", "green");
-        $this->log("URL: " . Env::get('APP_URL', 'http://localhost/login.php'), "white");
+        $this->log("URL: " . rtrim(Env::get('APP_URL', 'http://localhost'), '/') . '/login.php', "white");
         $this->log("Admin Login: admin / admin123\n", "white");
     }
 

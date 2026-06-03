@@ -105,7 +105,7 @@ if (!$invoiceId) {
                     </div>
                     <div class="md:col-span-2 space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Address</label>
-                        <textarea name="address" rows="2" placeholder="Client's Address" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-medium outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all resize-none"><?= htmlspecialchars($invoice['address'] ?? '') ?></textarea>
+                        <textarea name="address" rows="2" placeholder="Company's Address" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-medium outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all resize-none"><?= htmlspecialchars($invoice['address'] ?? '') ?></textarea>
                     </div>
                     <div id="gstinField" class="md:col-span-2 space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Party GSTIN</label>

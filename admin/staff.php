@@ -16,6 +16,22 @@ layout_start('Staff Management - Deckoid ERP');
         Add New Staff
     </button>
 </div>
+<!-- Filters Bar -->
+<div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="relative group md:col-span-2">
+            <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input type="text" id="search" placeholder="Search by name, username, or email..." 
+                   class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+        </div>
+        <button onclick="loadStaff(1)" class="btn btn-primary text-sm h-full">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            Apply Filter
+        </button>
+    </div>
+</div>
 
 <!-- Staff Table -->
 <div class="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
@@ -60,7 +76,7 @@ layout_start('Staff Management - Deckoid ERP');
                 </select>
             </div>
         </div>
-        <div class="flex gap-1.5" id="paginationButtons">
+        <div class="flex gap-1.5" id="pagination">
             <!-- Pagination buttons will be loaded here -->
         </div>
     </div>
@@ -144,8 +160,9 @@ layout_start('Staff Management - Deckoid ERP');
 
     async function loadStaff(page = 1) {
         currentPage = page;
+        const search = document.getElementById('search')?.value || '';
         try {
-            const response = await fetch(`../api/staff.php?page=${page}&limit=${currentLimit}`);
+            const response = await fetch(`../api/staff.php?page=${page}&limit=${currentLimit}&search=${encodeURIComponent(search)}`);
             const res = await response.json();
             
             if (!res.success) throw new Error(res.message);
@@ -153,7 +170,8 @@ layout_start('Staff Management - Deckoid ERP');
             const tbody = document.getElementById('staffTableBody');
             if (!res.data?.users || res.data.users.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-20 text-center text-neutral-400 font-medium">No staff accounts found.</td></tr>`;
-                updatePagination({ page: 1, limit: 10, total: 0, pages: 0 });
+                updatePaginationInfo({ total: 0 }, 'paginationInfo', 'staff');
+                document.getElementById('pagination').innerHTML = '';
                 return;
             }
 
@@ -197,7 +215,8 @@ layout_start('Staff Management - Deckoid ERP');
                 </tr>
             `).join('');
 
-            updatePagination(res.data.pagination);
+            updatePaginationInfo(res.data.pagination, 'paginationInfo', 'staff');
+            renderPagination(res.data.pagination, loadStaff);
         } catch (error) {
             console.error('Error:', error);
             showToast(error.message || 'Failed to load staff data', 'error');
@@ -346,40 +365,7 @@ layout_start('Staff Management - Deckoid ERP');
         const date = new Date(dateStr);
         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
-
-    function updatePagination(pagination) {
-        const info = document.getElementById('paginationInfo');
-        info.textContent = pagination.total > 0 
-            ? `Showing ${((pagination.page - 1) * pagination.limit) + 1} to ${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total} staff`
-            : 'No staff to display';
-
-        const container = document.getElementById('paginationButtons');
-        container.innerHTML = '';
-        if (pagination.pages <= 1) return;
-
-        // Previous
-        const prevBtn = document.createElement('button');
-        prevBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-        prevBtn.className = `w-9 h-9 rounded-xl flex items-center justify-center transition-all ${pagination.page > 1 ? 'text-neutral-500 hover:bg-neutral-100' : 'text-neutral-200 cursor-not-allowed'}`;
-        prevBtn.onclick = () => pagination.page > 1 && loadStaff(pagination.page - 1);
-        container.appendChild(prevBtn);
-
-        for (let i = 1; i <= pagination.pages; i++) {
-            const btn = document.createElement('button');
-            btn.textContent = i;
-            btn.className = `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs transition-all ${i === pagination.page ? 'bg-primary text-white shadow-lg shadow-primary/25 scale-105' : 'text-neutral-500 hover:bg-neutral-100'}`;
-            btn.onclick = () => loadStaff(i);
-            container.appendChild(btn);
-        }
-
-        // Next
-        const nextBtn = document.createElement('button');
-        nextBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
-        nextBtn.className = `w-9 h-9 rounded-xl flex items-center justify-center transition-all ${pagination.page < pagination.pages ? 'text-neutral-500 hover:bg-neutral-100' : 'text-neutral-200 cursor-not-allowed'}`;
-        nextBtn.onclick = () => pagination.page < pagination.pages && loadStaff(pagination.page + 1);
-        container.appendChild(nextBtn);
-    }
-
+    
     document.addEventListener('DOMContentLoaded', () => loadStaff(1));
 </script>
 

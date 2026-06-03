@@ -106,6 +106,27 @@
             };
         }
     </script>
+    <!-- CSRF Token & Fetch Interceptor -->
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+    <script>
+        const originalFetch = window.fetch;
+        window.fetch = async function() {
+            let [resource, config] = arguments;
+            if(config === undefined) {
+                config = {};
+            }
+            if(config.method && ['POST', 'PUT', 'DELETE'].includes(config.method.toUpperCase())) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (csrfToken) {
+                    config.headers = {
+                        ...config.headers,
+                        'X-CSRF-TOKEN': csrfToken
+                    };
+                }
+            }
+            return originalFetch(resource, config);
+        };
+    </script>
 </head>
 
 <body class="text-neutral-900 antialiased">

@@ -66,7 +66,7 @@ try {
     } else {
         ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // Log the actual technical error internally
     Logger::error('Auth API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
     

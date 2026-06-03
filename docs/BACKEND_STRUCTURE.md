@@ -103,7 +103,7 @@ Column	Type	Constraints	Description
 id	CHAR(36)	PK, NOT NULL	UUID
 lead_id	VARCHAR(50)	UNIQUE, NOT NULL	Business lead ID
 lead_date	DATE	NOT NULL	Lead creation date
-company_client_name	VARCHAR(255)	NOT NULL	Client/company
+company	VARCHAR(255)	NOT NULL	Client/company
 contact_person	VARCHAR(150)	NOT NULL	Contact name
 mobile_number	VARCHAR(20)	NOT NULL	Mobile
 alternative_number	VARCHAR(20)	NULL	Secondary number
@@ -111,27 +111,27 @@ email_id	VARCHAR(255)	NULL	Email
 city	VARCHAR(100)	NULL	City
 state	VARCHAR(100)	NULL	State
 source_of_lead	VARCHAR(100)	NOT NULL	Lead source
-service_interested_in	VARCHAR(255)	NULL	Services
+
 lead_category	ENUM('Hot','Warm','Cold')	NOT NULL	Category
 lead_status	VARCHAR(100)	NOT NULL	Lead status
 priority	ENUM('High','Medium','Low')	DEFAULT 'Medium'	Priority
 assigned_to	CHAR(36)	FK → users.id ON DELETE SET NULL	Assigned user
 next_followup_date	DATE	NULL	Follow-up
 last_followup_notes	TEXT	NULL	Notes
-requirement_details	TEXT	NULL	Requirements
+
 estimated_budget	DECIMAL(12,2)	NULL	Budget
 proposal_sent	BOOLEAN	DEFAULT FALSE	Proposal
 meeting_scheduled	BOOLEAN	DEFAULT FALSE	Meeting
 quotation_sent	BOOLEAN	DEFAULT FALSE	Quotation
 deal_status	VARCHAR(100)	NOT NULL	Deal status
-expected_closing_date	DATE	NULL	Closing
+
 payment_status	VARCHAR(100)	NOT NULL	Payment
 client_onboard_date	DATE	NULL	Onboard
 project_start_date	DATE	NULL	Project start
 project_status	VARCHAR(100)	NULL	Project
 reference_by	VARCHAR(255)	NULL	Reference
 website_social_link	VARCHAR(500)	NULL	Website
-remarks_notes	TEXT	NULL	Remarks
+remarks	TEXT	NULL	Remarks
 created_by	CHAR(36)	FK → users.id ON DELETE SET NULL	Creator
 created_at	TIMESTAMP	DEFAULT CURRENT_TIMESTAMP	Created
 updated_at	TIMESTAMP	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP	Updated
@@ -265,7 +265,7 @@ Success Response
   "data": [
     {
       "id": "uuid",
-      "companyClientName": "ABC Pvt Ltd",
+      "company": "ABC Pvt Ltd",
       "mobileNumber": "9876543210",
       "leadStatus": "Interested"
     }
@@ -281,7 +281,7 @@ POST /api/leads
 Request Body
 {
   "leadDate": "2026-05-07",
-  "companyClientName": "ABC Pvt Ltd",
+  "company": "ABC Pvt Ltd",
   "contactPerson": "Rahul",
   "mobileNumber": "9876543210",
   "emailId": "rahul@example.com",
@@ -292,7 +292,7 @@ Request Body
 }
 Validation Rules
 Field	Rules
-companyClientName	Required
+company	Required
 mobileNumber	Required, unique
 emailId	Valid email
 leadCategory	Hot/Warm/Cold
@@ -319,7 +319,7 @@ Success Response
   "success": true,
   "data": {
     "id": "uuid",
-    "companyClientName": "ABC Pvt Ltd"
+    "company": "ABC Pvt Ltd"
   }
 }
 Error Cases

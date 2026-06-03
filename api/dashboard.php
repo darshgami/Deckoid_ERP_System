@@ -14,9 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
+    ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
 }
 
 // Check authentication using middleware
@@ -32,8 +30,8 @@ try {
             COUNT(*) as total,
             SUM(CASE WHEN lead_status = 'New' THEN 1 ELSE 0 END) as new_count,
             SUM(CASE WHEN next_followup_date >= CURDATE() THEN 1 ELSE 0 END) as followup_count,
-            SUM(CASE WHEN deal_status = 'Won' OR lead_status = 'Converted' THEN 1 ELSE 0 END) as converted_count,
-            SUM(CASE WHEN deal_status = 'Lost' OR lead_status = 'Lost' THEN 1 ELSE 0 END) as lost_count,
+            SUM(CASE WHEN lead_status = 'Convert' THEN 1 ELSE 0 END) as converted_count,
+            SUM(CASE WHEN lead_status = 'Lost' THEN 1 ELSE 0 END) as lost_count,
             SUM(CASE WHEN payment_status = 'Pending' THEN 1 ELSE 0 END) as pending_payments,
             SUM(CASE WHEN next_followup_date = CURDATE() THEN 1 ELSE 0 END) as today_followups
         FROM leads";
@@ -51,16 +49,16 @@ try {
     ];
 
     // Get recent leads
-    $stmt = $db->query("SELECT lead_id, company_client_name, contact_person, mobile_number, lead_category, lead_status FROM leads ORDER BY created_at DESC LIMIT 5");
+    $stmt = $db->query("SELECT lead_id, company, contact_person, mobile_number, lead_category, lead_status FROM leads ORDER BY created_at DESC LIMIT 5");
     $recentLeads = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get upcoming followups
-    $stmt = $db->prepare("SELECT lead_id, company_client_name, contact_person, next_followup_date, last_followup_notes FROM leads WHERE next_followup_date >= CURDATE() ORDER BY next_followup_date ASC LIMIT 5");
+    $stmt = $db->prepare("SELECT lead_id, company, contact_person, next_followup_date, remarks FROM leads WHERE next_followup_date >= CURDATE() ORDER BY next_followup_date ASC LIMIT 5");
     $stmt->execute();
     $upcomingFollowups = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Get recent activity
-    $stmt = $db->query("SELECT al.company_client_name, u.full_name as user_name, al.activity_type, al.created_at 
+    $stmt = $db->query("SELECT al.company, u.full_name as user_name, al.activity_type, al.created_at 
                         FROM lead_activity_logs al 
                         LEFT JOIN users u ON al.user_id = u.id 
                         ORDER BY al.created_at DESC LIMIT 10");
@@ -98,7 +96,7 @@ try {
     }
 
     // Source of Lead Statistics
-    $stmt = $db->query("SELECT source_of_lead as source, COUNT(*) as count FROM leads GROUP BY source_of_lead ORDER BY count DESC LIMIT 5");
+    $stmt = $db->query("SELECT lead_category as source, COUNT(*) as count FROM leads GROUP BY lead_category ORDER BY count DESC LIMIT 5");
     $sourceStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Assigned User Statistics
@@ -119,7 +117,7 @@ try {
         'user_stats' => $userStats
     ]));
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     Logger::error('Dashboard API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
     ApiResponse::send(ApiResponse::error('Unable to load dashboard data. Please try again later.'), 500);
 }

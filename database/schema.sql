@@ -51,37 +51,20 @@ CREATE TABLE IF NOT EXISTS leads (
     id CHAR(36) PRIMARY KEY NOT NULL,
     lead_id VARCHAR(50) UNIQUE NOT NULL,
     lead_date DATE NOT NULL,
-    company_client_name VARCHAR(255) NOT NULL,
+    company VARCHAR(255) NOT NULL,
     contact_person VARCHAR(150) NOT NULL,
-    mobile_number VARCHAR(20) UNIQUE NOT NULL,
-    alternative_number VARCHAR(20) NULL,
+    mobile_number VARCHAR(20) NOT NULL,
     email_id VARCHAR(255) NULL,
     city VARCHAR(100) NULL,
     state VARCHAR(100) NULL,
-    country VARCHAR(100) DEFAULT 'India',
-    zip_code VARCHAR(20) NULL,
-    source_of_lead VARCHAR(100) NOT NULL,
-    service_interested_in VARCHAR(255) NULL,
     lead_category ENUM('Hot','Warm','Cold') NOT NULL,
     lead_status VARCHAR(100) NOT NULL,
-    priority ENUM('High','Medium','Low') DEFAULT 'Medium',
     assigned_to CHAR(36) NULL,
     next_followup_date DATE NULL,
-    last_followup_notes TEXT NULL,
-    requirement_details TEXT NULL,
     estimated_budget DECIMAL(12,2) NULL,
-    proposal_sent BOOLEAN DEFAULT FALSE,
-    meeting_scheduled BOOLEAN DEFAULT FALSE,
-    quotation_sent BOOLEAN DEFAULT FALSE,
-    deal_status VARCHAR(100) NOT NULL,
-    expected_closing_date DATE NULL,
     payment_status VARCHAR(100) NOT NULL,
-    client_onboard_date DATE NULL,
-    project_start_date DATE NULL,
-    project_status VARCHAR(100) NULL,
     reference_by VARCHAR(255) NULL,
-    website_social_link VARCHAR(500) NULL,
-    remarks_notes TEXT NULL,
+    remarks TEXT NULL,
     created_by CHAR(36) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -93,9 +76,7 @@ CREATE TABLE IF NOT EXISTS leads (
 CREATE INDEX idx_leads_mobile_number ON leads(mobile_number);
 CREATE INDEX idx_leads_email_id ON leads(email_id);
 CREATE INDEX idx_leads_lead_status ON leads(lead_status);
-CREATE INDEX idx_leads_priority ON leads(priority);
 CREATE INDEX idx_leads_city ON leads(city);
-CREATE INDEX idx_leads_deal_status ON leads(deal_status);
 CREATE INDEX idx_leads_payment_status ON leads(payment_status);
 CREATE INDEX idx_leads_assigned_to ON leads(assigned_to);
 CREATE INDEX idx_leads_created_by ON leads(created_by);
@@ -105,7 +86,7 @@ CREATE TABLE IF NOT EXISTS lead_activity_logs (
     id CHAR(36) PRIMARY KEY,
     lead_id CHAR(36) NOT NULL,
     user_id CHAR(36) NULL,
-    company_client_name VARCHAR(255) NULL,
+    company VARCHAR(255) NULL,
     activity_type VARCHAR(100) NOT NULL,
     old_value TEXT NULL,
     new_value TEXT NULL,
@@ -114,6 +95,38 @@ CREATE TABLE IF NOT EXISTS lead_activity_logs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Create followups table
+CREATE TABLE IF NOT EXISTS followups (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    lead_id CHAR(36) NOT NULL,
+    followup_date DATE NOT NULL,
+    remarks TEXT NULL,
+    status ENUM('Active', 'Completed', 'Lost') DEFAULT 'Active',
+    created_by CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
+);
+
+-- Create customer_onboarding table
+CREATE TABLE IF NOT EXISTS customer_onboarding (
+    id CHAR(36) PRIMARY KEY NOT NULL,
+    lead_id CHAR(36) NOT NULL,
+    project_name VARCHAR(255) NOT NULL,
+    company VARCHAR(255) NULL,
+    contact_person VARCHAR(150) NULL,
+    add_work VARCHAR(255) NULL,
+    status ENUM('Pending', 'In Progress', 'On Hold', 'Completed') DEFAULT 'Pending',
+    remarks TEXT NULL,
+    onboarding_date DATE NOT NULL,
+    created_by CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (lead_id) REFERENCES leads(id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
 -- Create invoices table

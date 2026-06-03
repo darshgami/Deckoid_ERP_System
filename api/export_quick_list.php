@@ -14,9 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
+    ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
 }
 
 // Allow both staff and admin
@@ -31,7 +29,7 @@ try {
 
     if (isset($_GET['search']) && !empty($_GET['search'])) {
         $search = '%' . $_GET['search'] . '%';
-        $where[] = "(company_client_name LIKE ? OR contact_person LIKE ? OR mobile_number LIKE ? OR email_id LIKE ? OR lead_id LIKE ?)";
+        $where[] = "(company LIKE ? OR contact_person LIKE ? OR mobile_number LIKE ? OR email_id LIKE ? OR lead_id LIKE ?)";
         $params = array_merge($params, [$search, $search, $search, $search, $search]);
     }
 
@@ -40,23 +38,44 @@ try {
         $params[] = $_GET['category'];
     }
 
-    if (isset($_GET['status']) && !empty($_GET['status'])) {
+    if (isset($_GET['lead_status']) && !empty($_GET['lead_status'])) {
         $where[] = "lead_status = ?";
-        $params[] = $_GET['status'];
+        $params[] = $_GET['lead_status'];
+    }
+
+    // Date Range Validation & Filtering
+    $dateFrom = $_GET['date_from'] ?? null;
+    $dateTo = $_GET['date_to'] ?? null;
+
+    if ($dateFrom && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFrom)) {
+        throw new Exception('Invalid start date format');
+    }
+    if ($dateTo && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateTo)) {
+        throw new Exception('Invalid end date format');
+    }
+
+    if ($dateFrom && $dateTo && $dateTo < $dateFrom) {
+        throw new Exception('End date cannot be earlier than start date');
+    }
+
+    if ($dateFrom) {
+        $where[] = "lead_date >= ?";
+        $params[] = $dateFrom;
+    }
+    if ($dateTo) {
+        $where[] = "lead_date <= ?";
+        $params[] = $dateTo;
     }
 
     $whereClause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
     // Get filtered leads for Quick List
-    $stmt = $db->prepare("SELECT lead_id, company_client_name, mobile_number, remarks_notes, last_followup_notes, next_followup_date FROM leads $whereClause ORDER BY created_at DESC");
+    $stmt = $db->prepare("SELECT lead_id, company, mobile_number, remarks, next_followup_date FROM leads $whereClause ORDER BY created_at DESC");
     $stmt->execute($params);
     $leads = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($leads)) {
-        header('Content-Type: application/json');
-        http_response_code(404);
-        echo json_encode(['error' => 'No leads found to export']);
-        exit;
+        ApiResponse::send(ApiResponse::error('No leads found to export'), 404);
     }
 
     // Set headers for CSV download
@@ -72,19 +91,17 @@ try {
 
     // Add headers exactly as requested
     fputcsv($output, [
-        'Lead ID', 'Name', 'Number', 'Remarks', 'Last Follow-up Notes', 'Next Follow-up Date'
+        'Lead ID', 'Name', 'Number', 'Remarks', 'Next Follow-up Date'
     ]);
 
     // Add data rows
     foreach ($leads as $lead) {
         $nextFollowupDate = $lead['next_followup_date'] ? formatDate($lead['next_followup_date']) : '-';
-        $lastFollowupNotes = $lead['last_followup_notes'] ? $lead['last_followup_notes'] : '-';
-        $remarks = $lead['remarks_notes'] ? $lead['remarks_notes'] : '-';
-        $name = $lead['company_client_name'] ? $lead['company_client_name'] : '-';
+        $remarks = $lead['remarks'] ? $lead['remarks'] : '-';
+        $name = $lead['company'] ? $lead['company'] : '-';
         $number = $lead['mobile_number'] ? $lead['mobile_number'] : '-';
 
         // Escaping line breaks in notes/remarks to ensure CSV integrity
-        $lastFollowupNotes = str_replace(array("\r", "\n"), " ", $lastFollowupNotes);
         $remarks = str_replace(array("\r", "\n"), " ", $remarks);
 
         fputcsv($output, [
@@ -92,7 +109,6 @@ try {
             $name,
             $number,
             $remarks,
-            $lastFollowupNotes,
             $nextFollowupDate
         ]);
     }
@@ -100,8 +116,6 @@ try {
     fclose($output);
     exit;
 
-} catch (Exception $e) {
-    header('Content-Type: application/json');
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+} catch (Throwable $e) {
+    ApiResponse::send(ApiResponse::error($e->getMessage()), 500);
 }

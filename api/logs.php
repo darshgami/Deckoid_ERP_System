@@ -37,7 +37,7 @@ try {
         }
 
         if ($search) {
-            $where[]  = '(COALESCE(l.company_client_name, al.company_client_name, al.notes) LIKE ?)';
+            $where[]  = '(COALESCE(l.company, al.company, al.notes) LIKE ?)';
             $params[] = '%' . $search . '%';
         }
 
@@ -61,7 +61,7 @@ try {
                 al.activity_type,
                 al.notes,
                 al.created_at,
-                COALESCE(l.company_client_name, al.company_client_name, 'Deleted Lead') AS company_client_name,
+                COALESCE(l.company, al.company, 'Deleted Lead') AS company,
                 COALESCE(u.full_name, 'System') AS user_name
             FROM lead_activity_logs al
             LEFT JOIN leads l ON al.lead_id = l.id
@@ -94,7 +94,7 @@ try {
         ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     Logger::error('Logs API Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
     ApiResponse::send(ApiResponse::error('Unable to retrieve activity logs. Please try again later.'), 500);
 }

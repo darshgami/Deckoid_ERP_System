@@ -14,9 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
-    exit;
+    ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
 }
 
 // Ensure users are authenticated
@@ -31,7 +29,7 @@ try {
 
     if (isset($_GET['search']) && !empty($_GET['search'])) {
         $search = '%' . $_GET['search'] . '%';
-        $where[] = "(company_client_name LIKE ? OR contact_person LIKE ? OR mobile_number LIKE ? OR email_id LIKE ? OR lead_id LIKE ?)";
+        $where[] = "(company LIKE ? OR contact_person LIKE ? OR mobile_number LIKE ? OR email_id LIKE ? OR lead_id LIKE ?)";
         $params = array_merge($params, [$search, $search, $search, $search, $search]);
     }
 
@@ -40,9 +38,9 @@ try {
         $params[] = $_GET['category'];
     }
 
-    if (isset($_GET['status']) && !empty($_GET['status'])) {
+    if (isset($_GET['lead_status']) && !empty($_GET['lead_status'])) {
         $where[] = "lead_status = ?";
-        $params[] = $_GET['status'];
+        $params[] = $_GET['lead_status'];
     }
 
     // Date Range Validation & Filtering
@@ -77,10 +75,7 @@ try {
     $leads = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if (empty($leads)) {
-        header('Content-Type: application/json');
-        http_response_code(404);
-        echo json_encode(['error' => 'No leads found to export']);
-        exit;
+        ApiResponse::send(ApiResponse::error('No leads found to export'), 404);
     }
 
     // Set headers for CSV download
@@ -94,68 +89,52 @@ try {
     // Add UTF-8 BOM for Excel compatibility
     fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
 
-    // Add headers matching Excel exactly
+    // Add headers matching the requested exact DB structure
     fputcsv($output, [
-        'Lead ID', 'Lead Date', 'Company / Client Name', 'Contact Person', 'Mobile Number', 
-        'Alternative Number', 'Email ID', 'City', 'State', 'Source of Lead', 
-        'Service Interested In', 'Lead Category', 'Lead Status', 'Priority', 
-        'Assigned To', 'Next Follow-up Date', 'Last Follow-up Notes', 'Requirement Details', 
-        'Estimated Budget', 'Proposal Sent', 'Meeting Scheduled', 'Quotation Sent', 
-        'Deal Status', 'Expected Closing Date', 'Payment Status', 'Client Onboard Date', 
-        'Project Start Date', 'Project Status', 'Reference By', 'Website / Social Link', 'Remarks / Notes'
+        'Lead ID', 'Lead Date', 'Company', 'Contact Person', 'Mobile Number', 
+        'Email ID', 'City', 'State', 'Lead Category', 'Lead Status', 
+        'Assigned To', 'Next Follow-up Date', 'Estimated Budget', 'Payment Status', 
+        'Reference By', 'Remarks'
     ]);
 
-    // Add data rows
+    // Add data rows exactly as they appear in the database
     foreach ($leads as $lead) {
         // Get assigned user name
         $assignedTo = '-';
-        if ($lead['assigned_to']) {
+        if (!empty($lead['assigned_to'])) {
             $uStmt = $db->prepare("SELECT full_name FROM users WHERE id = ?");
             $uStmt->execute([$lead['assigned_to']]);
             $user = $uStmt->fetch();
             if ($user) $assignedTo = $user['full_name'];
         }
+        
+        // Date formatting
+        $leadDate = !empty($lead['lead_date']) ? date('d-m-y', strtotime($lead['lead_date'])) : '';
+        $nextFollowup = !empty($lead['next_followup_date']) ? date('d-m-y', strtotime($lead['next_followup_date'])) : '';
 
         fputcsv($output, [
             $lead['lead_id'],
-            formatDate($lead['lead_date']),
-            $lead['company_client_name'],
+            $leadDate,
+            $lead['company'],
             $lead['contact_person'],
             $lead['mobile_number'],
-            $lead['alternative_number'],
             $lead['email_id'],
             $lead['city'],
             $lead['state'],
-            $lead['source_of_lead'],
-            $lead['service_interested_in'],
             $lead['lead_category'],
             $lead['lead_status'],
-            $lead['priority'],
             $assignedTo,
-            formatDate($lead['next_followup_date']),
-            $lead['last_followup_notes'],
-            $lead['requirement_details'],
+            $nextFollowup,
             $lead['estimated_budget'],
-            $lead['proposal_sent'] ? 'Yes' : 'No',
-            $lead['meeting_scheduled'] ? 'Yes' : 'No',
-            $lead['quotation_sent'] ? 'Yes' : 'No',
-            $lead['deal_status'],
-            formatDate($lead['expected_closing_date']),
             $lead['payment_status'],
-            formatDate($lead['client_onboard_date']),
-            formatDate($lead['project_start_date']),
-            $lead['project_status'],
             $lead['reference_by'],
-            $lead['website_social_link'],
-            $lead['remarks_notes']
+            $lead['remarks']
         ]);
     }
 
     fclose($output);
     exit;
 
-} catch (Exception $e) {
-    header('Content-Type: application/json');
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
+} catch (Throwable $e) {
+    ApiResponse::send(ApiResponse::error($e->getMessage()), 500);
 }

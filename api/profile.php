@@ -81,6 +81,6 @@ try {
         ApiResponse::send(ApiResponse::error('Method not allowed'), 405);
     }
 
-} catch (Exception $e) {
+} catch (Throwable $e) {
     ApiResponse::send(ApiResponse::error($e->getMessage()), 400);
 }

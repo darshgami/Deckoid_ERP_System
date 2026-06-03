@@ -11,6 +11,23 @@ layout_start('Activity Logs - Deckoid ERP');
     <p class="text-neutral-500 text-sm mt-0.5">Track all system changes and lead updates in real-time.</p>
 </div>
 
+<!-- Filters Bar -->
+<div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="relative group md:col-span-2">
+            <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </span>
+            <input type="text" id="search" placeholder="Search logs by company or content..." 
+                   class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+        </div>
+        <button onclick="loadLogs(1)" class="btn btn-primary text-sm h-full">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+            Apply Filter
+        </button>
+    </div>
+</div>
+
 <!-- Logs Timeline -->
 <div class="glass-card bg-white rounded-xl shadow-sm border border-neutral-100 p-6 lg:p-8 relative overflow-hidden">
     <div class="space-y-8 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-[1.5px] before:bg-neutral-100" id="logsContainer">
@@ -34,11 +51,13 @@ layout_start('Activity Logs - Deckoid ERP');
         const container = document.getElementById('logsContainer');
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         
+        const search = document.getElementById('search')?.value || '';
+        
         if (page === 1) container.innerHTML = '';
         loadMoreBtn.textContent = 'Fetching Activity...';
 
         try {
-            const response = await fetch(`../api/logs.php?page=${page}&limit=20`);
+            const response = await fetch(`../api/logs.php?page=${page}&limit=20&search=${encodeURIComponent(search)}`);
             const res = await response.json();
 
             if (!res.success) throw new Error(res.message);
@@ -80,7 +99,7 @@ layout_start('Activity Logs - Deckoid ERP');
                             <p class="text-xs text-neutral-500 font-medium">
                                 <span class="text-primary font-semibold">@${log.user_name || 'System'}</span> 
                                 ${log.notes || `processed lead for`} 
-                                <span class="text-neutral-900 font-semibold">${log.company_client_name}</span>
+                                <span class="text-neutral-900 font-semibold">${log.company}</span>
                             </p>
                         </div>
                     </div>

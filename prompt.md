@@ -1,198 +1,330 @@
-Update my Lead Management ERP with the following EXACT requirements.
+CSV IMPORT FOREIGN KEY ERROR – PERMANENT FIX MASTER PROMPT
 
-Project Stack:
+PROJECT:
+Deckoid ERP System
 
-* Core PHP
-* MySQL
-* HTML
-* Tailwind CSS
-* Vanilla JavaScript
-* XAMPP
-* No framework
-* No composer
+ISSUE:
+
+CSV Import fails with:
+
+SQLSTATE[23000]
+Integrity constraint violation: 1452
+
+Cannot add or update child row
+
+FOREIGN KEY:
+leads.created_by
+REFERENCES users.id
+
+ERROR:
+
+Failed Row:
+Row 2
+
+Failed Row:
+Row 3
+
+Failed Row:
+Row 4
+
+...
+
+All rows fail during import.
+
+ROOT CAUSE ANALYSIS:
+
+The leads table contains:
+
+created_by
+
+This column has a foreign key:
+
+leads.created_by
+→ users.id
+
+During CSV import the system inserts:
+
+created_by = 0
+
+or
+
+created_by = ''
+
+or
+
+created_by = NULL
+
+or
+
+created_by = invalid user id
+
+That user id does not exist inside users table.
+
+MySQL correctly rejects every insert.
+
+REQUIRED FIX:
+
+Perform complete end-to-end investigation.
+
+Check:
+
+database/schema.sql
+
+api/import_csv.php
+
+api/leads.php
+
+all lead creation APIs
+
+all onboarding APIs
+
+all followup APIs
+
+all CSV import logic
+
+all CSV export logic
+
+Verify created_by handling everywhere.
+
+DATABASE TASKS:
+
+Check users table.
+
+Check leads table.
+
+Check foreign key:
+
+leads_ibfk_2
+
+Verify:
+
+created_by references users.id
+
+If foreign key exists:
+
+Ensure imported rows use a valid user id.
+
+BACKEND TASKS:
+
+Find every insert into:
+
+leads
+
+followups
+
+onboarding
+
+customer_onboarding
+
+Replace any hardcoded value:
+
+created_by = 0
+
+created_by = ''
+
+created_by = NULL
+
+created_by = csv value
+
+with:
+
+logged-in user id
+
+Example:
+
+$_SESSION['user_id']
+
+or authenticated user id.
+
+Never use invalid ids.
+
+CSV IMPORT TASKS:
+
+When importing CSV:
+
+Automatically assign:
+
+created_by = current logged-in user
+
+Do NOT expect created_by column from CSV.
+
+Do NOT require created_by in CSV.
+
+Do NOT map created_by from uploaded file.
+
+Import must work even if CSV has no created_by field.
+
+VALIDATION:
+
+Before insert:
+
+Verify user exists.
+
+Example:
+
+SELECT id
+FROM users
+WHERE id = current_user
+
+If user not found:
+
+Return JSON:
+
+{
+"success": false,
+"message": "Invalid user account."
+}
+
+Do not continue.
+
+ERROR HANDLING:
+
+Never return:
+
+HTML
+
+PHP warnings
+
+PHP notices
+
+Fatal error output
+
+Always return JSON.
+
+Example:
+
+{
+"success": false,
+"message": "Database insert failed.",
+"row": 15,
+"reason": "Invalid created_by reference."
+}
+
+CSV IMPORT SUCCESS:
+
+Example:
+
+{
+"success": true,
+"message": "Imported 127 records successfully."
+}
+
+TESTS REQUIRED:
+
+TEST 1
+
+Check users table.
+
+Result:
+Valid user exists.
+
+====================================================
+
+TEST 2
+
+Import CSV with 100 records.
+
+Result:
+100 inserted.
+
+====================================================
+
+TEST 3
+
+Import CSV with duplicate records.
+
+Result:
+All inserted.
+
+====================================================
+
+TEST 4
+
+Verify created_by.
+
+Result:
+Every imported row contains valid user id.
+
+====================================================
+
+TEST 5
+
+Open Lead List.
+
+Result:
+Imported records visible.
+
+====================================================
+
+TEST 6
+
+Open Followups.
+
+Result:
+No errors.
+
+====================================================
+
+TEST 7
+
+Open Onboarding.
+
+Result:
+No errors.
+
+====================================================
+
+TEST 8
+
+Export CSV.
+
+Result:
+Records exported successfully.
+
+====================================================
+
+PROOF REQUIRED:
+
+1. Foreign key definition found.
+
+2. Source of invalid created_by identified.
+
+3. Fixed import_csv.php.
+
+4. Fixed leads insert API.
+
+5. Fixed onboarding insert API.
+
+6. Fixed followup insert API.
+
+7. Validation added.
+
+8. JSON response proof.
+
+9. Successful CSV import proof.
+
+10. No SQLSTATE[23000] errors.
 
 IMPORTANT:
-Keep ERP compact, professional, and productivity-focused.
 
-==================================================
+Do NOT remove foreign key.
 
-1. STAFF SIDE EXPORT CSV BUTTON
-   ==================================================
+Do NOT disable foreign key checks.
 
-Requirement:
-On Staff & admin Lead List page:
-Add:
-"Export CSV" button
+Do NOT use SET FOREIGN_KEY_CHECKS=0.
 
-Placement:
+Fix correctly using valid users.id values.
 
-* Near Quick List button
-* Same modern ERP button style
-* Compact size
+Implement permanently in:
 
-Behavior:
-When user clicks:
-→ Download CSV file automatically
+Database
+Backend
+Frontend
+CSV Import
+CSV Export
+Schema
 
-CSV must contain ONLY staff-visible lead data.
-
-Generate:
-
-1. CSV export workflow
-2. Proper CSV download strategy
-3. UTF-8 CSV compatibility
-4. Excel-compatible export recommendations
-5. Proper filename strategy
-6. Export security recommendations
-7. Role-based export validation
-8. Large data export optimization
-
-IMPORTANT:
-
-* CSV should open properly in Excel
-* Gujarati/UTF-8 text should work properly
-* No broken columns
-* Proper column alignment required
-
-Requirement:
-Quick List page currently shows:
-
-* Lead ID
-* Name
-* Number
-* Remarks
-
-NOW ADD THESE TWO COLUMNS:
-
-* Last Follow-up Notes
-* Next Follow-up Date
-
-Final Quick List Columns:
-| Lead ID |
-| Name |
-| Number |
-| Remarks |
-| Last Follow-up Notes |
-| Next Follow-up Date |
-
-IMPORTANT:
-ONLY show these fields.
-Do NOT add:
-
-* Edit button
-* Delete button
-* Filters
-* Analytics
-* Graphs
-* Extra actions
-
-Requirement:
-Make table compact and readable.
-
-Generate:
-
-1. Better column width distribution
-2. Follow-up notes text wrapping strategy
-3. Next follow-up date alignment
-4. Compact row height recommendations
-5. Mobile responsive behavior
-6. Better table density recommendations
-
-IMPORTANT:
-Table should feel:
-
-* Fast
-* Compact
-* Professional
-* CRM-oriented
-* Easy for admin quick viewing
-
-Requirement:
-Quick List must dynamically fetch:
-
-* Latest follow-up notes
-* Next follow-up date
-
-Generate:
-
-1. Latest follow-up fetch strategy
-2. Proper SQL optimization
-3. Null value handling
-4. Empty follow-up fallback behavior
-5. Follow-up date formatting recommendations
-
-IMPORTANT:
-If no follow-up exists:
-
-* Show "-"
-* Do NOT break layout
-
-Requirement:
-Quick List must work properly on:
-
-* Mobile
-* Tablet
-* Laptop
-* Desktop
-
-Generate:
-
-1. Compact responsive table strategy
-2. Horizontal scroll optimization
-3. Mobile spacing recommendations
-4. Better overflow handling
-
-CSV must include:
-
-* Lead ID
-* Name
-* Number
-* Remarks
-* Last Follow-up Notes
-* Next Follow-up Date
-
-Generate:
-
-1. Correct CSV column mapping
-2. Proper data escaping strategy
-3. Line-break handling
-4. Comma handling recommendations
-
-Design Style:
-
-* Modern SaaS ERP
-* Compact business UI
-* White table card
-* Minimal borders
-* Fast operational workflow
-
-Colors:
-
-* White cards
-* Light gray background
-* Purple accent (#6D5DFC)
-
-IMPORTANT:
-Do NOT redesign ERP.
-Only extend current UI professionally.
-
-STRICTLY DO NOT ADD:
-
-* Delete actions
-* Edit actions
-* Analytics
-* Charts
-* Graphs
-* Filters
-* Modals
-* Complex features
-* Fancy animations
-
-ONLY:
-✅ Quick viewing
-✅ CSV export
-✅ Follow-up visibility
-✅ Fast operational workflow
-
-Focus on:
-COMPACT QUICK LIST + PROFESSIONAL CSV EXPORT SYSTEM
+No temporary workaround.
+No silent failures.
+No skipped rows.
+No broken references.

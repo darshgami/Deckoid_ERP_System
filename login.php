@@ -33,6 +33,27 @@ if (AuthController::isLoggedIn()) {
             opacity: 0.05;
         }
     </style>
+    <!-- CSRF Token & Fetch Interceptor -->
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+    <script>
+        const originalFetch = window.fetch;
+        window.fetch = async function() {
+            let [resource, config] = arguments;
+            if(config === undefined) {
+                config = {};
+            }
+            if(config.method && ['POST', 'PUT', 'DELETE'].includes(config.method.toUpperCase())) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (csrfToken) {
+                    config.headers = {
+                        ...config.headers,
+                        'X-CSRF-TOKEN': csrfToken
+                    };
+                }
+            }
+            return originalFetch(resource, config);
+        };
+    </script>
 </head>
 <body class="bg-neutral-50 min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
     <div class="absolute inset-0 bg-pattern"></div>

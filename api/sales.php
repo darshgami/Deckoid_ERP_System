@@ -15,8 +15,7 @@ if ($method === 'GET') {
         $number = $_GET['check_number'];
         $stmt = $db->prepare("SELECT id FROM invoices WHERE invoice_number = ?");
         $stmt->execute([$number]);
-        echo json_encode(['exists' => $stmt->fetch() ? true : false]);
-        exit;
+        ApiResponse::send(['exists' => $stmt->fetch() ? true : false]);
     }
 
     if (isset($_GET['id'])) {
@@ -33,8 +32,7 @@ if ($method === 'GET') {
         $stmt->execute([$id]);
         $invoice['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo json_encode(['success' => true, 'data' => $invoice]);
-        exit;
+        ApiResponse::send(ApiResponse::success('Invoice retrieved successfully', $invoice));
     }
 
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -82,18 +80,15 @@ if ($method === 'GET') {
     $stmt->execute($params);
     $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode([
-        'success' => true,
-        'data' => [
-            'invoices' => $invoices,
-            'pagination' => [
-                'total' => (int)$total,
-                'page' => $page,
-                'pages' => ceil($total / $limit),
-                'limit' => $limit
-            ]
+    ApiResponse::send(ApiResponse::success('Invoices retrieved successfully', [
+        'invoices' => $invoices,
+        'pagination' => [
+            'total' => (int)$total,
+            'page' => $page,
+            'pages' => ceil($total / $limit),
+            'limit' => $limit
         ]
-    ]);
+    ]));
 }
 
 if ($method === 'POST') {
@@ -125,9 +120,41 @@ if ($method === 'POST') {
         ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
     }
 
+    // Secure server-side calculation for totals
+    $calculated_sub_total = 0;
+    if (isset($data['service_name']) && is_array($data['service_name'])) {
+        for ($i = 0; $i < count($data['service_name']); $i++) {
+            $service = $data['service_name'][$i];
+            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
+                $service = $data['custom_service'][$i];
+            }
+            if (empty($service)) continue;
+            
+            $qty = isset($data['qty'][$i]) ? (float)$data['qty'][$i] : 0;
+            $rate = isset($data['rate'][$i]) ? (float)$data['rate'][$i] : 0;
+            $amount = round($qty * $rate, 2);
+            
+            // Overwrite the amount in the payload for consistency later
+            $data['amount'][$i] = $amount;
+            $calculated_sub_total += $amount;
+        }
+    }
+
+    $calculated_gst = 0;
+    if ($data['invoice_type'] === 'With GST') {
+        $calculated_gst = round($calculated_sub_total * 0.18, 2);
+    }
+
+    $calculated_grand_total = round($calculated_sub_total + $calculated_gst, 2);
+
+    // Overwrite client-provided totals with secure server calculations
+    $data['sub_total'] = $calculated_sub_total;
+    $data['gst_total'] = $calculated_gst;
+    $data['grand_total'] = $calculated_grand_total;
+
     // Numeric consistency check (Prevent negative or zero totals)
     if ($data['grand_total'] <= 0) {
-        ApiResponse::send(ApiResponse::error('Grand total must be greater than zero'), 400);
+        ApiResponse::send(ApiResponse::error('Grand total must be greater than zero. Please add valid services.'), 400);
     }
 
     // Duplicate Invoice Number Check (Security & Data Integrity)
@@ -185,10 +212,10 @@ if ($method === 'POST') {
         }
 
         $db->commit();
-        echo json_encode(['success' => true, 'message' => 'Invoice saved successfully', 'id' => $invoice_id]);
-    } catch (Exception $e) {
+        ApiResponse::send(ApiResponse::success('Invoice saved successfully', ['id' => $invoice_id]));
+    } catch (Throwable $e) {
         $db->rollBack();
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        ApiResponse::send(ApiResponse::error($e->getMessage()), 500);
     }
 }
 
@@ -219,6 +246,43 @@ if ($method === 'PUT') {
 
     if (!$validator->validate($data, $rules)) {
         ApiResponse::send(ApiResponse::error($validator->getFirstError()), 400);
+    }
+
+    // Secure server-side calculation for totals (PUT)
+    $calculated_sub_total = 0;
+    if (isset($data['service_name']) && is_array($data['service_name'])) {
+        for ($i = 0; $i < count($data['service_name']); $i++) {
+            $service = $data['service_name'][$i];
+            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
+                $service = $data['custom_service'][$i];
+            }
+            if (empty($service)) continue;
+            
+            $qty = isset($data['qty'][$i]) ? (float)$data['qty'][$i] : 0;
+            $rate = isset($data['rate'][$i]) ? (float)$data['rate'][$i] : 0;
+            $amount = round($qty * $rate, 2);
+            
+            // Overwrite the amount in the payload for consistency later
+            $data['amount'][$i] = $amount;
+            $calculated_sub_total += $amount;
+        }
+    }
+
+    $calculated_gst = 0;
+    if ($data['invoice_type'] === 'With GST') {
+        $calculated_gst = round($calculated_sub_total * 0.18, 2);
+    }
+
+    $calculated_grand_total = round($calculated_sub_total + $calculated_gst, 2);
+
+    // Overwrite client-provided totals with secure server calculations
+    $data['sub_total'] = $calculated_sub_total;
+    $data['gst_total'] = $calculated_gst;
+    $data['grand_total'] = $calculated_grand_total;
+
+    // Numeric consistency check
+    if ($data['grand_total'] <= 0) {
+        ApiResponse::send(ApiResponse::error('Grand total must be greater than zero. Please add valid services.'), 400);
     }
 
     // Duplicate Check excluding current
@@ -274,25 +338,24 @@ if ($method === 'PUT') {
         }
 
         $db->commit();
-        echo json_encode(['success' => true, 'message' => 'Invoice updated successfully']);
-    } catch (Exception $e) {
+        ApiResponse::send(ApiResponse::success('Invoice updated successfully'));
+    } catch (Throwable $e) {
         $db->rollBack();
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        ApiResponse::send(ApiResponse::error($e->getMessage()), 500);
     }
 }
 
 if ($method === 'DELETE') {
     $id = $_GET['id'] ?? null;
     if (!$id) {
-        echo json_encode(['success' => false, 'message' => 'Missing ID']);
-        exit;
+        ApiResponse::send(ApiResponse::error('Missing ID'), 400);
     }
 
     try {
         $stmt = $db->prepare("DELETE FROM invoices WHERE id = ?");
         $stmt->execute([$id]);
-        echo json_encode(['success' => true, 'message' => 'Invoice deleted']);
-    } catch (Exception $e) {
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        ApiResponse::send(ApiResponse::success('Invoice deleted'));
+    } catch (Throwable $e) {
+        ApiResponse::send(ApiResponse::error($e->getMessage()), 500);
     }
 }

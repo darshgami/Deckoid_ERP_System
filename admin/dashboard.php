@@ -146,9 +146,9 @@ layout_start('Dashboard - Deckoid ERP');
                 <table class="w-full">
                     <thead>
                         <tr class="bg-neutral-50/50">
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Client Name</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Company</th>
                             <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Category</th>
-                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                            <th class="px-5 py-3 lg:px-6 lg:py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider">lead_status</th>
                             <th class="px-5 py-3 lg:px-6 lg:py-3 text-right text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
@@ -210,10 +210,10 @@ layout_start('Dashboard - Deckoid ERP');
                         <td class="px-5 py-3 lg:px-6 lg:py-3">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 bg-neutral-100 rounded-lg flex-shrink-0 flex items-center justify-center text-neutral-600 font-medium text-[11px] group-hover:bg-primary-600 group-hover:text-white transition-all">
-                                    ${lead.company_client_name.charAt(0)}
+                                    ${lead.company.charAt(0)}
                                 </div>
                                 <div class="flex flex-col">
-                                    <span class="font-semibold text-neutral-900 text-[13px] group-hover:text-primary-600 transition-colors">${lead.company_client_name}</span>
+                                    <span class="font-semibold text-neutral-900 text-[13px] group-hover:text-primary-600 transition-colors">${lead.company}</span>
                                     <span class="text-[10px] text-neutral-400 font-medium uppercase tracking-wider">${lead.contact_person}</span>
                                 </div>
                             </div>
@@ -249,7 +249,7 @@ layout_start('Dashboard - Deckoid ERP');
                                 <div class="flex items-center justify-between gap-2">
                                     <p class="text-[12px] font-medium text-neutral-600 leading-tight">
                                         <span class="text-primary font-semibold">@${log.user_name || 'System'}</span> 
-                                        ${log.activity_type} lead for <span class="text-neutral-900 font-semibold">${log.company_client_name}</span>
+                                        ${log.activity_type} lead for <span class="text-neutral-900 font-semibold">${log.company}</span>
                                     </p>
                                     <span class="text-[10px] font-medium text-neutral-400 uppercase whitespace-nowrap">${formatTimeAgo(log.created_at)}</span>
                                 </div>
