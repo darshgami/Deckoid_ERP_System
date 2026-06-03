@@ -171,7 +171,7 @@ if (!$invoiceId) {
 </div>
 
 <script>
-    const servicesList = ["Facebook Ads","Google Ads","Website Design & Development","Graphics Design","Search Engine Optimization","Video Editing","Social Media Management","AI Video Making","Other"];
+    const servicesList = ["AI Products","AI Video Making","Client Management","Facebook Ads","Google Ads","Graphics Design","Marketing Manager","Search Engine Optimization","Social Media Management","Video Editing","Website Design & Development","Other"];
     let rowCount = 0;
     const id = "<?= $invoiceId ?>";
 
@@ -376,7 +376,7 @@ if (!$invoiceId) {
             
             if (r.success) {
                 showToast(id ? 'Invoice updated successfully!' : 'Invoice created successfully!');
-                setTimeout(() => window.location.href = `print_invoice.php?id=${id || r.id}`, 1000);
+                setTimeout(() => window.location.href = `print_invoice.php?id=${id || r.data.id}`, 1000);
             } else {
                 showToast(r.message || 'Validation failed', 'error');
                 submitBtn.disabled = false;

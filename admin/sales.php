@@ -31,12 +31,6 @@ $db = Database::getInstance();
             <input type="text" id="search" placeholder="Search party or invoice number..." 
                    class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 pl-12 pr-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-medium text-neutral-700">
         </div>
-        <!-- Date Filters -->
-        <div class="flex items-center gap-2 w-full md:flex-[1.5]">
-            <input type="date" id="dateFrom" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-xs font-medium text-neutral-700" title="From Date">
-            <span class="text-neutral-400 text-xs font-semibold">to</span>
-            <input type="date" id="dateTo" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-3 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-xs font-medium text-neutral-700" title="To Date">
-        </div>
         <!-- Type Filter -->
         <div class="w-full md:flex-1">
             <select id="typeFilter" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-semibold text-neutral-900 cursor-pointer appearance-none">
@@ -46,9 +40,9 @@ $db = Database::getInstance();
             </select>
         </div>
         <!-- Filter Button -->
-        <div class="w-full md:w-32">
-            <button onclick="loadInvoices(1)" class="btn btn-primary w-full text-sm py-2.5 shadow-lg shadow-primary/20">
-                Filter
+        <div class="w-full md:w-auto">
+            <button onclick="loadInvoices(1)" class="btn btn-primary w-full md:w-40 text-sm py-2.5 shadow-lg shadow-primary/20">
+                Apply Filters
             </button>
         </div>
     </div>
@@ -105,10 +99,8 @@ $db = Database::getInstance();
         currentPage = page;
         const search = document.getElementById('search').value;
         const type = document.getElementById('typeFilter').value;
-        const dateFrom = document.getElementById('dateFrom').value;
-        const dateTo = document.getElementById('dateTo').value;
 
-        const params = new URLSearchParams({ page, limit: currentLimit, search, type, dateFrom, dateTo });
+        const params = new URLSearchParams({ page, limit: currentLimit, search, type });
 
         try {
             const response = await fetch(`../api/sales.php?${params}`);

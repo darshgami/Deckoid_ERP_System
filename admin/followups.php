@@ -87,11 +87,11 @@ layout_start('Upcoming Followups - Deckoid ERP');
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Next Follow-up Date *</label>
-                    <input type="date" id="action_next_date" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <input type="date" id="action_next_date" required class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Remarks *</label>
-                    <textarea id="action_remarks_next" required rows="3" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm resize-none"></textarea>
+                    <textarea id="action_remarks_next" required rows="3" class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm"></textarea>
                 </div>
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -113,15 +113,15 @@ layout_start('Upcoming Followups - Deckoid ERP');
             <div class="space-y-4">
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Company *</label>
-                    <input type="text" id="action_client_name_convert" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <input type="text" id="action_client_name_convert" required class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Add Work *</label>
-                    <input type="text" id="action_add_work_convert" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <input type="text" id="action_add_work_convert" required class="w-full bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Conversion Date *</label>
-                    <input type="date" id="action_conversion_date_convert" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                    <input type="date" id="action_conversion_date_convert" required class="w-20px bg-neutral-100 border-transparent rounded-xl py-2.5 px-4 text-neutral-500 transition-all outline-none text-sm">
                 </div>
             </div>
             <div class="flex justify-end gap-3 mt-6">
@@ -151,7 +151,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
                     <p id="view_mobile" class="text-sm font-medium text-neutral-900"></p>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">email_id ID</label>
+                    <label class="text-[10px] font-semibold text-neutral-500 uppercase tracking-wider">Email ID</label>
                     <p id="view_email" class="text-sm font-medium text-neutral-900"></p>
                 </div>
                 <div class="space-y-1">

@@ -57,7 +57,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="text" name="mobile_number" required placeholder="Phone number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">email_id ID</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email ID</label>
                     <input type="email_id" name="email_id" placeholder="email_id@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
 
@@ -76,7 +76,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     </select>
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead lead_status *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Lead Status *</label>
                     <select name="lead_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="New">New</option>
                         <option value="Next Follow Up">Next Follow Up</option>
@@ -117,7 +117,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     <input type="text" name="state" placeholder="State name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Payment lead_status *</label>
+                    <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status *</label>
                     <select name="payment_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                         <option value="Pending">Pending</option>
                         <option value="Partial">Partial</option>

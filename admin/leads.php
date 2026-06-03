@@ -46,7 +46,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                    oninput="debouncedSearch()">
         </div>
         <select id="statusFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm cursor-pointer">
-            <option value="">All lead_status</option>
+            <option value="">All Status</option>
             <option value="New">New</option>
             <option value="Next Follow Up">Next Follow Up</option>
             <option value="Convert">Convert</option>
@@ -70,15 +70,15 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Company</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Contact Person</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Mobile Number</th>
-                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">email_id ID</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Email ID</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">City</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">State</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Lead Category</th>
-                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Lead lead_status</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Lead Status</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Assigned To</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Next Follow-up Date</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Estimated Budget</th>
-                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Payment lead_status</th>
+                    <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Payment Status</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Reference By</th>
                     <th class="px-4 py-3 text-left text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Remarks</th>
                     <th class="px-4 py-3 text-right text-[11px] font-medium text-neutral-500 uppercase tracking-wider whitespace-nowrap">Actions</th>
@@ -160,7 +160,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                             <input type="text" name="mobile_number" required placeholder="+1 234 567 890" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">email_id ID</label>
+                            <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email ID *</label>
                             <input type="email_id" name="email_id" placeholder="email_id@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                     </div>
@@ -193,7 +193,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead lead_status *</label>
+                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Lead Status *</label>
                             <select name="lead_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                                 <option value="New">New</option>
                                 <option value="Next Follow Up">Next Follow Up</option>
@@ -221,7 +221,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 <div id="content-project" class="tab-content hidden space-y-5">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                         <div class="space-y-1.5">
-                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Payment lead_status *</label>
+                            <label class="text-[11px] font-bold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status *</label>
                             <select name="payment_status" required class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none cursor-pointer text-sm">
                                 <option value="Pending">Pending</option>
                                 <option value="Partial">Partial</option>

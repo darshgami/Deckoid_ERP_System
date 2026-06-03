@@ -14,23 +14,27 @@ layout_start('Customer Onboarding - Deckoid ERP');
 </div>
 
 <!-- Filters Bar -->
-<div class="bg-white p-4 lg:p-5 rounded-xl shadow-sm border border-neutral-100 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="relative group">
-            <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+<div class="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 mb-6">
+    <div class="flex flex-col md:flex-row items-center gap-4">
+        <!-- Search -->
+        <div class="relative flex-[2] w-full group">
+            <span class="absolute inset-y-0 left-5 flex items-center text-neutral-400 group-focus-within:text-primary transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </span>
             <input type="text" id="search" placeholder="Search project or company..." 
-                   class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm"
+                   class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 pl-12 pr-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-medium text-neutral-700"
                    oninput="debouncedSearch()">
         </div>
-        <select id="statusFilter" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm cursor-pointer" onchange="loadOnboardings(1)">
-            <option value="">All Statuses</option>
-            <option value="Pending">Pending</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-            <option value="On Hold">On Hold</option>
-        </select>
+        <!-- Status Filter -->
+        <div class="w-full md:flex-1">
+            <select id="statusFilter" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-semibold text-neutral-900 cursor-pointer appearance-none" onchange="loadOnboardings(1)">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="On Hold">On Hold</option>
+            </select>
+        </div>
     </div>
 </div>
 

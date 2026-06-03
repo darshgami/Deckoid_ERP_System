@@ -195,7 +195,7 @@ try {
                               LEFT JOIN users u ON l.assigned_to = u.id 
                               LEFT JOIN users c ON l.created_by = c.id 
                               $whereClause 
-                              ORDER BY l.created_at DESC 
+                              ORDER BY l.lead_date DESC, l.created_at DESC 
                               LIMIT ? OFFSET ?");
         
         // Bind all parameters positionally
@@ -337,7 +337,7 @@ try {
         // Sync followup record
         if (isset($input['next_followup_date']) && !empty($input['next_followup_date'])) {
             // Delete existing active followups to recreate a fresh one for this date
-            $delStmt = $db->prepare("DELETE FROM followups WHERE lead_id = ? AND lead_status = 'Active'");
+            $delStmt = $db->prepare("DELETE FROM followups WHERE lead_id = ? AND status = 'Active'");
             $delStmt->execute([$id]);
 
             $fId = generateUUID();

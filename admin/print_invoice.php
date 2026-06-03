@@ -119,10 +119,9 @@ function numberToWordsIndian($number) {
             <div class="p-4 border-b-black text-center flex flex-col items-center">
                 <img src="<?= asset_url('assets/ERP.png') ?>" alt="Logo" class="w-16 h-16 mb-2 object-contain">
                 <h1 class="text-2xl font-black tracking-widest uppercase py-1 border-b-2 border-black mb-1">DECKOID SOLUTION</h1>
-                <p class="text-[10px] font-bold text-neutral-600 uppercase">C/O; PARSOTTAM INDUSTRIES</p>
                 <p class="text-[10px] font-bold text-neutral-600 uppercase">6, BHAKTINAGAR STATION PLOT, RAJKOT-360002</p>
                 <p class="text-[10px] font-bold text-neutral-600">9426225742/9586536724</p>
-                <p class="text-[10px] font-bold text-neutral-600 underline">jpipalia123@gmail.com / www.deckoidsolution.com</p>
+                <p class="text-[10px] font-bold text-neutral-600 underline">www.deckoidsolution.com</p>
             </div>
 
             <!-- TITLE BAR -->

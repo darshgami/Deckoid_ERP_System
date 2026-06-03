@@ -58,7 +58,7 @@ try {
         $total = $totalRow ? $totalRow['total'] : 0;
 
         // Get followups
-        $stmt = $db->prepare("SELECT f.*, l.company, l.contact_person, l.remarks as lead_remarks 
+        $stmt = $db->prepare("SELECT f.*, l.company, l.contact_person, l.mobile_number, l.email_id, l.lead_category, l.lead_status, l.remarks as lead_remarks 
                               FROM followups f 
                               LEFT JOIN leads l ON l.id = f.lead_id 
                               $whereClause 

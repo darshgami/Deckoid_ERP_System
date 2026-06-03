@@ -1,4 +1,5 @@
--- Deckoid ERP System Database Schema
+-- Deckoid ERP System Database Schema (Fully Up-To-Date)
+-- Includes all latest tables: leads, followups, customer_onboarding, invoices, invoice_items, and users.
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;

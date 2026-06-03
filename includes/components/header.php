@@ -115,7 +115,7 @@
             if(config === undefined) {
                 config = {};
             }
-            if(config.method && ['POST', 'PUT', 'DELETE'].includes(config.method.toUpperCase())) {
+            if(config.method && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(config.method.toUpperCase())) {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
                 if (csrfToken) {
                     config.headers = {
