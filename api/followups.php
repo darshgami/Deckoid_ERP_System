@@ -15,9 +15,9 @@ requireAuth();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-if (in_array($method, ['POST', 'PUT', 'DELETE'])) {
-    if (AuthController::getCurrentRole() === 'staff') {
-        ApiResponse::send(ApiResponse::error('Access denied. Staff users have view-only permissions for Followups.'), 403);
+if (in_array($method, ['POST', 'DELETE'])) {
+    if (AuthController::getCurrentRole() !== 'admin') {
+        ApiResponse::send(ApiResponse::error('Access denied. Only administrators can create or delete follow-ups.'), 403);
     }
 }
 
@@ -103,6 +103,65 @@ try {
                 'pages' => ceil($total / $limit)
             ]
         ]));
+    } elseif ($method === 'PUT') {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $id = basename($path);
+        }
+
+        if (empty($id) || $id === 'followups.php') {
+            throw new Exception('Follow-up ID is required for updating.');
+        }
+
+        $input = json_decode(file_get_contents('php://input'), true);
+        if (!is_array($input)) {
+            throw new Exception('Invalid JSON payload provided.');
+        }
+
+        $checkStmt = $db->prepare("SELECT f.id, l.assigned_to FROM followups f LEFT JOIN leads l ON l.id = f.lead_id WHERE f.id = ?");
+        $checkStmt->execute([$id]);
+        $followupRecord = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$followupRecord) {
+            throw new Exception('The requested follow-up could not be found.');
+        }
+
+        if (AuthController::getCurrentRole() === 'staff' && ($followupRecord['assigned_to'] ?? null) !== $_SESSION['user_id']) {
+            ApiResponse::send(ApiResponse::error('Access denied. You can only edit follow-ups assigned to you.'), 403);
+            exit;
+        }
+
+        $allowedFields = ['followup_date', 'remarks', 'status'];
+        $updates = [];
+        $params = [];
+
+        foreach ($allowedFields as $field) {
+            if (array_key_exists($field, $input)) {
+                $updates[] = "$field = ?";
+                $params[] = $input[$field] === '' ? null : $input[$field];
+            }
+        }
+
+        if (empty($updates)) {
+            throw new Exception('No valid follow-up fields were provided for update.');
+        }
+
+        $params[] = $id;
+        $stmt = $db->prepare("UPDATE followups SET " . implode(', ', $updates) . ", updated_at = NOW() WHERE id = ?");
+        $stmt->execute($params);
+
+        if (isset($input['followup_date']) && $input['followup_date'] !== '') {
+            $leadStmt = $db->prepare("UPDATE leads SET next_followup_date = ? WHERE id = (SELECT lead_id FROM followups WHERE id = ?)");
+            $leadStmt->execute([$input['followup_date'], $id]);
+        }
+
+        if (array_key_exists('remarks', $input)) {
+            $leadStmt = $db->prepare("UPDATE leads SET remarks = ? WHERE id = (SELECT lead_id FROM followups WHERE id = ?)");
+            $leadStmt->execute([$input['remarks'] === '' ? null : $input['remarks'], $id]);
+        }
+
+        ApiResponse::send(ApiResponse::success('Follow-up updated successfully'));
     }
 } catch (Exception $e) {
     Logger::error("Followups API Error: " . $e->getMessage());

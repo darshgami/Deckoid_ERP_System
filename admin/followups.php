@@ -76,7 +76,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
 <!-- Next Follow Up Modal -->
 <div id="nextFollowUpModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm hidden z-[100] transition-all duration-300 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <form id="nextFollowUpForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event, 'Next Follow Up')">
+        <form id="nextFollowUpForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event)">
             <input type="hidden" id="action_lead_id_next">
             <h3 class="text-lg font-semibold text-neutral-900 mb-4">Schedule Next Follow Up</h3>
             <div class="space-y-4">
@@ -264,8 +264,8 @@ layout_start('Upcoming Followups - Deckoid ERP');
                             <button onclick="performAction('${lead.lead_id}', 'Lost')" title="Mark as Lost" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition-all border border-red-100">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             </button>
-                            <button onclick="openViewModal('${lead.id}')" title="View Full Lead" class="p-1.5 text-neutral-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all ml-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            <button onclick="openEditFollowupModal('${lead.id}')" title="Edit Follow-up" class="p-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded-lg transition-all border border-amber-100 ml-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                             </button>
                         </div>
                     </td>
@@ -302,6 +302,8 @@ layout_start('Upcoming Followups - Deckoid ERP');
         if (action === 'Next Follow Up') {
             document.getElementById('action_lead_id_next').value = leadId;
             document.getElementById('nextFollowUpForm').reset();
+            document.getElementById('nextFollowUpForm').dataset.mode = 'schedule';
+            document.getElementById('nextFollowUpBtnText').textContent = 'Save';
             document.getElementById('action_lead_name_next').value = lead ? lead.company : '';
             if (lead && lead.followup_date) {
                 document.getElementById('action_next_date').value = lead.followup_date;
@@ -315,26 +317,48 @@ layout_start('Upcoming Followups - Deckoid ERP');
         }
     }
 
-    function openViewModal(leadId) {
-        const lead = currentLeadsData.find(l => l.id === leadId);
-        if (!lead) return;
-        
-        document.getElementById('view_company').innerText = lead.company || '-';
-        document.getElementById('view_contact').innerText = lead.contact_person || '-';
-        document.getElementById('view_mobile').innerText = lead.mobile_number || '-';
-        document.getElementById('view_email').innerText = lead.email_id || '-';
-        document.getElementById('view_category').innerText = lead.lead_category || '-';
-        document.getElementById('view_status').innerText = lead.lead_status || '-';
-        document.getElementById('view_next_followup').innerText = lead.followup_date ? formatDate(lead.followup_date) : '-';
-        document.getElementById('view_remarks').innerText = lead.remarks || '-';
-        
-        document.getElementById('viewModal').classList.remove('hidden');
+    function openEditFollowupModal(followupId) {
+        const followup = currentLeadsData.find(item => item.id === followupId);
+        if (!followup) return;
+
+        document.getElementById('action_lead_id_next').value = followup.lead_id;
+        document.getElementById('nextFollowUpForm').reset();
+        document.getElementById('action_lead_name_next').value = followup.company || '';
+        document.getElementById('action_next_date').value = followup.followup_date || '';
+        document.getElementById('action_remarks_next').value = followup.remarks || '';
+        document.getElementById('nextFollowUpBtnText').textContent = 'Update';
+        document.getElementById('nextFollowUpForm').dataset.mode = 'edit';
+        document.getElementById('nextFollowUpForm').dataset.followupId = followupId;
+        document.getElementById('nextFollowUpModal').classList.remove('hidden');
     }
 
     function closeModals() {
         document.getElementById('nextFollowUpModal').classList.add('hidden');
         document.getElementById('convertModal').classList.add('hidden');
         document.getElementById('viewModal').classList.add('hidden');
+    }
+
+    async function updateFollowup(followupId, extraData = {}) {
+        try {
+            const response = await fetch(`../api/followups.php?id=${followupId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(extraData)
+            });
+            const res = await response.json();
+            if (res.success) {
+                if (window.toast) toast('Follow-up updated successfully.', 'success');
+                else alert('Follow-up updated successfully.');
+                closeModals();
+                loadFollowups(currentPage);
+            } else {
+                if (window.toast) toast(res.message, 'error');
+                else alert(res.message);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Error updating follow-up.');
+        }
     }
 
     async function performAction(leadId, actionType, extraData = {}) {
@@ -363,20 +387,35 @@ layout_start('Upcoming Followups - Deckoid ERP');
         }
     }
 
-    function handleActionSubmit(e, actionType) {
+    function handleActionSubmit(e, actionType = null) {
         e.preventDefault();
+        const mode = actionType || document.getElementById('nextFollowUpForm').dataset.mode || 'schedule';
         let leadId, extraData = {};
-        if (actionType === 'Next Follow Up') {
+
+        if (mode === 'schedule') {
             leadId = document.getElementById('action_lead_id_next').value;
             extraData.next_followup_date = document.getElementById('action_next_date').value;
             extraData.remarks = document.getElementById('action_remarks_next').value;
-        } else if (actionType === 'Convert') {
+            performAction(leadId, 'Next Follow Up', extraData);
+            return;
+        }
+
+        if (mode === 'edit') {
+            const followupId = document.getElementById('nextFollowUpForm').dataset.followupId;
+            extraData.followup_date = document.getElementById('action_next_date').value;
+            extraData.remarks = document.getElementById('action_remarks_next').value;
+            extraData.status = 'Active';
+            updateFollowup(followupId, extraData);
+            return;
+        }
+
+        if (mode === 'Convert') {
             leadId = document.getElementById('action_lead_id_convert').value;
             extraData.company = document.getElementById('action_client_name_convert').value;
             extraData.add_work = document.getElementById('action_add_work_convert').value;
             extraData.onboarding_date = document.getElementById('action_conversion_date_convert').value;
+            performAction(leadId, actionType, extraData);
         }
-        performAction(leadId, actionType, extraData);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
