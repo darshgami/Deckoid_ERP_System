@@ -139,43 +139,48 @@ try {
         $where = [];
         $params = [];
 
+        if (AuthController::getCurrentRole() === 'staff') {
+            $where[] = "l.assigned_to = ?";
+            $params[] = $_SESSION['user_id'];
+        }
+
         if (isset($_GET['search']) && !empty($_GET['search'])) {
             $search = '%' . $_GET['search'] . '%';
-            $where[] = "(company LIKE ? OR contact_person LIKE ? OR mobile_number LIKE ? OR email_id LIKE ? OR lead_id LIKE ?)";
+            $where[] = "(l.company LIKE ? OR l.contact_person LIKE ? OR l.mobile_number LIKE ? OR l.email_id LIKE ? OR l.lead_id LIKE ?)";
             $params = array_merge($params, [$search, $search, $search, $search, $search]);
         }
 
         if (isset($_GET['category']) && !empty($_GET['category'])) {
-            $where[] = "lead_category = ?";
+            $where[] = "l.lead_category = ?";
             $params[] = $_GET['category'];
         }
 
         if (isset($_GET['lead_status']) && !empty($_GET['lead_status'])) {
-            $where[] = "lead_status = ?";
+            $where[] = "l.lead_status = ?";
             $params[] = $_GET['lead_status'];
         }
 
         if (isset($_GET['date_from']) && !empty($_GET['date_from'])) {
-            $where[] = "lead_date >= ?";
+            $where[] = "l.lead_date >= ?";
             $params[] = $_GET['date_from'];
         }
 
         if (isset($_GET['date_to']) && !empty($_GET['date_to'])) {
-            $where[] = "lead_date <= ?";
+            $where[] = "l.lead_date <= ?";
             $params[] = $_GET['date_to'];
         }
 
         if (isset($_GET['has_followup']) && $_GET['has_followup'] === 'true') {
-            $where[] = "next_followup_date IS NOT NULL";
-            $where[] = "lead_status != 'Convert'";
+            $where[] = "l.next_followup_date IS NOT NULL";
+            $where[] = "l.lead_status != 'Convert'";
             
             if (isset($_GET['followup_filter'])) {
                 $today = date('Y-m-d');
                 if ($_GET['followup_filter'] === 'today') {
-                    $where[] = "next_followup_date = ?";
+                    $where[] = "l.next_followup_date = ?";
                     $params[] = $today;
                 } elseif ($_GET['followup_filter'] === 'upcoming') {
-                    $where[] = "next_followup_date > ?";
+                    $where[] = "l.next_followup_date > ?";
                     $params[] = $today;
                 }
             }
@@ -184,7 +189,7 @@ try {
         $whereClause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 
         // Get total count
-        $countStmt = $db->prepare("SELECT COUNT(*) as total FROM leads $whereClause");
+        $countStmt = $db->prepare("SELECT COUNT(*) as total FROM leads l $whereClause");
         $countStmt->execute($params);
         $totalRow = $countStmt->fetch();
         $total = $totalRow ? $totalRow['total'] : 0;
@@ -245,11 +250,16 @@ try {
 
         $input = json_decode(file_get_contents('php://input'), true);
 
-        // Prevent staff from changing followup statuses
-        if (AuthController::getCurrentRole() === 'staff') {
-            if (isset($input['lead_status']) && in_array($input['lead_status'], ['Convert', 'Lost', 'Next Follow Up'])) {
-                ApiResponse::send(ApiResponse::error('Access denied. Staff users cannot perform followup actions.'), 403);
-            }
+        $leadRecord = $db->prepare("SELECT assigned_to FROM leads WHERE id = ?");
+        $leadRecord->execute([$id]);
+        $leadRecordRow = $leadRecord->fetch(PDO::FETCH_ASSOC);
+
+        if (!$leadRecordRow) {
+            throw new Exception('The requested lead could not be found.');
+        }
+
+        if (AuthController::getCurrentRole() === 'staff' && ($leadRecordRow['assigned_to'] ?? null) !== $_SESSION['user_id']) {
+            ApiResponse::send(ApiResponse::error('Access denied. You can only work on leads assigned to you.'), 403);
         }
 
         // Normalize empty strings to null to prevent database errors for DATE/DECIMAL columns

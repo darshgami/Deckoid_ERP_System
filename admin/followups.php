@@ -40,11 +40,10 @@ layout_start('Upcoming Followups - Deckoid ERP');
                 <tr>
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">Company</th>
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">Followup Date</th>
+                    <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">Assigned To</th>
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">Remarks</th>
                     <th class="px-6 py-3 text-left text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">lead_status</th>
-                    <?php if ($_SESSION['role'] === 'admin'): ?>
                     <th class="px-6 py-3 text-right text-[11px] font-bold text-neutral-500 uppercase tracking-wider whitespace-nowrap">Actions</th>
-                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody id="followupsBody" class="divide-y divide-neutral-50 text-sm">
@@ -205,7 +204,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
         const tbody = document.getElementById('followupsBody');
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" class="px-6 py-12 text-center">
+                <td colspan="6" class="px-6 py-12 text-center">
                     <div class="flex flex-col items-center gap-2 text-neutral-400">
                         <div class="w-8 h-8 border-2 border-primary-light border-t-primary rounded-full animate-spin"></div>
                         <span class="font-semibold text-[11px] uppercase tracking-wider">Loading Followups...</span>
@@ -225,7 +224,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
             currentLeadsData = data.leads || [];
 
             if (!data.leads || data.leads.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-neutral-400 text-sm font-medium">No followups scheduled.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-neutral-400 text-sm font-medium">No followups scheduled.</td></tr>`;
                 return;
             }
 
@@ -246,12 +245,14 @@ layout_start('Upcoming Followups - Deckoid ERP');
                         </div>
                     </td>
                     <td class="px-6 py-4">
+                        <span class="text-sm text-neutral-700">${lead.assigned_to_name || 'Unassigned'}</span>
+                    </td>
+                    <td class="px-6 py-4">
                         <p class="text-xs text-neutral-500 max-w-xs truncate font-medium">${lead.remarks}</p>
                     </td>
                     <td class="px-6 py-4">
                         <span class="px-2 py-0.5 text-[11px] font-semibold rounded-md uppercase tracking-wider bg-blue-50 text-blue-600">Active</span>
                     </td>
-                    ${currentRole === 'admin' ? `
                     <td class="px-6 py-4 text-right">
                         <div class="flex items-center justify-end gap-2">
                             <button onclick="openActionModal('Next Follow Up', '${lead.lead_id}')" title="Next Follow Up" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-all border border-blue-100">
@@ -268,7 +269,6 @@ layout_start('Upcoming Followups - Deckoid ERP');
                             </button>
                         </div>
                     </td>
-                    ` : ''}
                 </tr>
             `).join('');
 
@@ -276,7 +276,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
             renderPagination(data.pagination, loadFollowups);
         } catch (error) {
             console.error('Error:', error);
-            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-12 text-center text-red-500 text-sm font-semibold">${error.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-red-500 text-sm font-semibold">${error.message}</td></tr>`;
         }
     }
 

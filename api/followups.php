@@ -32,6 +32,11 @@ try {
         $where = ["f.status != 'Completed'"]; // Exclude completed
         $params = [];
 
+        if (AuthController::getCurrentRole() === 'staff') {
+            $where[] = "l.assigned_to = ?";
+            $params[] = $_SESSION['user_id'];
+        }
+
         if (isset($_GET['search']) && !empty($_GET['search'])) {
             $search = '%' . $_GET['search'] . '%';
             $where[] = "(l.company LIKE ? OR l.contact_person LIKE ? OR l.mobile_number LIKE ?)";
@@ -58,9 +63,10 @@ try {
         $total = $totalRow ? $totalRow['total'] : 0;
 
         // Get followups
-        $stmt = $db->prepare("SELECT f.*, l.company, l.contact_person, l.mobile_number, l.email_id, l.lead_category, l.lead_status, l.remarks as lead_remarks 
+        $stmt = $db->prepare("SELECT f.*, l.company, l.contact_person, l.mobile_number, l.email_id, l.lead_category, l.lead_status, l.remarks as lead_remarks, u.full_name as assigned_to_name 
                               FROM followups f 
                               LEFT JOIN leads l ON l.id = f.lead_id 
+                              LEFT JOIN users u ON l.assigned_to = u.id 
                               $whereClause 
                               ORDER BY f.followup_date ASC 
                               LIMIT ? OFFSET ?");
