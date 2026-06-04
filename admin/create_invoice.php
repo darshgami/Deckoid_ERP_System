@@ -175,6 +175,30 @@ if (!$invoiceId) {
     let rowCount = 0;
     const id = "<?= $invoiceId ?>";
 
+    function parseServiceLabel(label = '') {
+        const value = String(label || '').trim();
+
+        if (!value) {
+            return { serviceName: '', description: '' };
+        }
+
+        const dashIndex = value.lastIndexOf(' - ');
+        if (dashIndex > 0) {
+            const baseName = value.slice(0, dashIndex).trim();
+            const description = value.slice(dashIndex + 3).trim();
+
+            if (servicesList.includes(baseName)) {
+                return { serviceName: baseName, description };
+            }
+        }
+
+        if (servicesList.includes(value)) {
+            return { serviceName: value, description: '' };
+        }
+
+        return { serviceName: 'Other', description: value };
+    }
+
     async function loadInvoiceData() {
         if (!id) {
             addRow();
@@ -208,12 +232,9 @@ if (!$invoiceId) {
         const tr = document.createElement('tr');
         tr.className = 'text-sm font-semibold hover:bg-neutral-50 transition-colors';
 
-        let isOther = false;
-        let serviceValue = data ? data.service_name : '';
-        if (data && !servicesList.includes(data.service_name)) {
-            isOther = true;
-            serviceValue = 'Other';
-        }
+        const parsed = parseServiceLabel(data ? data.service_name : '');
+        const serviceValue = parsed.serviceName || (data ? data.service_name : '');
+        const descriptionValue = parsed.description || '';
 
         tr.innerHTML = `
             <td class="px-4 py-4 text-xs text-neutral-400 font-semibold border-r border-neutral-100">${rowCount}</td>
@@ -222,7 +243,7 @@ if (!$invoiceId) {
                     <option value="">Select Service</option>
                     ${servicesList.map(s => `<option value="${s}" ${serviceValue === s ? 'selected' : ''}>${s}</option>`).join('')}
                 </select>
-                <textarea name="custom_service[]" placeholder="Description" class="${isOther ? '' : 'hidden'} w-full mt-2 bg-white border border-neutral-100 rounded-lg py-2 px-3 text-xs resize-none" rows="2">${isOther ? data.service_name : ''}</textarea>
+                <textarea name="custom_service[]" placeholder="Description" class="w-full mt-2 bg-white border border-neutral-100 rounded-lg py-2 px-3 text-xs resize-none" rows="2">${descriptionValue}</textarea>
             </td>
             <td class="hsn-col px-4 py-4 border-r border-neutral-100"><input type="text" name="hsn_sac[]" value="${data ? data.hsn_sac : '9983'}" class="w-full bg-transparent border-transparent text-center text-xs font-semibold opacity-60"></td>
             <td class="px-4 py-4 border-r border-neutral-100"><input type="number" name="qty[]" value="${data ? data.qty : '1.000'}" step="0.001" oninput="calculateRow(this)" class="w-full bg-transparent text-center text-xs font-semibold outline-none"></td>
@@ -257,8 +278,10 @@ if (!$invoiceId) {
 
     function handleServiceChange(sel) {
         const inp = sel.nextElementSibling;
-        inp.classList.toggle('hidden', sel.value !== 'Other');
-        if (sel.value === 'Other') inp.focus();
+        inp.classList.remove('hidden');
+        if (sel.value === 'Other') {
+            inp.focus();
+        }
     }
 
     function calculateRow(inp) {

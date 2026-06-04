@@ -125,8 +125,10 @@ if ($method === 'POST') {
     if (isset($data['service_name']) && is_array($data['service_name'])) {
         for ($i = 0; $i < count($data['service_name']); $i++) {
             $service = $data['service_name'][$i];
-            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
-                $service = $data['custom_service'][$i];
+            $description = trim($data['custom_service'][$i] ?? '');
+
+            if ($description !== '') {
+                $service = ($service === 'Other') ? $description : $service . ' - ' . $description;
             }
             if (empty($service)) continue;
             
@@ -194,8 +196,10 @@ if ($method === 'POST') {
         
         for ($i = 0; $i < count($data['service_name']); $i++) {
             $service = $data['service_name'][$i];
-            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
-                $service = $data['custom_service'][$i];
+            $description = trim($data['custom_service'][$i] ?? '');
+
+            if ($description !== '') {
+                $service = ($service === 'Other') ? $description : $service . ' - ' . $description;
             }
 
             if (empty($service)) continue;
@@ -253,8 +257,10 @@ if ($method === 'PUT') {
     if (isset($data['service_name']) && is_array($data['service_name'])) {
         for ($i = 0; $i < count($data['service_name']); $i++) {
             $service = $data['service_name'][$i];
-            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
-                $service = $data['custom_service'][$i];
+            $description = trim($data['custom_service'][$i] ?? '');
+
+            if ($description !== '') {
+                $service = ($service === 'Other') ? $description : $service . ' - ' . $description;
             }
             if (empty($service)) continue;
             
@@ -320,8 +326,10 @@ if ($method === 'PUT') {
         
         for ($i = 0; $i < count($data['service_name']); $i++) {
             $service = $data['service_name'][$i];
-            if ($service === 'Other' && !empty($data['custom_service'][$i])) {
-                $service = $data['custom_service'][$i];
+            $description = trim($data['custom_service'][$i] ?? '');
+
+            if ($description !== '') {
+                $service = ($service === 'Other') ? $description : $service . ' - ' . $description;
             }
 
             if (empty($service)) continue;
