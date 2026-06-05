@@ -32,11 +32,6 @@ try {
         $where = ["f.status != 'Completed'"]; // Exclude completed
         $params = [];
 
-        if (AuthController::getCurrentRole() === 'staff') {
-            $where[] = "l.assigned_to = ?";
-            $params[] = $_SESSION['user_id'];
-        }
-
         if (isset($_GET['search']) && !empty($_GET['search'])) {
             $search = '%' . $_GET['search'] . '%';
             $where[] = "(l.company LIKE ? OR l.contact_person LIKE ? OR l.mobile_number LIKE ?)";
