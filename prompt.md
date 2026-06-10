@@ -1,279 +1,394 @@
-@agency-project-auditor
-@agency-frontend-engineer
-@agency-backend-engineer
-@agency-database-engineer
+@agency-backend-architect
+@agency-frontend-developer
+@agency-database-optimizer
 @agency-qa-engineer
 
-TASK: REMOVE BROWSER AUTOFILL / AUTOCOMPLETE SUGGESTIONS FROM ALL FORMS
+TASK: ADD DIRECT PAYMENT STATUS UPDATE FROM SALES ACTION MENU
 
 PROJECT:
 Deckoid ERP System
 
-PROBLEM:
+MODULE:
+Sales → Invoice List
 
-Input fields show browser suggestions such as:
+OBJECTIVE:
 
-* Previous emails
-* Previous names
-* Previous mobile numbers
-* Previous company names
-* Stored browser autofill values
+Currently when user clicks the 3-dot action menu, only:
+
+* Edit
+* Print
+* Delete
+
+are available.
+
+I want a new Payment Status section inside the same dropdown.
+
+NO new page.
+
+NO modal.
+
+NO extra screens.
+
+Direct status update from the action menu.
+
+==================================================
+
+CURRENT FLOW
+
+Sales List
+
+↓
+
+3 Dot Menu
+
+↓
+
+Edit
+Print
+Delete
+
+==================================================
+
+REQUIRED FLOW
+
+Sales List
+
+↓
+
+3 Dot Menu
+
+↓
+
+Edit
+
+Print
+
+---
+
+Payment Status
+
+✓ Pending
+
+✓ Partial
+
+✓ Paid
+
+✓ Cancelled
+
+---
+
+Delete
+
+==================================================
+
+UI REQUIREMENTS
+
+Inside action dropdown add:
+
+Payment Status
+
+When user clicks:
+
+Pending
+
+Partial
+
+Paid
+
+Cancelled
+
+Immediately update invoice status.
+
+No page refresh.
+
+Use AJAX.
+
+Show success toast.
 
 Example:
 
-[abc@gmail.com](mailto:abc@gmail.com)
-[abc1@gmail.com](mailto:abc1@gmail.com)
-AAA@
+Payment Status Updated Successfully
 
-These suggestions appear when user clicks or types in form fields.
+==================================================
 
-REQUIREMENT:
+DATABASE
 
-Remove these suggestions from ALL forms across the entire project.
+Audit invoice table.
 
-DO NOT modify business logic.
+Find actual status column.
 
-DO NOT modify database.
+Examples:
 
-DO NOT modify APIs.
+payment_status
 
-ONLY remove browser autofill/autocomplete behavior.
+invoice_status
 
-====================================================
+status
 
-AUDIT ENTIRE PROJECT
+Use existing column.
 
-Search all files for:
+DO NOT create duplicate columns.
 
-input
+If column missing:
 
-textarea
+Add proper migration.
 
-select
+Update schema.sql.
 
-form
+==================================================
 
-autocomplete
+BACKEND
 
-autofill
+Create secure API endpoint.
 
-email fields
+Example:
 
-mobile fields
+api/update_invoice_status.php
 
-name fields
+Requirements:
 
-search fields
+Validate login session.
 
-company fields
+Validate invoice id.
 
-login fields
+Validate status value.
 
-lead forms
+Allowed values only:
 
-followup forms
+Pending
 
-onboarding forms
+Partial
 
-staff forms
+Paid
 
-profile forms
+Cancelled
 
-====================================================
+Return JSON only.
 
-FRONTEND FIX
+Success:
 
-For every form:
+{
+"success": true,
+"message": "Payment status updated."
+}
+
+Failure:
+
+{
+"success": false,
+"message": "Invalid status."
+}
+
+==================================================
+
+FRONTEND
+
+Update:
+
+admin/sales.php
+
+Locate 3-dot action dropdown.
 
 Add:
 
-autocomplete="off"
+Pending
+
+Partial
+
+Paid
+
+Cancelled
+
+Click action:
+
+AJAX request
+
+↓
+
+Backend update
+
+↓
+
+Update badge instantly
+
+↓
+
+Show toast
+
+No reload.
+
+==================================================
+
+STATUS BADGE COLORS
+
+Pending
+
+Orange
+
+Partial
+
+Blue
+
+Paid
+
+Green
+
+Cancelled
+
+Red
+
+==================================================
+
+LIVE TABLE UPDATE
+
+After successful update:
+
+Invoice row badge updates immediately.
 
 Example:
 
-<form autocomplete="off">
+PENDING
 
-For sensitive fields:
+↓
 
-autocomplete="new-password"
+User clicks PAID
 
-Example:
+↓
 
-<input
-type="text"
-autocomplete="off">
+Badge changes to:
 
-<input
-type="email"
-autocomplete="off">
+PAID
 
-<input
-type="tel"
-autocomplete="off">
+Without refresh.
 
-<textarea
-autocomplete="off"></textarea>
+==================================================
 
-====================================================
+STAFF PERMISSIONS
 
-CHROME AUTOFILL FIX
+Admin:
 
-Where browser still ignores autocomplete:
+Can change status.
 
-Apply:
+Staff:
 
-autocomplete="new-password"
+Can view status.
 
-or
+Staff cannot change status.
 
-autocomplete="nope"
+Hide payment status actions for staff users.
 
-and unique field names if required.
+==================================================
 
-Example:
+FILES TO AUDIT
 
-<input
-name="company_input_unique"
-autocomplete="off">
+admin/sales.php
 
-====================================================
+api/sales.php
 
-CSS AUTOFILL RESET
+api/update_invoice_status.php
 
-Add project-wide autofill styling fix.
+schema.sql
 
-Prevent yellow autofill background.
+invoice related models
 
-Prevent autofill visual artifacts.
+invoice related queries
 
-====================================================
+==================================================
 
-FILES TO CHECK
+TEST CASES
 
-admin/add_lead.php
+TEST 1
 
-admin/leads.php
-
-admin/followups.php
-
-admin/onboarding.php
-
-admin/staff_management.php
-
-admin/profile.php
-
-admin/login.php
-
-all modal forms
-
-all edit forms
-
-all search forms
-
-all import/export forms
-
-all dynamically generated forms
-
-====================================================
-
-VALIDATION
-
-After fix:
-
-Click Company
-
-No suggestions
+Pending → Paid
 
 PASS
 
 ---
 
-Click Email
+TEST 2
 
-No suggestions
-
-PASS
-
----
-
-Click Mobile
-
-No suggestions
+Pending → Partial
 
 PASS
 
 ---
 
-Click Contact Person
+TEST 3
 
-No suggestions
-
-PASS
-
----
-
-Click Search
-
-No previous values
+Partial → Paid
 
 PASS
 
 ---
 
-Lead Form
+TEST 4
+
+Paid → Pending
 
 PASS
 
 ---
 
-Followup Form
+TEST 5
+
+Invalid invoice id
+
+Proper JSON error
 
 PASS
 
 ---
 
-Onboarding Form
+TEST 6
+
+Staff login
+
+Cannot update
 
 PASS
 
 ---
 
-Staff Form
+TEST 7
+
+Admin login
+
+Can update
 
 PASS
 
-====================================================
+==================================================
 
 PROOF REQUIRED
 
-1. List of modified files
+1. Files changed
 
-2. Forms updated
+2. Database column used
 
-3. Inputs updated
+3. API endpoint created
 
-4. Autocomplete disabled
+4. AJAX implementation proof
 
-5. Autofill disabled
+5. Status dropdown screenshot
 
-6. No console errors
+6. Status update query proof
 
-7. No functionality broken
+7. Admin permission proof
 
-8. Frontend tested
+8. Staff restriction proof
 
-9. Production tested
+9. No console errors
 
-10. Local tested
+10. No page refresh required
 
-IMPORTANT:
+IMPORTANT
 
-Do not change database.
+Do NOT modify invoice creation flow.
 
-Do not change APIs.
+Do NOT change invoice design.
 
-Do not change validations.
+Do NOT add new pages.
 
-Do not add features.
+Do NOT add modals.
 
-Only remove browser autofill/autocomplete suggestions project-wide.
+Only add direct Payment Status update inside existing 3-dot action menu and update status instantly.

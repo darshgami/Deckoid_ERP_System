@@ -41,6 +41,7 @@ if ($method === 'GET') {
     
     $search = isset($_GET['search']) ? $_GET['search'] : '';
     $type = isset($_GET['type']) ? $_GET['type'] : '';
+    $payment = isset($_GET['payment']) ? $_GET['payment'] : '';
     $dateFrom = isset($_GET['dateFrom']) ? $_GET['dateFrom'] : '';
     $dateTo = isset($_GET['dateTo']) ? $_GET['dateTo'] : '';
 
@@ -56,6 +57,11 @@ if ($method === 'GET') {
     if ($type) {
         $where[] = "invoice_type = ?";
         $params[] = $type;
+    }
+
+    if ($payment) {
+        $where[] = "payment_status = ?";
+        $params[] = $payment;
     }
 
     if ($dateFrom) {

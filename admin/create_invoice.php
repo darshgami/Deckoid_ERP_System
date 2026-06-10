@@ -399,7 +399,13 @@ if (!$invoiceId) {
             
             if (r.success) {
                 showToast(id ? 'Invoice updated successfully!' : 'Invoice created successfully!');
-                setTimeout(() => window.location.href = `print_invoice.php?id=${id || r.data.id}`, 1000);
+                setTimeout(() => {
+                    if (id) {
+                        window.location.href = 'sales.php';
+                    } else {
+                        window.location.href = `print_invoice.php?id=${r.data.id}`;
+                    }
+                }, 1000);
             } else {
                 showToast(r.message || 'Validation failed', 'error');
                 submitBtn.disabled = false;

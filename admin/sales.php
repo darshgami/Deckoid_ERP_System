@@ -29,22 +29,26 @@ $db = Database::getInstance();
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </span>
             <input type="text" id="search" placeholder="Search party or invoice number..." autocomplete="off"
-                   class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 pl-12 pr-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-medium text-neutral-700">
+                   class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 pl-12 pr-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-medium text-neutral-700"
+                   oninput="debouncedSearch()">
         </div>
         <!-- Type Filter -->
         <div class="w-full md:flex-1">
-            <select id="typeFilter" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-semibold text-neutral-900 cursor-pointer appearance-none">
+            <select id="typeFilter" onchange="loadInvoices(1)" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-semibold text-neutral-900 cursor-pointer appearance-none">
                 <option value="">All Types</option>
                 <option value="With GST">With GST</option>
                 <option value="Without GST">Without GST</option>
             </select>
         </div>
-        <!-- Filter Button -->
-        <div class="w-full md:w-auto">
-            <button onclick="loadInvoices(1)" class="btn btn-primary w-full md:w-40 text-sm py-2.5 shadow-lg shadow-primary/20">
-                Apply Filters
-            </button>
+        <!-- Payment Filter -->
+        <div class="w-full md:flex-1">
+            <select id="paymentFilter" onchange="loadInvoices(1)" class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 px-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-semibold text-neutral-900 cursor-pointer appearance-none">
+                <option value="">All Payment Status</option>
+                <option value="Complete">Complete</option>
+                <option value="Pending">Pending</option>
+            </select>
         </div>
+
     </div>
 </div>
 
@@ -95,12 +99,21 @@ $db = Database::getInstance();
         loadInvoices(1);
     }
 
+    let searchTimeout;
+    function debouncedSearch() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            loadInvoices(1);
+        }, 300);
+    }
+
     async function loadInvoices(page = 1) {
         currentPage = page;
         const search = document.getElementById('search').value;
         const type = document.getElementById('typeFilter').value;
+        const payment = document.getElementById('paymentFilter').value;
 
-        const params = new URLSearchParams({ page, limit: currentLimit, search, type });
+        const params = new URLSearchParams({ page, limit: currentLimit, search, type, payment });
 
         try {
             const response = await fetch(`../api/sales.php?${params}`);
