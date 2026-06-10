@@ -18,7 +18,7 @@ layout_start('Activity Logs - Deckoid ERP');
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" id="search" placeholder="Search logs by company or content..." 
+            <input type="text" id="search" placeholder="Search logs by company or content..." autocomplete="off"
                    class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
         </div>
         <button onclick="loadLogs(1)" class="btn btn-primary text-sm h-full">

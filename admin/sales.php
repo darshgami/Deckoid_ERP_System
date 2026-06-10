@@ -28,7 +28,7 @@ $db = Database::getInstance();
             <span class="absolute inset-y-0 left-5 flex items-center text-neutral-400 group-focus-within:text-primary transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </span>
-            <input type="text" id="search" placeholder="Search party or invoice number..." 
+            <input type="text" id="search" placeholder="Search party or invoice number..." autocomplete="off"
                    class="w-full bg-neutral-50/80 border border-neutral-200 rounded-xl py-2.5 pl-12 pr-6 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm font-medium text-neutral-700">
         </div>
         <!-- Type Filter -->

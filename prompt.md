@@ -1,330 +1,279 @@
-CSV IMPORT FOREIGN KEY ERROR – PERMANENT FIX MASTER PROMPT
+@agency-project-auditor
+@agency-frontend-engineer
+@agency-backend-engineer
+@agency-database-engineer
+@agency-qa-engineer
+
+TASK: REMOVE BROWSER AUTOFILL / AUTOCOMPLETE SUGGESTIONS FROM ALL FORMS
 
 PROJECT:
 Deckoid ERP System
 
-ISSUE:
+PROBLEM:
 
-CSV Import fails with:
+Input fields show browser suggestions such as:
 
-SQLSTATE[23000]
-Integrity constraint violation: 1452
+* Previous emails
+* Previous names
+* Previous mobile numbers
+* Previous company names
+* Stored browser autofill values
 
-Cannot add or update child row
+Example:
 
-FOREIGN KEY:
-leads.created_by
-REFERENCES users.id
+[abc@gmail.com](mailto:abc@gmail.com)
+[abc1@gmail.com](mailto:abc1@gmail.com)
+AAA@
 
-ERROR:
+These suggestions appear when user clicks or types in form fields.
 
-Failed Row:
-Row 2
+REQUIREMENT:
 
-Failed Row:
-Row 3
+Remove these suggestions from ALL forms across the entire project.
 
-Failed Row:
-Row 4
+DO NOT modify business logic.
 
-...
+DO NOT modify database.
 
-All rows fail during import.
+DO NOT modify APIs.
 
-ROOT CAUSE ANALYSIS:
+ONLY remove browser autofill/autocomplete behavior.
 
-The leads table contains:
+====================================================
 
-created_by
+AUDIT ENTIRE PROJECT
 
-This column has a foreign key:
+Search all files for:
 
-leads.created_by
-→ users.id
+input
 
-During CSV import the system inserts:
+textarea
 
-created_by = 0
+select
+
+form
+
+autocomplete
+
+autofill
+
+email fields
+
+mobile fields
+
+name fields
+
+search fields
+
+company fields
+
+login fields
+
+lead forms
+
+followup forms
+
+onboarding forms
+
+staff forms
+
+profile forms
+
+====================================================
+
+FRONTEND FIX
+
+For every form:
+
+Add:
+
+autocomplete="off"
+
+Example:
+
+<form autocomplete="off">
+
+For sensitive fields:
+
+autocomplete="new-password"
+
+Example:
+
+<input
+type="text"
+autocomplete="off">
+
+<input
+type="email"
+autocomplete="off">
+
+<input
+type="tel"
+autocomplete="off">
+
+<textarea
+autocomplete="off"></textarea>
+
+====================================================
+
+CHROME AUTOFILL FIX
+
+Where browser still ignores autocomplete:
+
+Apply:
+
+autocomplete="new-password"
 
 or
 
-created_by = ''
+autocomplete="nope"
 
-or
-
-created_by = NULL
-
-or
-
-created_by = invalid user id
-
-That user id does not exist inside users table.
-
-MySQL correctly rejects every insert.
-
-REQUIRED FIX:
-
-Perform complete end-to-end investigation.
-
-Check:
-
-database/schema.sql
-
-api/import_csv.php
-
-api/leads.php
-
-all lead creation APIs
-
-all onboarding APIs
-
-all followup APIs
-
-all CSV import logic
-
-all CSV export logic
-
-Verify created_by handling everywhere.
-
-DATABASE TASKS:
-
-Check users table.
-
-Check leads table.
-
-Check foreign key:
-
-leads_ibfk_2
-
-Verify:
-
-created_by references users.id
-
-If foreign key exists:
-
-Ensure imported rows use a valid user id.
-
-BACKEND TASKS:
-
-Find every insert into:
-
-leads
-
-followups
-
-onboarding
-
-customer_onboarding
-
-Replace any hardcoded value:
-
-created_by = 0
-
-created_by = ''
-
-created_by = NULL
-
-created_by = csv value
-
-with:
-
-logged-in user id
+and unique field names if required.
 
 Example:
 
-$_SESSION['user_id']
-
-or authenticated user id.
-
-Never use invalid ids.
-
-CSV IMPORT TASKS:
-
-When importing CSV:
-
-Automatically assign:
-
-created_by = current logged-in user
-
-Do NOT expect created_by column from CSV.
-
-Do NOT require created_by in CSV.
-
-Do NOT map created_by from uploaded file.
-
-Import must work even if CSV has no created_by field.
-
-VALIDATION:
-
-Before insert:
-
-Verify user exists.
-
-Example:
-
-SELECT id
-FROM users
-WHERE id = current_user
-
-If user not found:
-
-Return JSON:
-
-{
-"success": false,
-"message": "Invalid user account."
-}
-
-Do not continue.
-
-ERROR HANDLING:
-
-Never return:
-
-HTML
-
-PHP warnings
-
-PHP notices
-
-Fatal error output
-
-Always return JSON.
-
-Example:
-
-{
-"success": false,
-"message": "Database insert failed.",
-"row": 15,
-"reason": "Invalid created_by reference."
-}
-
-CSV IMPORT SUCCESS:
-
-Example:
-
-{
-"success": true,
-"message": "Imported 127 records successfully."
-}
-
-TESTS REQUIRED:
-
-TEST 1
-
-Check users table.
-
-Result:
-Valid user exists.
+<input
+name="company_input_unique"
+autocomplete="off">
 
 ====================================================
 
-TEST 2
+CSS AUTOFILL RESET
 
-Import CSV with 100 records.
+Add project-wide autofill styling fix.
 
-Result:
-100 inserted.
+Prevent yellow autofill background.
 
-====================================================
-
-TEST 3
-
-Import CSV with duplicate records.
-
-Result:
-All inserted.
+Prevent autofill visual artifacts.
 
 ====================================================
 
-TEST 4
+FILES TO CHECK
 
-Verify created_by.
+admin/add_lead.php
 
-Result:
-Every imported row contains valid user id.
+admin/leads.php
 
-====================================================
+admin/followups.php
 
-TEST 5
+admin/onboarding.php
 
-Open Lead List.
+admin/staff_management.php
 
-Result:
-Imported records visible.
+admin/profile.php
 
-====================================================
+admin/login.php
 
-TEST 6
+all modal forms
 
-Open Followups.
+all edit forms
 
-Result:
-No errors.
+all search forms
 
-====================================================
+all import/export forms
 
-TEST 7
-
-Open Onboarding.
-
-Result:
-No errors.
+all dynamically generated forms
 
 ====================================================
 
-TEST 8
+VALIDATION
 
-Export CSV.
+After fix:
 
-Result:
-Records exported successfully.
+Click Company
+
+No suggestions
+
+PASS
+
+---
+
+Click Email
+
+No suggestions
+
+PASS
+
+---
+
+Click Mobile
+
+No suggestions
+
+PASS
+
+---
+
+Click Contact Person
+
+No suggestions
+
+PASS
+
+---
+
+Click Search
+
+No previous values
+
+PASS
+
+---
+
+Lead Form
+
+PASS
+
+---
+
+Followup Form
+
+PASS
+
+---
+
+Onboarding Form
+
+PASS
+
+---
+
+Staff Form
+
+PASS
 
 ====================================================
 
-PROOF REQUIRED:
+PROOF REQUIRED
 
-1. Foreign key definition found.
+1. List of modified files
 
-2. Source of invalid created_by identified.
+2. Forms updated
 
-3. Fixed import_csv.php.
+3. Inputs updated
 
-4. Fixed leads insert API.
+4. Autocomplete disabled
 
-5. Fixed onboarding insert API.
+5. Autofill disabled
 
-6. Fixed followup insert API.
+6. No console errors
 
-7. Validation added.
+7. No functionality broken
 
-8. JSON response proof.
+8. Frontend tested
 
-9. Successful CSV import proof.
+9. Production tested
 
-10. No SQLSTATE[23000] errors.
+10. Local tested
 
 IMPORTANT:
 
-Do NOT remove foreign key.
+Do not change database.
 
-Do NOT disable foreign key checks.
+Do not change APIs.
 
-Do NOT use SET FOREIGN_KEY_CHECKS=0.
+Do not change validations.
 
-Fix correctly using valid users.id values.
+Do not add features.
 
-Implement permanently in:
-
-Database
-Backend
-Frontend
-CSV Import
-CSV Export
-Schema
-
-No temporary workaround.
-No silent failures.
-No skipped rows.
-No broken references.
+Only remove browser autofill/autocomplete suggestions project-wide.

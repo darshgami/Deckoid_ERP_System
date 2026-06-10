@@ -20,7 +20,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" id="search" placeholder="Search by name, contact..." 
+            <input type="text" id="search" placeholder="Search by name, contact..." autocomplete="off"
                    class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm"
                    oninput="debouncedSearchFilter(this.value)">
         </div>
@@ -76,7 +76,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
 <!-- Next Follow Up Modal -->
 <div id="nextFollowUpModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm hidden z-[100] transition-all duration-300 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <form id="nextFollowUpForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event)">
+        <form id="nextFollowUpForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event)" autocomplete="off">
             <input type="hidden" id="action_lead_id_next">
             <h3 class="text-lg font-semibold text-neutral-900 mb-4">Schedule Next Follow Up</h3>
             <div class="space-y-4">
@@ -106,7 +106,7 @@ layout_start('Upcoming Followups - Deckoid ERP');
 <!-- Convert Modal -->
 <div id="convertModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm hidden z-[100] transition-all duration-300 overflow-y-auto">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <form id="convertForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event, 'Convert')">
+        <form id="convertForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleActionSubmit(event, 'Convert')" autocomplete="off">
             <input type="hidden" id="action_lead_id_convert">
             <h3 class="text-lg font-semibold text-neutral-900 mb-4">Convert Lead to Project</h3>
             <div class="space-y-4">

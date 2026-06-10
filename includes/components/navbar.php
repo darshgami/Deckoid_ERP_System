@@ -19,7 +19,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </span>
-            <input type="text" placeholder="Search anything..." 
+            <input type="text" placeholder="Search anything..." autocomplete="off"
                    class="w-full bg-neutral-100/50 border-transparent rounded-3xl py-3 pl-14 pr-6 focus:bg-white focus:border-primary-100 focus:ring-8 focus:ring-primary-50 transition-all outline-none text-sm font-bold placeholder:text-neutral-400">
         </div> -->
     </div>

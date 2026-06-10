@@ -70,7 +70,7 @@ if (AuthController::isLoggedIn()) {
 
         <!-- Login Card -->
         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-8 lg:p-10 relative overflow-hidden">
-            <form id="loginForm" class="space-y-5">
+            <form id="loginForm" class="space-y-5" autocomplete="off">
                 <div class="space-y-1.5">
                     <label for="username" class="text-[11px] font-semibold text-neutral-500 uppercase tracking-wider ml-1">Username</label>
                     <div class="relative">
@@ -78,6 +78,7 @@ if (AuthController::isLoggedIn()) {
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </span>
                         <input id="username" name="username" type="text" required
+                                autocomplete="new-password"
                                 class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm"
                                 placeholder="Enter your username">
                     </div>
@@ -90,6 +91,7 @@ if (AuthController::isLoggedIn()) {
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </span>
                         <input id="password" name="password" type="password" required
+                                autocomplete="new-password"
                                 class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm"
                                 placeholder="••••••••">
                     </div>

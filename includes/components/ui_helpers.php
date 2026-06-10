@@ -67,7 +67,7 @@ function ui_input($name, $label = '', $placeholder = '', $type = 'text', $value 
         $html .= "<label class=\"block text-sm font-bold text-neutral-700 ml-1 mb-2\">$label" . ($required ? ' *' : '') . "</label>";
     }
     $req = $required ? 'required' : '';
-    $html .= "<input type=\"$type\" name=\"$name\" value=\"$value\" placeholder=\"$placeholder\" $req 
+    $html .= "<input type=\"$type\" name=\"$name\" value=\"$value\" placeholder=\"$placeholder\" $req autocomplete=\"off\"
               class=\"w-full bg-neutral-50 border-transparent rounded-2xl py-3.5 px-5 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium\">";
     
     return $html;
@@ -82,7 +82,7 @@ function ui_select($name, $options = [], $label = '', $selected = '', $required 
         $html .= "<label class=\"block text-sm font-bold text-neutral-700 ml-1 mb-2\">$label" . ($required ? ' *' : '') . "</label>";
     }
     $req = $required ? 'required' : '';
-    $html .= "<select name=\"$name\" $req class=\"w-full bg-neutral-50 border-transparent rounded-2xl py-3.5 px-5 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium cursor-pointer\">";
+    $html .= "<select name=\"$name\" $req autocomplete=\"off\" class=\"w-full bg-neutral-50 border-transparent rounded-2xl py-3.5 px-5 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm font-medium cursor-pointer\">";
     foreach ($options as $val => $text) {
         $sel = ($val == $selected) ? 'selected' : '';
         $html .= "<option value=\"$val\" $sel>$text</option>";

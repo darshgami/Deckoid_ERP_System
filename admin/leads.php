@@ -41,7 +41,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" id="search" placeholder="Search by name, company..." 
+            <input type="text" id="search" placeholder="Search by name, company..." autocomplete="off"
                    class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm"
                    oninput="debouncedSearch()">
         </div>
@@ -133,7 +133,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 <button onclick="switchTab('project')" class="tab-btn px-4 py-3 text-xs font-semibold border-b-2 border-transparent text-neutral-400 hover:text-neutral-600 whitespace-nowrap" id="tab-project">Project & Others</button>
             </div>
 
-            <form id="leadForm" class="p-6 lg:p-8 max-h-[70vh] overflow-y-auto" novalidate>
+            <form id="leadForm" class="p-6 lg:p-8 max-h-[70vh] overflow-y-auto" novalidate autocomplete="off">
                 <input type="hidden" name="id" id="lead_id_input">
                 
                 <!-- Basic Info Tab -->
@@ -149,19 +149,19 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Company *</label>
-                            <input type="text" name="company" required placeholder="e.g. Acme Corp" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="text" name="company" required placeholder="e.g. Acme Corp" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Contact Person *</label>
-                            <input type="text" name="contact_person" required placeholder="Full Name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="text" name="contact_person" required placeholder="Full Name" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number *</label>
-                            <input type="text" name="mobile_number" required placeholder="+1 234 567 890" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="text" name="mobile_number" required placeholder="+1 234 567 890" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email ID *</label>
-                            <input type="email_id" name="email_id" placeholder="email_id@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="email_id" name="email_id" placeholder="email_id@example.com" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                     </div>
                 </div>
@@ -268,7 +268,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- Import CSV Modal -->
 <div id="importModal" class="fixed inset-0 bg-neutral-900/40 backdrop-blur-sm hidden z-[100] transition-all duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
-        <form id="importForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleImportSubmit(event)">
+        <form id="importForm" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6" onsubmit="handleImportSubmit(event)" autocomplete="off">
             <h3 class="text-lg font-semibold text-neutral-900 mb-4">Import Leads via CSV</h3>
             <div class="space-y-4">
                 <div class="space-y-1.5">

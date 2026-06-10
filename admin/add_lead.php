@@ -32,7 +32,7 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
         </button>
     </div>
 
-    <form id="addLeadForm" class="p-6 lg:p-8" novalidate>
+    <form id="addLeadForm" class="p-6 lg:p-8" novalidate autocomplete="off">
         <!-- Basic Information Tab -->
         <div id="content-basic" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -46,19 +46,19 @@ $users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Company *</label>
-                    <input type="text" name="company" required placeholder="Enter company name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+                    <input type="text" name="company" required placeholder="Enter company name" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Contact Person *</label>
-                    <input type="text" name="contact_person" required placeholder="Full name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+                    <input type="text" name="contact_person" required placeholder="Full name" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number *</label>
-                    <input type="text" name="mobile_number" required placeholder="Phone number" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+                    <input type="text" name="mobile_number" required placeholder="Phone number" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email ID</label>
-                    <input type="email_id" name="email_id" placeholder="email_id@example.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
+                    <input type="email_id" name="email_id" placeholder="email_id@example.com" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 px-4 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
                 </div>
 
             </div>

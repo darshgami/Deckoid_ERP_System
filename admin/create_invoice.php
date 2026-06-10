@@ -36,7 +36,7 @@ if (!$invoiceId) {
 ?>
 
 <div class="max-w-5xl mx-auto">
-    <form id="invoiceForm" class="space-y-6 pb-20" novalidate>
+    <form id="invoiceForm" class="space-y-6 pb-20" novalidate autocomplete="off">
         <!-- Header -->
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -76,7 +76,7 @@ if (!$invoiceId) {
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Invoice Number</label>
-                        <input type="text" name="invoice_number" id="invoice_number" value="<?= $nextNumber ?>" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-bold uppercase outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
+                        <input type="text" name="invoice_number" id="invoice_number" value="<?= $nextNumber ?>" autocomplete="new-password" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-bold uppercase outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Payment Status</label>
@@ -91,16 +91,16 @@ if (!$invoiceId) {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Party Name</label>
-                        <input type="text" name="party_name" value="<?= htmlspecialchars($invoice['party_name'] ?? '') ?>" placeholder="M/s. Party Name" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
+                        <input type="text" name="party_name" value="<?= htmlspecialchars($invoice['party_name'] ?? '') ?>" placeholder="M/s. Party Name" autocomplete="new-password" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Mobile Number</label>
-                            <input type="text" name="mobile_number" value="<?= htmlspecialchars($invoice['mobile_number'] ?? '') ?>" placeholder="Number" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
+                            <input type="text" name="mobile_number" value="<?= htmlspecialchars($invoice['mobile_number'] ?? '') ?>" placeholder="Number" autocomplete="new-password" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Place of Supply</label>
-                            <input type="text" name="place_of_supply" value="<?= htmlspecialchars($invoice['place_of_supply'] ?? '') ?>" placeholder="State/City" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
+                            <input type="text" name="place_of_supply" value="<?= htmlspecialchars($invoice['place_of_supply'] ?? '') ?>" placeholder="State/City" autocomplete="new-password" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all">
                         </div>
                     </div>
                     <div class="md:col-span-2 space-y-1.5">
@@ -109,7 +109,7 @@ if (!$invoiceId) {
                     </div>
                     <div id="gstinField" class="md:col-span-2 space-y-1.5">
                         <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Party GSTIN</label>
-                        <input type="text" name="gstin" value="<?= htmlspecialchars($invoice['gstin'] ?? '') ?>" placeholder="GST Number" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all uppercase tracking-widest">
+                        <input type="text" name="gstin" value="<?= htmlspecialchars($invoice['gstin'] ?? '') ?>" placeholder="GST Number" autocomplete="new-password" class="w-full bg-neutral-50 border border-neutral-200 rounded-xl py-2.5 px-4 text-sm font-semibold outline-none focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/5 transition-all uppercase tracking-widest">
                     </div>
                 </div>
 

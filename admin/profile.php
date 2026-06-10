@@ -15,11 +15,11 @@ layout_start('Settings - Deckoid ERP');
     <div class="bg-white rounded-xl shadow-sm border border-neutral-100 p-6 lg:p-8 glass-card">
         <h3 class="text-lg font-semibold text-neutral-900 mb-6">Personal Profile</h3>
         
-        <form id="profileForm" class="space-y-5">
+        <form id="profileForm" class="space-y-5" autocomplete="off">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Full Name</label>
-                    <input type="text" name="full_name" id="prof_full_name" required class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                    <input type="text" name="full_name" id="prof_full_name" required autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Username</label>
@@ -30,11 +30,11 @@ layout_start('Settings - Deckoid ERP');
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email Address</label>
-                    <input type="email" name="email" id="prof_email" required placeholder="Enter your email" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                    <input type="email" name="email" id="prof_email" required placeholder="Enter your email" autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Phone Number</label>
-                    <input type="text" name="phone_number" id="prof_phone" placeholder="Enter your phone number" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                    <input type="text" name="phone_number" id="prof_phone" placeholder="Enter your phone number" autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
                 </div>
             </div>
 
@@ -51,19 +51,19 @@ layout_start('Settings - Deckoid ERP');
     <div class="bg-white rounded-xl shadow-sm border border-neutral-100 p-6 lg:p-8 glass-card">
         <h3 class="text-lg font-semibold text-neutral-900 mb-6">Security</h3>
         
-        <form id="passwordForm" class="space-y-5">
+        <form id="passwordForm" class="space-y-5" autocomplete="off">
             <div class="space-y-1.5">
                 <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Current Password</label>
-                <input type="password" name="current_password" required class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                <input type="password" name="current_password" required autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">New Password</label>
-                    <input type="password" name="new_password" required class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                    <input type="password" name="new_password" required autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
                 </div>
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Confirm New Password</label>
-                    <input type="password" name="confirm_password" required class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
+                    <input type="password" name="confirm_password" required autocomplete="new-password" class="w-full px-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all font-medium text-sm">
                 </div>
             </div>
 

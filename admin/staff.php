@@ -23,7 +23,7 @@ layout_start('Staff Management - Deckoid ERP');
             <span class="absolute inset-y-0 left-4 flex items-center text-neutral-400 group-focus-within:text-primary">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </span>
-            <input type="text" id="search" placeholder="Search by name, username, or email..." 
+            <input type="text" id="search" placeholder="Search by name, username, or email..." autocomplete="off"
                    class="w-full bg-neutral-50 border-transparent rounded-xl py-2.5 pl-11 pr-4 focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/5 transition-all outline-none text-sm">
         </div>
         <button onclick="loadStaff(1)" class="btn btn-primary text-sm h-full">
@@ -97,22 +97,22 @@ layout_start('Staff Management - Deckoid ERP');
             </div>
             
             <div class="overflow-y-auto p-6">
-                <form id="staffForm" class="space-y-4">
+                <form id="staffForm" class="space-y-4" autocomplete="off">
                     <input type="hidden" name="id" id="staff_id">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="col-span-2 space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Full Name *</label>
-                            <input type="text" name="full_name" id="staff_full_name" required placeholder="Enter full name" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="text" name="full_name" id="staff_full_name" required placeholder="Enter full name" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                         
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Username *</label>
-                            <input type="text" name="username" id="staff_username" required placeholder="Choose a username" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="text" name="username" id="staff_username" required placeholder="Choose a username" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
 
                         <div class="space-y-1.5">
                             <label class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Email Address *</label>
-                            <input type="email" name="email" id="staff_email" required placeholder="staff@deckoid.com" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="email" name="email" id="staff_email" required placeholder="staff@deckoid.com" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
 
                         <div class="col-span-2 space-y-1.5">
@@ -125,12 +125,12 @@ layout_start('Staff Management - Deckoid ERP');
 
                         <div class="space-y-1.5">
                             <label id="pass_label" class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Password *</label>
-                            <input type="password" name="password" id="staff_password" required placeholder="Min 8 chars" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="password" name="password" id="staff_password" required placeholder="Min 8 chars" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
 
                         <div class="space-y-1.5">
                             <label id="confirm_pass_label" class="text-[11px] font-semibold text-neutral-700 ml-1 uppercase tracking-wider">Confirm Password *</label>
-                            <input type="password" name="confirm_password" id="staff_confirm_password" required placeholder="Repeat" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
+                            <input type="password" name="confirm_password" id="staff_confirm_password" required placeholder="Repeat" autocomplete="new-password" class="w-full bg-neutral-50 border-transparent rounded-xl py-2 px-4 focus:bg-white focus:border-primary-100 focus:ring-4 focus:ring-primary-50 transition-all outline-none text-sm">
                         </div>
                     </div>
 
